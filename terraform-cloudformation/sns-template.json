@@ -1,0 +1,18 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Conditions": {},
+  "Description": "",
+  "Mappings": {},
+  "Metadata": {},
+  "Outputs": {},
+  "Parameters": {},
+  "Resources": {
+    "CloudformationTopic": {
+      "Type": "AWS::SNS::Topic",
+      "Properties": {
+        "DisplayName": "Created by CloudFormation",
+        "TopicName": "CloudformationTopic"
+      }
+    }
+  }
+}
