@@ -18,7 +18,7 @@ packaging, and distribution.
 | Import Test            | N/A                     | Top-level module              |
 |                        |                         |                               |
 | **Dev Environment**    |                         |                               |
-| Repository Location    | `src/module.py`         | `test/test_module.py`         |
+| Repository Location    | `src/module.py`         | `tests/test_module.py`        |
 | Run With               | `python src/<main.py>`? | `pytest [module_test.py] ...` |
 | PYTHONPATH             | `src`?                  | `src`                         |
 |                        |                         |                               |
