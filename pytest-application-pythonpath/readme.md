@@ -78,7 +78,15 @@ can load production sources without going through any \[local\] packages or
 links.
 
 
-## Running tests
+## Development
+### Running main
+
+Run production code in local source files with `pipenv run main`.  This uses the
+settings in `.env` to set up `PYTHONPATH`, so that `main.py` can find the rest
+of the production code.
+
+
+### Running tests
 
 Run tests with `pipenv run test`.  If you need to run a particular test without
 running all the rest, add `@pytest.mark.focus` to the test and run with
@@ -88,6 +96,5 @@ running all the rest, add `@pytest.mark.focus` to the test and run with
 
 ## Future Work
 
-1. Run some sort of `main.py` to see if the production code can load ok.
 1. Can `pytest` run in watch mode?  Looks like it can: https://stackoverflow.com/questions/35097577/pytest-run-only-the-changed-file/35101867
 1. Spin off another project to co-locate production and test sources.

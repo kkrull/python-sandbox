@@ -14,5 +14,6 @@ python_version = "3.8"
 
 [scripts]
 flake8 = 'flake8 --max-line-length=120'
+main = 'python main.py'
 test = 'pytest -rA --strict-markers'
 test-focus = 'pytest -m focus -rA --strict-markers'
