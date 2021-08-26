@@ -1,0 +1,19 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+
+[dev-packages]
+pytest = "*"
+pytest-watch = "*"
+
+[requires]
+python_version = "3.8"
+
+[scripts]
+test = 'pytest -rA --strict-markers'
+test-focus = 'pytest -m focus -rA --strict-markers'
+watch = 'ptw'
+watch-say = 'ptw --onfail "say failed" --onpass "say passed"'
