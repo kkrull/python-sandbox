@@ -93,8 +93,12 @@ running all the rest, add `@pytest.mark.focus` to the test and run with
 `pipenv run test-focus`.
 [Custom markers](https://docs.pytest.org/en/6.2.x/example/markers.html#registering-markers) are registered in `pytest.ini`.
 
+Watch tests with [`pytest-watch`](https://github.com/joeyespo/pytest-watch), by
+running `pipenv run watch`. Watch with audible notifications with `pipenv
+watch-say`.
+
 
 ## Future Work
 
-1. Can `pytest` run in watch mode?  Looks like it can: https://stackoverflow.com/questions/35097577/pytest-run-only-the-changed-file/35101867
-1. Spin off another project to co-locate production and test sources.
+1. Spin off another project to co-locate production and test sources and suffix
+   `test` instead of prefixing it.

@@ -8,6 +8,7 @@ name = "pypi"
 [dev-packages]
 pytest = "*"
 flake8 = "*"
+pytest-watch = "*"
 
 [requires]
 python_version = "3.8"
@@ -17,3 +18,5 @@ flake8 = 'flake8 --max-line-length=120'
 main = 'python main.py'
 test = 'pytest -rA --strict-markers'
 test-focus = 'pytest -m focus -rA --strict-markers'
+watch = 'ptw'
+watch-say = 'ptw --onfail "say failed" --onpass "say passed"'
