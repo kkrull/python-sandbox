@@ -88,6 +88,6 @@ running all the rest, add `@pytest.mark.focus` to the test and run with
 
 ## Future Work
 
-1. De-clutter output
 1. Run some sort of `main.py` to see if the production code can load ok.
 1. Can `pytest` run in watch mode?  Looks like it can: https://stackoverflow.com/questions/35097577/pytest-run-only-the-changed-file/35101867
+1. Spin off another project to co-locate production and test sources.
