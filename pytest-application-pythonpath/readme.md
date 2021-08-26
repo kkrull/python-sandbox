@@ -96,9 +96,3 @@ running all the rest, add `@pytest.mark.focus` to the test and run with
 Watch tests with [`pytest-watch`](https://github.com/joeyespo/pytest-watch), by
 running `pipenv run watch`. Watch with audible notifications with `pipenv
 watch-say`.
-
-
-## Future Work
-
-1. Spin off another project to co-locate production and test sources and suffix
-   `test` instead of prefixing it.

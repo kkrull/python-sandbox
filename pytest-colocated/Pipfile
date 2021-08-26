@@ -13,6 +13,7 @@ pytest-watch = "*"
 python_version = "3.8"
 
 [scripts]
+main = 'python main.py'
 test = 'pytest -rA --strict-markers'
 test-focus = 'pytest -m focus -rA --strict-markers'
 watch = 'ptw'
