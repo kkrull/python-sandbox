@@ -1,8 +1,5 @@
 import pytest
-
-class Greeter:
-    def make_greeting(self):
-        return "Hello World!"
+from greeter import Greeter
 
 class TestGreeter:
     def test_make_greeting(self):
