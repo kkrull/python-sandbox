@@ -78,7 +78,16 @@ can load production sources without going through any \[local\] packages or
 links.
 
 
+## Running tests
+
+Run tests with `pipenv run test`.  If you need to run a particular test without
+running all the rest, add `@pytest.mark.focus` to the test and run with
+`pipenv run test-focus`.
+[Custom markers](https://docs.pytest.org/en/6.2.x/example/markers.html#registering-markers) are registered in `pytest.ini`.
+
+
 ## Future Work
 
+1. De-clutter output
 1. Run some sort of `main.py` to see if the production code can load ok.
 1. Can `pytest` run in watch mode?  Looks like it can: https://stackoverflow.com/questions/35097577/pytest-run-only-the-changed-file/35101867
