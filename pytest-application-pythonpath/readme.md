@@ -76,3 +76,9 @@ Tests will import from top-level modules, without installing anything as a
 package first.  So use `PYTHONPATH=src` when running `pytest`, so that test code
 can load production sources without going through any \[local\] packages or
 links.
+
+
+## Future Work
+
+1. Run some sort of `main.py` to see if the production code can load ok.
+1. Can `pytest` run in watch mode?  Looks like it can: https://stackoverflow.com/questions/35097577/pytest-run-only-the-changed-file/35101867
