@@ -1,7 +1,5 @@
 import unittest
-
-def greet(name="World"):
-    return "Hello %s" % (name)
+from greeter import greet
 
 class GreeterGreetTest(unittest.TestCase):
     def test_no_args(self):
