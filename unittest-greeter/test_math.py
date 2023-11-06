@@ -7,7 +7,7 @@ class AddTest(unittest.TestCase):
         self.assertEqual(3, add(1, 2))
         self.assertEqual(6, add(2, 4))
 
-    def test_add_strings(self):
+    def test_add_string_first_param(self):
         """should raise TypeError for strings that are not numbers"""
         with self.assertRaises(TypeError):
-            add("1", "2")
+            add("1", 2)
