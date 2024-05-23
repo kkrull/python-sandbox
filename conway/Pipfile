@@ -1,0 +1,23 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+
+[dev-packages]
+flake8 = "*"
+autopep8 = "*"
+pytest = "*"
+pytest-cov = "*"
+pytest-watch = "*"
+
+[requires]
+python_version = "3.8"
+
+[scripts]
+coverage-report = 'coverage xml -i --omit="*/test*,*/lambda_function.py"'
+lint = 'flake8 --max-line-length=120 --ignore=E402,F401,E126,E128'
+test = 'pytest --cov=src'
+test-focus = 'pytest -m focus -rA --strict-markers'
+watch = 'ptw'

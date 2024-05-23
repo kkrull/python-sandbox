@@ -1,0 +1,10 @@
+#Bitbucket test-lint
+.coverage
+coverage.xml
+
+.DS_Store
+.envrc
+.terraform/
+*.zip
+*.pyc
+.vscode/
