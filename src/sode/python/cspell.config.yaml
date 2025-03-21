@@ -16,6 +16,8 @@ import:
 version: "0.2"
 words:
   - Madoshakalaka
+  - plette
   - pypi
+  - requirementslib
   - setuptools
   - vistir

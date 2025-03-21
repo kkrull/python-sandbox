@@ -98,11 +98,8 @@ all: setup.py
 clean: pipenv-clean
 	$(RM) -r build sode.egg-info
 
-# Keep upgrading setuptools to avoid strip_trailing_zero error during `pip install .`
-# https://github.com/pypa/setuptools/issues/4483
 .PHONY: install
 install: $(sources) setup.py #> Install package and links with pip
-	$(PIPENV) upgrade --dev setuptools
 	$(PIP) install .
 
 .PHONY: test
@@ -110,7 +107,7 @@ test: pipenv-lint-flake8 pipenv-setup-check
 
 .PHONY: uninstall
 uninstall: #> Uninstall package with pip
-	$(PIP) uninstall sode
+	$(PIP) uninstall -y sode
 
 #. SUPPORT TARGETS
 

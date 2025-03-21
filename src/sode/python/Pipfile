@@ -5,13 +5,9 @@ name = "pypi"
 
 [packages]
 
-#setuptools: Update so `pip install .` works: https://github.com/pypa/setuptools/issues/4483
-#vistir: Compatibility with pipenv-setup: https://github.com/Madoshakalaka/pipenv-setup/issues/138#issuecomment-1276368448
 [dev-packages]
 flake8 = "*"
-pipenv-setup = "*"
-vistir = "==0.6.1"
-setuptools = ">=77.0.3"
+setuptools = "*"
 
 [requires]
 python_version = "3.13"
@@ -20,5 +16,3 @@ python_version = "3.13"
 lint-flake8 = 'flake8 --max-line-length=120 --ignore=E402,F401,E126,E128'
 main-package = { call = "sode.sode:main()" }
 main-python = 'python sode.py'
-setup-check = 'pipenv-setup check --strict'
-setup-sync = 'pipenv-setup sync --dev'

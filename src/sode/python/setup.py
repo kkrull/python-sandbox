@@ -102,8 +102,41 @@ setup(
     #   $ pip install sampleproject[dev]
     #
     # Similar to `install_requires` above, these must be valid existing
-    # projects.
-    extras_require={"dev": ["attrs==25.3.0; python_version >= '3.8'", "cached-property==2.0.1; python_version >= '3.8'", "cerberus==1.3.7; python_version >= '3.7'", "certifi==2025.1.31; python_version >= '3.6'", "chardet==5.0.0; python_version >= '3.6'", "charset-normalizer==3.4.1; python_version >= '3.7'", "colorama==0.4.6; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6'", 'distlib==0.3.9', "flake8==7.1.2; python_full_version >= '3.8.1'", "idna==3.10; python_version >= '3.6'", "mccabe==0.7.0; python_version >= '3.6'", 'orderedmultidict==1.0.1', "packaging==20.9; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'", "pep517==0.13.1; python_version >= '3.6'", "pip==25.0.1; python_version >= '3.8'", "pip-shims==0.7.3; python_version >= '3.6'", "pipenv-setup==3.2.0; python_version >= '2.6' and python_version not in '3.0, 3.1, 3.2' and python_version < '4'", 'pipfile==0.0.2', "platformdirs==4.3.7; python_version >= '3.9'", "plette[validation]==2.1.0; python_version >= '3.7'", "pycodestyle==2.12.1; python_version >= '3.8'", "pyflakes==3.2.0; python_version >= '3.8'", "pyparsing==2.4.7; python_version >= '2.6' and python_version not in '3.0, 3.1, 3.2'", "python-dateutil==2.9.0.post0; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2'", "requests==2.32.3; python_version >= '3.8'", "requirementslib==1.6.9; python_version >= '3.7'", "setuptools==77.0.3; python_version >= '3.9'", "six==1.17.0; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2'", "toml==0.10.2; python_version >= '2.6' and python_version not in '3.0, 3.1, 3.2'", "tomlkit==0.13.2; python_version >= '3.8'", "urllib3==2.3.0; python_version >= '3.9'", "vistir==0.6.1; python_version not in '3.0, 3.1, 3.2, 3.3' and python_version >= '3.7'", "wheel==0.45.1; python_version >= '3.8'",]},  # Optional
+    # projects. (Optional)
+    extras_require={"dev": [
+        "attrs==25.3.0; python_version >= '3.8'",
+        "cached-property==2.0.1; python_version >= '3.8'",
+        "cerberus==1.3.7; python_version >= '3.7'",
+        "certifi==2025.1.31; python_version >= '3.6'",
+        "chardet==5.0.0; python_version >= '3.6'",
+        "charset-normalizer==3.4.1; python_version >= '3.7'",
+        "colorama==0.4.6; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6'",
+        'distlib==0.3.9',
+        "flake8==7.1.2; python_full_version >= '3.8.1'",
+        "idna==3.10; python_version >= '3.6'",
+        "mccabe==0.7.0; python_version >= '3.6'",
+        'orderedmultidict==1.0.1',
+        "packaging==20.9; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'",
+        "pep517==0.13.1; python_version >= '3.6'",
+        "pip==25.0.1; python_version >= '3.8'",
+        "pip-shims==0.7.3; python_version >= '3.6'",
+        "pipenv-setup==3.2.0; python_version >= '2.6' and python_version not in '3.0, 3.1, 3.2' and python_version < '4'", 'pipfile==0.0.2',
+        "platformdirs==4.3.7; python_version >= '3.9'",
+        "plette[validation]==2.1.0; python_version >= '3.7'",
+        "pycodestyle==2.12.1; python_version >= '3.8'",
+        "pyflakes==3.2.0; python_version >= '3.8'",
+        "pyparsing==2.4.7; python_version >= '2.6' and python_version not in '3.0, 3.1, 3.2'",
+        "python-dateutil==2.9.0.post0; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2'",
+        "requests==2.32.3; python_version >= '3.8'",
+        "requirementslib==1.6.9; python_version >= '3.7'",
+        "setuptools==77.0.3; python_version >= '3.9'",
+        "six==1.17.0; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2'",
+        "toml==0.10.2; python_version >= '2.6' and python_version not in '3.0, 3.1, 3.2'",
+        "tomlkit==0.13.2; python_version >= '3.8'",
+        "urllib3==2.3.0; python_version >= '3.9'",
+        "vistir==0.6.1; python_version not in '3.0, 3.1, 3.2, 3.3' and python_version >= '3.7'",
+        "wheel==0.45.1; python_version >= '3.8'",
+    ]},
 
     # If there are data files included in your packages that need to be
     # installed, specify them here.
@@ -134,7 +167,9 @@ setup(
     #
     # For example, the following would provide a command called `sample` which
     # executes the function `main` from this package when invoked:
-    entry_points={"console_scripts": ["sode=sode.sode:main"]},
+    entry_points={"console_scripts": [
+        "sode=sode.sode:main"
+    ]},
 
     # List additional URLs that are relevant to your project as a dict.
     #
