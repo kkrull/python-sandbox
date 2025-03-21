@@ -1,2 +1,7 @@
 ## direnv: machine-specific settings
 # https://direnv.net/
+
+## Python
+
+#export PIP=pip3
+#export PYTHON=python3

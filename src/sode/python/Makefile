@@ -46,14 +46,19 @@ debug-paths:
 
 ## Programs
 
-INSTALL := install
+INSTALL ?= install
 INSTALLFLAGS := -g 0 -o 0
+
+PIP ?= pip
+PYTHON ?= python
 
 .PHONY: debug-programs
 debug-programs:
 	$(info Programs:)
 	$(info - INSTALL: $(INSTALL))
 	$(info - INSTALLFLAGS: $(INSTALLFLAGS))
+	$(info - PIP: $(PIP))
+	$(info - PYTHON: $(PYTHON))
 	@:
 
 #. STANDARD TARGETS

@@ -125,6 +125,7 @@ gaps between pip, python (using system python, pyenv or asdf) and virtualenv._
 _Python is a programming language that lets you work quickly and integrate systems more effectively_
 
 - Related:
+  - Override the path to the Python executable you want with [`direnv`](#direnv)
   - Automate installation with [Pipenv](#pipenv).
   - Automate installation with [pyenv](#pyenv).
 
