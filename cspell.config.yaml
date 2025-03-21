@@ -17,5 +17,6 @@ ignoreWords: []
 import: []
 version: "0.2"
 words:
+  - checkmake
   - kkrull
   - Krull
