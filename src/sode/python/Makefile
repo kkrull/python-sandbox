@@ -83,6 +83,7 @@ pipenv-main: #> Run the main script with pipenv
 pipenv-setup-check:
 	$(PIPENV) run setup-check
 
+# https://stackoverflow.com/questions/1471994/what-is-setup-py
 setup.py: Pipfile Pipfile.lock
 	$(PIPENV) run pipenv-setup sync --dev
 
@@ -97,9 +98,11 @@ all: setup.py
 clean: pipenv-clean
 	$(RM) -r build sode.egg-info
 
-# https://stackoverflow.com/questions/1471994/what-is-setup-py
+# Keep upgrading setuptools to avoid strip_trailing_zero error during `pip install .`
+# https://github.com/pypa/setuptools/issues/4483
 .PHONY: install
 install: $(sources) setup.py #> Install package and links with pip
+	$(PIPENV) upgrade --dev setuptools
 	$(PIP) install .
 
 .PHONY: test
