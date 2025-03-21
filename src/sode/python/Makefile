@@ -83,11 +83,14 @@ pipenv-main: #> Run the main script with pipenv
 pipenv-setup-check:
 	$(PIPENV) run setup-check
 
+setup.py: Pipfile Pipfile.lock
+	$(PIPENV) run pipenv-setup sync --dev
+
 #. STANDARD TARGETS
 
 .NOTPARALLEL: all
 .PHONY: all
-all:
+all: setup.py
 	@:
 
 .PHONY: clean
