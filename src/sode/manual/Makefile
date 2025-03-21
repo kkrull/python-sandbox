@@ -6,7 +6,9 @@
 .PHONY: default
 default: all
 
-include ../../../make.d/help.mk ../../../make.d/paths-system.mk
+include ../../../make.d/help.mk
+include ../../../make.d/homebrew.mk
+include ../../../make.d/paths-system.mk
 
 ### Sources
 
@@ -139,5 +141,4 @@ install-assets:
 	@:
 
 .PHONY: install-tools
-install-tools:
-	@:
+install-tools: homebrew-bundle-install

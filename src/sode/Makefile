@@ -3,7 +3,8 @@
 .PHONY: default
 default: all
 
-include ../../make.d/help.mk ../../make.d/pre-commit.mk
+include ../../make.d/help.mk
+include ../../make.d/pre-commit.mk
 
 ## Sources
 
