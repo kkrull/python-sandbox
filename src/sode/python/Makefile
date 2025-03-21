@@ -84,7 +84,7 @@ all:
 
 .PHONY: clean
 clean: pipenv-clean
-	$(RM) -r build sode.egg-info
+	$(RM) -r src/build src/sode.egg-info
 
 .PHONY: install
 install: #> Install package and links with pip
