@@ -20,10 +20,17 @@ words:
   - checkmake
   - Codesandbox
   - direnv
+  - envrc
   - Haines
   - kata
   - katas
   - kkrull
   - Krull
+  - Makefiles
+  - minphony
   - Nystrom
   - Piantanida
+  - Pipenv
+  - Pipfile
+  - pyenv
+  - virtualenv
