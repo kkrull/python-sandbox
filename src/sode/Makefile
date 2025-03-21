@@ -1,7 +1,9 @@
-#. ==Python Sandbox==
+#. ==(Brode)sode==
 
 .PHONY: default
 default: all
+
+include ../../make.d/help.mk ../../make.d/pre-commit.mk
 
 ## Sources
 
@@ -19,7 +21,7 @@ debug-programs:
 ## Project
 
 # https://stackoverflow.com/a/17845120/112682
-SUBDIRS := src/sode
+SUBDIRS := manual python
 
 .PHONY: $(SUBDIRS)
 $(SUBDIRS):
@@ -31,21 +33,19 @@ debug-project:
 	$(info - SUBDIRS: $(SUBDIRS))
 	@:
 
-include make.d/direnv.mk make.d/help.mk make.d/pre-commit.mk
-
 #. STANDARD TARGETS
 
 .PHONY: all
 all: $(SUBDIRS) #> Build all projects
 
 .PHONY: clean
-clean: pre-commit-gc $(SUBDIRS) #> Remove local build files
+clean: $(SUBDIRS) #> Remove local build files
 
 .PHONY: install
 install: $(SUBDIRS) #> Copy artifacts to shared location
 
 .PHONY: test
-test: pre-commit-run $(SUBDIRS) #> Run tests
+test: $(SUBDIRS) #> Run tests
 
 .PHONY: uninstall
 uninstall: $(SUBDIRS) #> Remove artifacts from shared location
@@ -58,11 +58,11 @@ debug: _debug-prefix debug-programs debug-project $(SUBDIRS) #> Show debugging i
 
 .PHONY: _debug-prefix
 _debug-prefix:
-	$(info ==Python Sandbox==)
+	$(info ==(Brode)sode==)
 	@:
 
 .PHONY: install-assets
 install-assets: $(SUBDIRS)
 
 .PHONY: install-tools
-install-tools: pre-commit-install $(SUBDIRS)
+install-tools: $(SUBDIRS)

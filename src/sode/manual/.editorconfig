@@ -1,0 +1,10 @@
+root = false
+
+# Manuals
+
+[*.1.md,*.7.md]
+indent_size = unset
+max_line_length = unset
+
+# Need trailing whitespace to separate lines in SYNOPSIS
+trim_trailing_whitespace = false
