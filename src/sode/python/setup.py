@@ -5,6 +5,8 @@ https://github.com/pypa/sampleproject
 Modified by Madoshakalaka@Github (dependency links added)
 """
 
+#TODO KDK: Compare to https://github.com/kennethreitz/setup.py/blob/master/setup.py
+
 # Always prefer setuptools over distutils
 from setuptools import setup, find_packages
 from os import path

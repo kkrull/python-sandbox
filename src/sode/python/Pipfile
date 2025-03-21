@@ -9,7 +9,7 @@ name = "pypi"
 flake8 = "*"
 pipenv-setup = "*"
 vistir = "==0.6.1" #Compatibility with pipenv-setup: https://github.com/Madoshakalaka/pipenv-setup/issues/138#issuecomment-1276368448
-setuptools = "*" #Update setuptools so our package installs: https://github.com/pypa/setuptools/issues/4483#issuecomment-2236612373
+setuptools = "*"
 
 [requires]
 python_version = "3.13"

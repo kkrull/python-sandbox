@@ -97,6 +97,7 @@ all: setup.py
 clean: pipenv-clean
 	$(RM) -r build sode.egg-info
 
+# https://stackoverflow.com/questions/1471994/what-is-setup-py
 .PHONY: install
 install: $(sources) setup.py #> Install package and links with pip
 	$(PIP) install .
