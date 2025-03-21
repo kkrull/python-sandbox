@@ -55,7 +55,7 @@ debug-paths:
 
 FSWATCH ?= fswatch
 
-INSTALL := install
+INSTALL ?= install
 INSTALLFLAGS := -g 0 -o 0
 
 MANDOC ?= mandoc
