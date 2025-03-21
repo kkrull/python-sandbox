@@ -151,7 +151,3 @@ install-assets:
 
 .PHONY: install-tools
 install-tools: homebrew-bundle-install
-
-.PHONY: install-pipenv
-install-pipenv:
-	$(PIP) install pipenv --user
