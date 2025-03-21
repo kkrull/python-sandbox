@@ -10,17 +10,13 @@ include ../../../make.d/paths-system.mk
 ## Sources
 
 # NB: the wildcard function is not recursive: https://stackoverflow.com/a/2483203/112682
-source_bins := $(shell find bin -type f -name '*.py' | sort)
-source_libs := $(shell find lib -type f -name '*.py' | sort)
-source_main := sode.py
+source_main := src/sode/sode.py
 source_version := version
-sources := $(shell find . -type f -name '*.py' | sort)
+sources := $(shell find src -type f -name '*.py' | sort)
 
 .PHONY: debug-sources
 debug-sources:
 	$(info Sources:)
-	$(info - source_bins: $(source_bins))
-	$(info - source_libs: $(source_libs))
 	$(info - source_main: $(source_main))
 	$(info - source_version: $(source_version))
 	$(info - sources: $(sources))
@@ -92,7 +88,7 @@ clean: pipenv-clean
 
 .PHONY: install
 install: #> Install package and links with pip
-	$(PIP) install .
+	( cd src && $(PIP) install . )
 
 .PHONY: test
 test: pipenv-lint-flake8

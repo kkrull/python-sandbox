@@ -19,7 +19,7 @@ from os import path
 from io import open
 
 here = path.abspath(path.dirname(__file__))
-with open(path.join(here, "README.md"), encoding="utf-8") as f:
+with open(path.join(here, "../README.md"), encoding="utf-8") as f:
     long_description = f.read()
 
 setup(
@@ -81,7 +81,6 @@ setup(
     #
     packages=find_packages(
         exclude=["contrib", "docs", "tests"],
-        where="src"
     ),
 
     # Specify which Python versions you support. In contrast to the
