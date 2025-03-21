@@ -6,9 +6,11 @@ name = "pypi"
 [packages]
 
 [dev-packages]
+flake8 = "*"
 
 [requires]
 python_version = "3.13"
 
 [scripts]
+lint-flake8 = 'flake8 --max-line-length=120 --ignore=E402,F401,E126,E128'
 main = 'python sode.py'

@@ -1,0 +1,65 @@
+name: sode python
+description: Check sode python sources
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/sode-python.yml'
+      - 'src/sode/python/**'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/sode-python.yml'
+      - 'src/sode/python/**'
+  workflow_dispatch:
+
+env:
+  python_cache: 'pipenv'
+  python_version: '3.13.2'
+  working_directory: ./src/sode/python
+
+permissions:
+  contents: read
+
+jobs:
+  sode-python:
+    defaults:
+      run:
+        working-directory: ${{ env.working_directory }}
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          cache: ${{ env.python_cache }}
+          cache-dependency-path: ${{ env.working_directory }}/Pipfile.lock
+          python-version: ${{ env.python_version }}
+
+      - run: python --version
+      - run: pip --version
+
+      - run: pip install pipenv
+      - run: pipenv --version
+      - run: pipenv install --dev
+
+  sode-python-lint:
+    defaults:
+      run:
+        working-directory: ${{ env.working_directory }}
+    needs: sode-python
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          cache: ${{ env.python_cache }}
+          cache-dependency-path: ${{ env.working_directory }}/Pipfile.lock
+          python-version: ${{ env.python_version }}
+
+      # Packages were already loaded from cache, but commands like pipenv et al won't be on the path
+      - run: pip install pipenv
+      - run: pipenv install --dev
+      - run: pipenv run lint-flake8 --verbose
