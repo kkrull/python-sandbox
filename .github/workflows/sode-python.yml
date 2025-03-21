@@ -15,6 +15,7 @@ on:
   workflow_dispatch:
 
 env:
+  python_cache: 'pipenv'
   python_version: '3.13.2'
   working_directory: ./src/sode/python
 
@@ -32,10 +33,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
+          cache: ${{ env.python_cache }}
+          cache-dependency-path: ${{ env.working_directory }}/Pipfile.lock
           python-version: ${{ env.python_version }}
-          cache: 'pipenv'
-          cache-dependency-path: |
-            ${{ env.working_directory }}/Pipfile.lock
 
       - run: python --version
       - run: pip --version
@@ -55,9 +55,10 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
+          cache: ${{ env.python_cache }}
+          cache-dependency-path: ${{ env.working_directory }}/Pipfile.lock
           python-version: ${{ env.python_version }}
-          cache: 'pipenv'
-          cache-dependency-path: |
-            ${{ env.working_directory }}/Pipfile.lock
 
+      # Packages were already loaded from cache, but pipenv won't be on the path
+      - run: pip install pipenv
       - run: pipenv run flake8
