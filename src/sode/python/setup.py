@@ -127,7 +127,7 @@ setup(
     # and refuse to install the project if the version does not match. If you
     # do not support Python 2, you can simplify this to '>=3.5' or similar, see
     # https://packaging.python.org/guides/distributing-packages-using-setuptools/#python-requires
-    python_requires=">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, <4",
+    python_requires=">=3.13, <4",
 
     # This field lists other packages that your project depends on to run.
     # Any package you put here will be installed by pip when your project is
@@ -145,7 +145,7 @@ setup(
     #
     # Similar to `install_requires` above, these must be valid existing
     # projects.
-    extras_require={"dev": []},  # Optional
+    extras_require={"dev": ["attrs==25.3.0; python_version >= '3.8'", "cached-property==2.0.1; python_version >= '3.8'", "cerberus==1.3.7; python_version >= '3.7'", "certifi==2025.1.31; python_version >= '3.6'", "chardet==5.0.0; python_version >= '3.6'", "charset-normalizer==3.4.1; python_version >= '3.7'", "colorama==0.4.6; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6'", 'distlib==0.3.9', "flake8==7.1.2; python_full_version >= '3.8.1'", "idna==3.10; python_version >= '3.6'", "mccabe==0.7.0; python_version >= '3.6'", 'orderedmultidict==1.0.1', "packaging==20.9; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'", "pep517==0.13.1; python_version >= '3.6'", "pip==25.0.1; python_version >= '3.8'", "pip-shims==0.7.3; python_version >= '3.6'", "pipenv-setup==3.2.0; python_version >= '2.6' and python_version not in '3.0, 3.1, 3.2' and python_version < '4'", 'pipfile==0.0.2', "platformdirs==4.3.7; python_version >= '3.9'", "plette[validation]==2.1.0; python_version >= '3.7'", "pycodestyle==2.12.1; python_version >= '3.8'", "pyflakes==3.2.0; python_version >= '3.8'", "pyparsing==2.4.7; python_version >= '2.6' and python_version not in '3.0, 3.1, 3.2'", "python-dateutil==2.9.0.post0; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2'", "requests==2.32.3; python_version >= '3.8'", "requirementslib==1.6.9; python_version >= '3.7'", "setuptools==77.0.3; python_version >= '3.9'", "six==1.17.0; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2'", "toml==0.10.2; python_version >= '2.6' and python_version not in '3.0, 3.1, 3.2'", "tomlkit==0.13.2; python_version >= '3.8'", "urllib3==2.3.0; python_version >= '3.9'", "vistir==0.6.1; python_version not in '3.0, 3.1, 3.2, 3.3' and python_version >= '3.7'", "wheel==0.45.1; python_version >= '3.8'",]},  # Optional
 
     # If there are data files included in your packages that need to be
     # installed, specify them here.
