@@ -52,6 +52,7 @@ INSTALL ?= install
 INSTALLFLAGS := -g 0 -o 0
 
 PIP ?= pip
+PIPENV ?= pipenv
 PYTHON ?= python
 
 .PHONY: debug-programs
@@ -60,8 +61,15 @@ debug-programs:
 	$(info - INSTALL: $(INSTALL))
 	$(info - INSTALLFLAGS: $(INSTALLFLAGS))
 	$(info - PIP: $(PIP))
+	$(info - PIPENV: $(PIPENV))
 	$(info - PYTHON: $(PYTHON))
 	@:
+
+#. PYTHON TARGETS
+
+.PHONY: run-main
+run-main: #> Run the main script with pipenv
+	$(PIPENV) run main
 
 #. STANDARD TARGETS
 

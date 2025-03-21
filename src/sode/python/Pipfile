@@ -9,3 +9,6 @@ name = "pypi"
 
 [requires]
 python_version = "3.13"
+
+[scripts]
+main = 'python sode.py'
