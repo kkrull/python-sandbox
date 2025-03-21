@@ -12,5 +12,5 @@ flake8 = "*"
 python_version = "3.13"
 
 [scripts]
-flake8 = 'flake8 --max-line-length=120 --ignore=E402,F401,E126,E128'
+lint-flake8 = 'flake8 --max-line-length=120 --ignore=E402,F401,E126,E128'
 main = 'python sode.py'
