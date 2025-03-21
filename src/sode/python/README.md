@@ -16,4 +16,5 @@ yet.
 
 ## pipenv
 
-Remember to use `pipenv shell` to set up the python interpreter.
+Remember to use `pipenv shell` to set up the python interpreter.  This appears to happen
+automatically with the use of a local `.envrc`.
