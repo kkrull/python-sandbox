@@ -1,7 +1,10 @@
 [[source]]
+name = "pypi"
 url = "https://pypi.org/simple"
 verify_ssl = true
-name = "pypi"
+
+[pipenv]
+sort_pipfile = true
 
 [packages]
 
@@ -15,4 +18,4 @@ python_version = "3.13"
 [scripts]
 lint-flake8 = 'flake8 --max-line-length=120 --ignore=E402,F401,E126,E128'
 main-package = { call = "sode.sode:main()" }
-main-python = 'python sode.py'
+main-python = 'python src/sode/sode.py'
