@@ -10,17 +10,13 @@ include ../../../make.d/paths-system.mk
 ## Sources
 
 # NB: the wildcard function is not recursive: https://stackoverflow.com/a/2483203/112682
-source_bins := $(shell find bin -type f -name '*.py' | sort)
-source_libs := $(shell find lib -type f -name '*.py' | sort)
-source_main := sode.py
+source_main := src/sode/sode.py
 source_version := version
-sources := $(shell find . -type f -name '*.py' | sort)
+sources := $(shell find src -type f -name '*.py' | sort)
 
 .PHONY: debug-sources
 debug-sources:
 	$(info Sources:)
-	$(info - source_bins: $(source_bins))
-	$(info - source_libs: $(source_libs))
 	$(info - source_main: $(source_main))
 	$(info - source_version: $(source_version))
 	$(info - sources: $(sources))
@@ -67,17 +63,17 @@ debug-programs:
 
 #. PYTHON TARGETS
 
-.PHONY: clean-pipenv
-clean-pipenv: #> Uninstall packages not listed in Pipfile
+.PHONY: pipenv-clean
+pipenv-clean: #> Uninstall packages not listed in Pipfile
 	$(PIPENV) clean
 
-.PHONY: run-main
-run-main: #> Run the main script with pipenv
-	$(PIPENV) run main
-
-.PHONY: test-flake8
-test-flake8: #> Lint sources with flake8
+.PHONY: pipenv-lint-flake8
+pipenv-lint-flake8: #> Lint sources with flake8
 	$(PIPENV) run lint-flake8
+
+.PHONY: pipenv-main
+pipenv-main: #> Run the main script with pipenv
+	$(PIPENV) run main
 
 #. STANDARD TARGETS
 
@@ -87,67 +83,25 @@ all:
 	@:
 
 .PHONY: clean
-clean: clean-pipenv
+clean: pipenv-clean
+	$(RM) -r src/build src/sode.egg-info
 
 .PHONY: install
-install: install-bins install-datadirpkg install-executable install-libs #> Install program and links
-	$(INSTALL) $(INSTALLFLAGS) -d $(bindir)
-	ln -s $(libexecdirpkg)/$(executable) $(bindir)/sode
-	chmod 0755 $(bindir)/sode
-
-.PHONY: install-bins
-install-bins:
-	$(INSTALL) $(INSTALLFLAGS) -d $(libexecdirpkg)/bin
-	$(INSTALL) $(INSTALLFLAGS) -m 0755 $(source_bins) $(libexecdirpkg)/bin
-
-.PHONY: install-datadirpkg
-install-datadirpkg:
-	$(INSTALL) $(INSTALLFLAGS) -d $(datadirpkg)
-	$(INSTALL) $(INSTALLFLAGS) -m 0644 $(source_version) $(datadirpkg)
-
-.PHONY: install-executable
-install-executable: $(executable)
-	$(INSTALL) $(INSTALLFLAGS) -d $(libexecdirpkg)
-	$(INSTALL) $(INSTALLFLAGS) -m 0755 $(executable) $(libexecdirpkg)
-	$(INSTALL) $(INSTALLFLAGS) -m 0644 $(source_version) $(libexecdirpkg)
-
-.PHONY: install-libs
-install-libs:
-	$(INSTALL) $(INSTALLFLAGS) -d $(libexecdirpkg)/lib
-	$(INSTALL) $(INSTALLFLAGS) -m 0644 $(source_libs) $(libexecdirpkg)/lib
+install: #> Install package and links with pip
+	( cd src && $(PIP) install . )
 
 .PHONY: test
-test: test-flake8
+test: pipenv-lint-flake8
 
 .PHONY: uninstall
-uninstall: #> Uninstall program
-	$(RM) $(bindir)/sode
-	$(RM) -R $(datadirpkg)
-	$(RM) -R $(libexecdirpkg)
+uninstall: #> Uninstall package with pip
+	$(PIP) uninstall -y sode
 
 #. SUPPORT TARGETS
 
 .PHONY: check
-check: check-bindir check-datadir check-libexecdir #> Check if `make install` worked
-	@:
-
-.PHONY: check-bindir
-check-bindir:
-	@[ -x $(bindir)/sode ] || \
-	 ( echo "$(bindir)/sode: Missing or not executable"; exit 1 )
-	@find $(bindir)/sode -exec stat -f "%N%SY" {} \;
-
-.PHONY: check-datadir
-check-datadir:
-	@[ -d $(datadirpkg) ] || \
-	 ( echo "$(datadirpkg): Missing or not a directory"; exit 1 )
-	@find $(datadirpkg) -type f | sort
-
-.PHONY: check-libexecdir
-check-libexecdir:
-	@[ -d $(libexecdirpkg) ] || \
-	 ( echo "$(libexecdirpkg): Missing or not a directory"; exit 1 )
-	@find $(libexecdirpkg) -type f | sort
+check: #> Check if `make install` worked
+	@type sode &> /dev/null || ( echo "sode: Not found"; exit 1)
 
 .PHONY: debug
 .NOTPARALLEL: debug
