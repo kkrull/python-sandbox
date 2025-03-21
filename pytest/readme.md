@@ -2,12 +2,10 @@
 
 Trying out [`pytest`](https://docs.pytest.org/en/6.2.x/) to see how it works.
 
-
 ## Python Environment
 
 The Python virtual environment is created and managed by `pipenv`, using `pipenv
 --python 3.9`.
-
 
 ## Runtime Environment
 
@@ -18,7 +16,6 @@ out of source control.
 
 Use `pipenv run init-env` to initialize the file with a template that you can
 fill in with your own secrets.
-
 
 ## Testing
 
