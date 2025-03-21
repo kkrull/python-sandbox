@@ -21,7 +21,7 @@ debug-programs:
 ## Project
 
 # https://stackoverflow.com/a/17845120/112682
-SUBDIRS := manual
+SUBDIRS := manual python
 
 .PHONY: $(SUBDIRS)
 $(SUBDIRS):

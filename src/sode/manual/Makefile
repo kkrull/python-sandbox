@@ -1,4 +1,4 @@
-#. ==Manuals==
+#. ==sode manuals==
 
 # Guide: https://eddieantonio.ca/blog/2015/12/18/authoring-manpages-in-markdown-with-pandoc/
 # man-pages conventions: https://linux.die.net/man/7/man-pages
@@ -131,7 +131,7 @@ debug: _debug-prefix debug-artifacts debug-paths debug-programs debug-sources #>
 
 .PHONY: _debug-prefix
 _debug-prefix:
-	$(info ==Manuals==)
+	$(info ==sode manuals==)
 	@:
 
 .PHONY: install-assets

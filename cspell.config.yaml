@@ -20,13 +20,16 @@ words:
   - Brode
   - checkmake
   - Codesandbox
+  - datadirpkg
   - direnv
   - envrc
   - Haines
+  - INSTALLFLAGS
   - kata
   - katas
   - kkrull
   - Krull
+  - libexecdirpkg
   - Makefiles
   - minphony
   - Nystrom
