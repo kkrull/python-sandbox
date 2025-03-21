@@ -65,4 +65,10 @@ _debug-prefix:
 install-assets: $(SUBDIRS)
 
 .PHONY: install-tools
-install-tools: pre-commit-install $(SUBDIRS)
+install-tools: install-homebrew pre-commit-install $(SUBDIRS)
+
+BREW ?= brew
+
+.PHONY: install-homebrew
+install-homebrew: #> Install packages with Homebrew
+	$(BREW) bundle install
