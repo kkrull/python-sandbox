@@ -35,7 +35,7 @@ jobs:
           python-version: ${{ env.python_version }}
           cache: 'pipenv'
           cache-dependency-path: |
-            ${{ env.python_version }}/Pipfile.lock
+            ${{ env.working_directory }}/Pipfile.lock
 
       - run: python --version
       - run: pip --version
