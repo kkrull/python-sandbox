@@ -6,6 +6,7 @@ Modified by Madoshakalaka@Github (dependency links added)
 """
 
 #TODO KDK: Compare to https://github.com/kennethreitz/setup.py/blob/master/setup.py
+# https://stackoverflow.com/questions/1471994/what-is-setup-py
 
 # Always prefer setuptools over distutils
 from setuptools import setup, find_packages
@@ -120,7 +121,6 @@ setup(
         "pep517==0.13.1; python_version >= '3.6'",
         "pip==25.0.1; python_version >= '3.8'",
         "pip-shims==0.7.3; python_version >= '3.6'",
-        "pipenv-setup==3.2.0; python_version >= '2.6' and python_version not in '3.0, 3.1, 3.2' and python_version < '4'", 'pipfile==0.0.2',
         "platformdirs==4.3.7; python_version >= '3.9'",
         "plette[validation]==2.1.0; python_version >= '3.7'",
         "pycodestyle==2.12.1; python_version >= '3.8'",

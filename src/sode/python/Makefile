@@ -79,19 +79,11 @@ pipenv-lint-flake8: #> Lint sources with flake8
 pipenv-main: #> Run the main script with pipenv
 	$(PIPENV) run main
 
-.PHONY: pipenv-setup-check
-pipenv-setup-check:
-	$(PIPENV) run setup-check
-
-# https://stackoverflow.com/questions/1471994/what-is-setup-py
-setup.py: Pipfile Pipfile.lock
-	$(PIPENV) run pipenv-setup sync --dev
-
 #. STANDARD TARGETS
 
 .NOTPARALLEL: all
 .PHONY: all
-all: setup.py
+all:
 	@:
 
 .PHONY: clean
@@ -99,11 +91,11 @@ clean: pipenv-clean
 	$(RM) -r build sode.egg-info
 
 .PHONY: install
-install: $(sources) setup.py #> Install package and links with pip
+install: #> Install package and links with pip
 	$(PIP) install .
 
 .PHONY: test
-test: pipenv-lint-flake8 pipenv-setup-check
+test: pipenv-lint-flake8
 
 .PHONY: uninstall
 uninstall: #> Uninstall package with pip
