@@ -18,3 +18,19 @@ yet.
 
 Remember to use `pipenv shell` to set up the python interpreter.  This appears to happen
 automatically with the use of a local `.envrc`.
+
+## Setup
+
+### Activate virtual environment
+
+`direnv` should automatically activate the virtualenv for this project.  If it doesn't, use
+
+```shell
+pipenv shell
+```
+
+### Install packages
+
+```shell
+pipenv install --dev
+```
