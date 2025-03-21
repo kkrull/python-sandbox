@@ -33,6 +33,7 @@ words:
   - Makefiles
   - minphony
   - Nystrom
+  - pandoc
   - Piantanida
   - Pipenv
   - Pipfile
