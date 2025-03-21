@@ -9,7 +9,7 @@ def main():
     if path.exists(target_file):
         print('Not modifying existing file: {}'.format(target_file))
         return 1
-    
+
     template_file = 'dotenv-template'
     shutil.copyfile(template_file, target_file)
     print('Initialied environment settings in {}'.format(target_file))
