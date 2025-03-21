@@ -1,0 +1,33 @@
+name: sode python
+description: Check sode python sources
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/sode-python.yml'
+      - 'src/sode/python/**'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/sode-python.yml'
+      - 'src/sode/python/**'
+  workflow_dispatch:
+
+env:
+  working_directory: ./src/sode/python
+
+permissions:
+  contents: read
+
+jobs:
+  sode-python:
+    defaults:
+      run:
+        working-directory: ${{ env.working_directory }}
+    runs-on: ubuntu-24.04
+
+    steps:
+      #TODO KDK: Set up python and print versions.  Then make a follow up test job
+      - uses: actions/checkout@v4
+      - run: make test
