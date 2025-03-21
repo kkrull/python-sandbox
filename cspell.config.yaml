@@ -1,0 +1,29 @@
+$schema: https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json
+dictionaries: []
+dictionaryDefinitions: []
+enableFiletypes:
+  - github-actions-workflow
+  - json
+  - makefile
+  - markdown
+  - plaintext
+  - shellscript
+  - text
+  - yaml
+ignorePaths:
+  - .gitignore
+  - cspell.config.yaml
+ignoreWords: []
+import: []
+version: "0.2"
+words:
+  - checkmake
+  - Codesandbox
+  - direnv
+  - Haines
+  - kata
+  - katas
+  - kkrull
+  - Krull
+  - Nystrom
+  - Piantanida
