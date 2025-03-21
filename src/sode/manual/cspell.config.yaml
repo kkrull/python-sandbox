@@ -2,37 +2,31 @@ $schema: https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell
 dictionaries: []
 dictionaryDefinitions: []
 enableFiletypes:
-  - github-actions-workflow
-  - json
   - makefile
   - markdown
   - plaintext
-  - shellscript
   - text
   - yaml
 ignorePaths:
   - .gitignore
   - cspell.config.yaml
 ignoreWords: []
-import: []
+import:
+  - ../../cspell.config.yaml
 version: "0.2"
 words:
+  - bambam
+  - bitovi
   - Brode
-  - checkmake
-  - Codesandbox
-  - direnv
-  - envrc
-  - Haines
-  - kata
-  - katas
-  - kkrull
-  - Krull
-  - Makefiles
-  - minphony
-  - Nystrom
-  - Piantanida
-  - Pipenv
-  - Pipfile
-  - pyenv
+  - BRODESODE
+  - datadirpkg
+  - frontends
+  - fscmd
+  - FSWATCH
+  - Groff
+  - INSTALLFLAGS
+  - libexecdirpkg
+  - MANDOC
+  - Pandoc
+  - PANDOCFLAGS
   - sode
-  - virtualenv
