@@ -95,42 +95,18 @@ all: setup.py
 
 .PHONY: clean
 clean: pipenv-clean
+	$(RM) -r build sode.egg-info
 
 .PHONY: install
-install: install-bins install-datadirpkg install-executable install-libs #> Install program and links
-	$(INSTALL) $(INSTALLFLAGS) -d $(bindir)
-	ln -s $(libexecdirpkg)/$(executable) $(bindir)/sode
-	chmod 0755 $(bindir)/sode
-
-.PHONY: install-bins
-install-bins:
-	$(INSTALL) $(INSTALLFLAGS) -d $(libexecdirpkg)/bin
-	$(INSTALL) $(INSTALLFLAGS) -m 0755 $(source_bins) $(libexecdirpkg)/bin
-
-.PHONY: install-datadirpkg
-install-datadirpkg:
-	$(INSTALL) $(INSTALLFLAGS) -d $(datadirpkg)
-	$(INSTALL) $(INSTALLFLAGS) -m 0644 $(source_version) $(datadirpkg)
-
-.PHONY: install-executable
-install-executable: $(executable)
-	$(INSTALL) $(INSTALLFLAGS) -d $(libexecdirpkg)
-	$(INSTALL) $(INSTALLFLAGS) -m 0755 $(executable) $(libexecdirpkg)
-	$(INSTALL) $(INSTALLFLAGS) -m 0644 $(source_version) $(libexecdirpkg)
-
-.PHONY: install-libs
-install-libs:
-	$(INSTALL) $(INSTALLFLAGS) -d $(libexecdirpkg)/lib
-	$(INSTALL) $(INSTALLFLAGS) -m 0644 $(source_libs) $(libexecdirpkg)/lib
+install: $(sources) setup.py #> Install package and links with pip
+	$(PIP) install .
 
 .PHONY: test
 test: pipenv-lint-flake8 pipenv-setup-check
 
 .PHONY: uninstall
-uninstall: #> Uninstall program
-	$(RM) $(bindir)/sode
-	$(RM) -R $(datadirpkg)
-	$(RM) -R $(libexecdirpkg)
+uninstall: #> Uninstall package with pip
+	$(PIP) uninstall sode
 
 #. SUPPORT TARGETS
 
