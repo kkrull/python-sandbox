@@ -6,7 +6,9 @@
 .PHONY: default
 default: all
 
-include ../../../make.d/help.mk ../../../make.d/paths-system.mk
+include ../../../make.d/help.mk
+include ../../../make.d/homebrew.mk
+include ../../../make.d/paths-system.mk
 
 ### Sources
 
@@ -55,7 +57,7 @@ debug-paths:
 
 FSWATCH ?= fswatch
 
-INSTALL := install
+INSTALL ?= install
 INSTALLFLAGS := -g 0 -o 0
 
 MANDOC ?= mandoc
@@ -139,5 +141,4 @@ install-assets:
 	@:
 
 .PHONY: install-tools
-install-tools:
-	@:
+install-tools: homebrew-bundle-install

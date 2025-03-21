@@ -3,7 +3,9 @@
 .PHONY: default
 default: all
 
-include ../../../make.d/help.mk ../../../make.d/paths-system.mk
+include ../../../make.d/help.mk
+include ../../../make.d/homebrew.mk
+include ../../../make.d/paths-system.mk
 
 ## Sources
 
@@ -46,15 +48,28 @@ debug-paths:
 
 ## Programs
 
-INSTALL := install
+INSTALL ?= install
 INSTALLFLAGS := -g 0 -o 0
+
+PIP ?= pip
+PIPENV ?= pipenv
+PYTHON ?= python
 
 .PHONY: debug-programs
 debug-programs:
 	$(info Programs:)
 	$(info - INSTALL: $(INSTALL))
 	$(info - INSTALLFLAGS: $(INSTALLFLAGS))
+	$(info - PIP: $(PIP))
+	$(info - PIPENV: $(PIPENV))
+	$(info - PYTHON: $(PYTHON))
 	@:
+
+#. PYTHON TARGETS
+
+.PHONY: run-main
+run-main: #> Run the main script with pipenv
+	$(PIPENV) run main
 
 #. STANDARD TARGETS
 
@@ -143,5 +158,4 @@ install-assets:
 	@:
 
 .PHONY: install-tools
-install-tools:
-	@:
+install-tools: homebrew-bundle-install

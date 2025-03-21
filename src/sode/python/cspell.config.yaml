@@ -15,17 +15,4 @@ import:
   - ../cspell.config.yaml
 version: "0.2"
 words:
-  - bambam
-  - bitovi
-  - Brode
-  - BRODESODE
-  - datadirpkg
-  - frontends
-  - fscmd
-  - FSWATCH
-  - Groff
-  - INSTALLFLAGS
-  - libexecdirpkg
-  - MANDOC
-  - Pandoc
-  - PANDOCFLAGS
+  - pypi

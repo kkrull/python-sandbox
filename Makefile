@@ -31,7 +31,10 @@ debug-project:
 	$(info - SUBDIRS: $(SUBDIRS))
 	@:
 
-include make.d/direnv.mk make.d/help.mk make.d/pre-commit.mk
+include make.d/direnv.mk
+include make.d/help.mk
+include make.d/homebrew.mk
+include make.d/pre-commit.mk
 
 #. STANDARD TARGETS
 
@@ -65,4 +68,4 @@ _debug-prefix:
 install-assets: $(SUBDIRS)
 
 .PHONY: install-tools
-install-tools: pre-commit-install $(SUBDIRS)
+install-tools: homebrew-bundle-install pre-commit-install $(SUBDIRS)

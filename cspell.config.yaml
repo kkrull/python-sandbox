@@ -17,12 +17,15 @@ ignoreWords: []
 import: []
 version: "0.2"
 words:
+  - autoupdate
   - Brode
   - checkmake
   - Codesandbox
+  - coreutils
   - datadirpkg
   - direnv
   - envrc
+  - fswatch
   - Haines
   - INSTALLFLAGS
   - kata
@@ -38,5 +41,6 @@ words:
   - Pipenv
   - Pipfile
   - pyenv
+  - shellcheck
   - sode
   - virtualenv

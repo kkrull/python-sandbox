@@ -1,0 +1,5 @@
+tap "homebrew/bundle"
+brew "checkmake"
+brew "coreutils"
+brew "direnv"
+brew "pre-commit"
