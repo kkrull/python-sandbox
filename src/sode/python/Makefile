@@ -67,17 +67,21 @@ debug-programs:
 
 #. PYTHON TARGETS
 
-.PHONY: clean-pipenv
-clean-pipenv: #> Uninstall packages not listed in Pipfile
+.PHONY: pipenv-clean
+pipenv-clean: #> Uninstall packages not listed in Pipfile
 	$(PIPENV) clean
 
-.PHONY: run-main
-run-main: #> Run the main script with pipenv
+.PHONY: pipenv-lint-flake8
+pipenv-lint-flake8: #> Lint sources with flake8
+	$(PIPENV) run lint-flake8
+
+.PHONY: pipenv-main
+pipenv-main: #> Run the main script with pipenv
 	$(PIPENV) run main
 
-.PHONY: test-flake8
-test-flake8: #> Lint sources with flake8
-	$(PIPENV) run lint-flake8
+.PHONY: pipenv-setup-check
+pipenv-setup-check:
+	$(PIPENV) run setup-check
 
 #. STANDARD TARGETS
 
@@ -87,7 +91,7 @@ all:
 	@:
 
 .PHONY: clean
-clean: clean-pipenv
+clean: pipenv-clean
 
 .PHONY: install
 install: install-bins install-datadirpkg install-executable install-libs #> Install program and links
@@ -117,7 +121,7 @@ install-libs:
 	$(INSTALL) $(INSTALLFLAGS) -m 0644 $(source_libs) $(libexecdirpkg)/lib
 
 .PHONY: test
-test: test-flake8
+test: pipenv-lint-flake8 pipenv-setup-check
 
 .PHONY: uninstall
 uninstall: #> Uninstall program

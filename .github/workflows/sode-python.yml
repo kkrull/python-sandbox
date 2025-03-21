@@ -44,7 +44,7 @@ jobs:
       - run: pipenv --version
       - run: pipenv install --dev
 
-  sode-python-lint:
+  sode-python-check:
     defaults:
       run:
         working-directory: ${{ env.working_directory }}
@@ -63,3 +63,4 @@ jobs:
       - run: pip install pipenv
       - run: pipenv install --dev
       - run: pipenv run lint-flake8 --verbose
+      - run: pipenv run setup-check
