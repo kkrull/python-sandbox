@@ -105,3 +105,34 @@ _A framework for managing and maintaining multi-language pre-commit hooks in Git
   - Debian: `apt install pre-commit`
   - Homebrew: `brew install pre-commit`
 - `pre-commit install`: Install Git hooks in this repository.
+
+## [Pipenv](https://pipenv.pypa.io/en/stable/index.html)
+
+_a Python virtualenv management tool that supports a multitude of systems and nicely bridges the
+gaps between pip, python (using system python, pyenv or asdf) and virtualenv._
+
+- Documentation:
+  - Installation: <https://pipenv.pypa.io/en/stable/installation.html>
+- Files
+  - `Pipfile`
+  - `Pipfile.lock`
+- Related:
+  - Pipenv is a better way to install [Python](#python-3).
+  - Pipenv can use [pyenv](#pyenv) to install Python.
+
+## [Python 3](https://www.python.org/)
+
+_Python is a programming language that lets you work quickly and integrate systems more effectively_
+
+- Related:
+  - Automate installation with [Pipenv](#pipenv).
+  - Automate installation with [pyenv](#pyenv).
+
+## [pyenv](https://github.com/pyenv/pyenv)
+
+_pyenv lets you easily switch between multiple versions of Python._
+
+- Documentation:
+  - Installation: <https://github.com/pyenv/pyenv?tab=readme-ov-file#installation>
+- Related:
+  - `pyenv` is a better way to install [Python](#python-3).
