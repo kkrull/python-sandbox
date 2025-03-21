@@ -2,15 +2,13 @@
 
 Deploy a lambda function with terraform that is triggered by SNS messages.
 
-
 ## Example
 
 ```shell
-$ ./scripts.build.sh
-$ terraform init #do once, after creating a bucket in S3
-$ terraform apply
+./scripts.build.sh
+terraform init #do once, after creating a bucket in S3
+terraform apply
 ```
-
 
 ## Learnings about Lambdas
 
@@ -18,10 +16,9 @@ $ terraform apply
    do anything without it.  This is listed in the AWS Console under Lambda ->
    Configuration -> Triggers.
 1. Lambdas need `AWSLambdaBasicExecutionRole`, in order to log to CloudWatch.
-1. Lambda responses automatically format as JSON, when invoked synchonously,
+1. Lambda responses automatically format as JSON, when invoked synchronously,
    when returning a `dict`:
-   https://docs.aws.amazon.com/lambda/latest/dg/python-handler.html#python-handler-return
-
+   <https://docs.aws.amazon.com/lambda/latest/dg/python-handler.html#python-handler-return>
 
 ## Organizing Terraform
 

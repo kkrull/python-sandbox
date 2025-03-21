@@ -4,7 +4,6 @@ Skeleton projects that can help when starting a new Code Retreat session, in
 which participants practice [Conway's Game of
 Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life#Rules).
 
-
 ## The big idea
 
 Practice our craft in an environment in which we are free to experiment.
@@ -13,20 +12,19 @@ It's not about finishing the kata by the end of the session (few people do).
 It's about trying different ideas in a safe environment that has few, if any,
 consequences.
 
-
 ## Format
 
 1. introduction, followed by
-1. a few cycles of
+2. a few cycles of
 
    1. pair on the kata for about 40 minutes
    2. delete the code you just wrote
    3. get back together for a quick retro: What did you learn?  What surprised you?
-2. Lunch period, somewhere between sessions.
-3. Wrap up
-
+3. Lunch period, somewhere between sessions.
+4. Wrap up
 
 ## Things to practice
+
 ### Pairing
 
 1. Driver-navigator:
@@ -46,7 +44,6 @@ consequences.
    * Person B then gets that test to pass and writes the next failing test.
    * Rinse and repeat.
    * Pro-tip: _Nobody likes a back-seat driver!!_
-
 
 ### Test Driven Development (TDD)
 
@@ -84,8 +81,7 @@ Pro-tip: a red-green-refactor cycle should take no more than 2-3 minutes.  If
 it's taking longer, try to focus on some smaller shortcoming that can be
 addressed more quickly.
 
-Blog: https://martinfowler.com/bliki/TestDrivenDevelopment.html
-
+Blog: <https://martinfowler.com/bliki/TestDrivenDevelopment.html>
 
 ### 4 Rules of Simple Design
 
@@ -95,22 +91,20 @@ Blog: https://martinfowler.com/bliki/TestDrivenDevelopment.html
 1. Fewest elements: Express each idea once and only once.  Make the code as
    small as possible (without sacrificing tests passing or readability)
 
-Blog: https://martinfowler.com/bliki/BeckDesignRules.html
-
+Blog: <https://martinfowler.com/bliki/BeckDesignRules.html>
 
 ## Kata: Conway's Game of Life
 
 **Goal: Write a function that accepts a game state (where cells are alive or
 dead) and computes the next game state**, following these rules:
 
-1. Any live cell with fewer than two live neighbors dies [underpopulation]
+1. Any live cell with fewer than two live neighbors dies \[under-population]
 1. Any live cell with two or three live neighbors lives on to the next
    generation.
-1. Any live cell with more than three live neighbors dies [overpopulation]
+1. Any live cell with more than three live neighbors dies \[overpopulation]
 1. Any dead cell with exactly three live neighbors becomes a live cell.
 
-Reference: https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life#Rules
-
+Reference: <https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life#Rules>
 
 ## Misc tips
 
@@ -119,21 +113,19 @@ Reference: https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life#Rules
   basic test+production syntax.
 * Pairing tools:
 
-   * Your regular dev environment + plus screen sharing
-   * VS Live Code
-   * Jetbrains has a new pairing feature?
-   * Codesandbox? https://codesandbox.io/
-
+  * Your regular dev environment + plus screen sharing
+  * VS Live Code
+  * Jetbrains has a new pairing feature?
+  * Codesandbox? <https://codesandbox.io/>
 
 ## What to do next?
 
 * Try doing code katas on a regular basis (daily, weekly).  For example:
-  https://kata-log.rocks/index.html
+  <https://kata-log.rocks/index.html>
 * Read about it: Understanding the Four Rules of Simple Design [Haines].
-  https://leanpub.com/4rulesofsimpledesign
-
+  <https://leanpub.com/4rulesofsimpledesign>
 
 ## Acknowledgments
 
 Thank you to Ignacio Piantanida and Brian Nystrom for your contributions to the
-Typescript and Java projects, repsectively.
+Typescript and Java projects, respectively.

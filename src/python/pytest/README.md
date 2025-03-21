@@ -20,8 +20,8 @@ fill in with your own secrets.
 ## Testing
 
 Run `pytest` and it does the rest.  Or forget the details and just say `pipenv
-run test` (`pipenv scripts` if you forget even the name of the script, which I
-am bound to do).
+run test` `pipenv scripts` if you forget even the name of the script, which I
+am bound to do.
 
 There's a test that makes sure you created an `.env` file.  You can get started
 by copying a template, by running `pipenv run init-env` and the modifying `.env`
