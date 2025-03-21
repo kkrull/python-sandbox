@@ -77,7 +77,7 @@ run-main: #> Run the main script with pipenv
 
 .PHONY: test-flake8
 test-flake8: #> Lint sources with flake8
-	$(PIPENV) run flake8
+	$(PIPENV) run lint-flake8
 
 #. STANDARD TARGETS
 
