@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 env:
-  python_version: '3.12'
+  python_version: '3.13.2'
 
 permissions:
   contents: read
@@ -23,4 +23,5 @@ jobs:
         with:
           python-version: ${{ env.python_version }}
 
+      - run: python --version
       - uses: pre-commit/action@v3.0.1

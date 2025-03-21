@@ -15,6 +15,7 @@ on:
   workflow_dispatch:
 
 env:
+  python_version: '3.13.2'
   working_directory: ./src/sode/python
 
 permissions:
@@ -28,6 +29,15 @@ jobs:
     runs-on: ubuntu-24.04
 
     steps:
-      #TODO KDK: Set up python and print versions.  Then make a follow up test job
       - uses: actions/checkout@v4
-      - run: make test
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.python_version }}
+          cache: 'pipenv'
+          cache-dependency-path: |
+            ${{ env.python_version }}/Pipfile.lock
+
+      - run: python --version
+      - run: pip --version
+      - run: pipenv --version
+      - run: pipenv install
