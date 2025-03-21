@@ -42,5 +42,22 @@ jobs:
 
       - run: pip install pipenv
       - run: pipenv --version
+      - run: pipenv install --dev
 
-      - run: pipenv install
+  sode-python-lint:
+    defaults:
+      run:
+        working-directory: ${{ env.working_directory }}
+    needs: sode-python
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.python_version }}
+          cache: 'pipenv'
+          cache-dependency-path: |
+            ${{ env.working_directory }}/Pipfile.lock
+
+      - run: pipenv run flake8
