@@ -5,11 +5,13 @@ name = "pypi"
 
 [packages]
 
+#setuptools: Update so `pip install .` works: https://github.com/pypa/setuptools/issues/4483
+#vistir: Compatibility with pipenv-setup: https://github.com/Madoshakalaka/pipenv-setup/issues/138#issuecomment-1276368448
 [dev-packages]
 flake8 = "*"
 pipenv-setup = "*"
-vistir = "==0.6.1" #Compatibility with pipenv-setup: https://github.com/Madoshakalaka/pipenv-setup/issues/138#issuecomment-1276368448
-setuptools = "*"
+vistir = "==0.6.1"
+setuptools = ">=77.0.3"
 
 [requires]
 python_version = "3.13"
