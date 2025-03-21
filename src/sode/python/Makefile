@@ -71,6 +71,10 @@ debug-programs:
 run-main: #> Run the main script with pipenv
 	$(PIPENV) run main
 
+.PHONY: test-flake8
+test-flake8: #> Lint sources with flake8
+	$(PIPENV) run flake8
+
 #. STANDARD TARGETS
 
 .NOTPARALLEL: all
@@ -110,7 +114,7 @@ install-libs:
 	$(INSTALL) $(INSTALLFLAGS) -m 0644 $(source_libs) $(libexecdirpkg)/lib
 
 .PHONY: test
-test:
+test: test-flake8
 	@:
 
 .PHONY: uninstall
