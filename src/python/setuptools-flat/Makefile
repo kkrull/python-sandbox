@@ -54,6 +54,10 @@ debug-artifacts:
 
 #. PYTHON TARGETS
 
+.PHONY: pipenv-clean
+pipenv-clean: #> Uninstall unused packages from virtualenv
+	$(PIPENV) clean
+
 .PHONY: pipenv-install
 pipenv-install: #> Install development dependencies with pipenv
 	$(PIPENV) install --dev
@@ -91,7 +95,7 @@ all: $(artifact_sdist) $(artifact_wheel) #> Build all artifacts
 	@:
 
 .PHONY: clean
-clean: #> Remove files built from these sources
+clean: pipenv-clean #> Remove files built from these sources
 	$(RM) -r build dist $(package_id).egg-info
 
 .PHONY: install
