@@ -11,11 +11,21 @@ VERSION ?= 0.0.1
 # Programs
 
 BREW ?= brew
-PIP ?= pip
+BUILD ?= $(PIPENV) run python -m build
 PIPENV ?= pipenv
-PYTHON ?= python
 TAR ?= tar
 UNZIP ?= unzip
+
+.PHONY: debug-programs
+debug-programs:
+	$(info Programs)
+	$(info - BREW=$(BREW))
+	$(info - BUILD=$(BUILD))
+	$(info - PIPENV=$(PIPENV))
+	$(info - TAR=$(TAR))
+	$(info - UNZIP=$(UNZIP))
+	@:
+
 
 # Sources
 
@@ -56,10 +66,10 @@ wheel-contents: $(artifact_wheel)
 	$(UNZIP) -l $(artifact_wheel)
 
 $(artifact_sdist): $(sources)
-	$(PIPENV) run python -m build --sdist
+	$(BUILD) --sdist
 
 $(artifact_wheel): $(sources)
-	$(PIPENV) run python -m build --wheel
+	$(BUILD) --wheel
 
 #. STANDARD TARGETS
 
@@ -78,7 +88,7 @@ test:
 #. SUPPORT TARGETS
 
 .PHONY: debug
-debug: _debug-prefix debug-artifacts debug-sources
+debug: _debug-prefix debug-artifacts debug-programs debug-sources
 
 .PHONY: _debug-prefix
 _debug-prefix:
