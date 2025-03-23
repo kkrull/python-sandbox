@@ -54,15 +54,23 @@ debug-artifacts:
 #. PYTHON TARGETS
 
 .PHONY: pipenv-install
-pipenv-install:
+pipenv-install: #> Install development dependencies with pipenv
 	$(PIPENV) install --dev
 
+.PHONY: sdist
+sdist: $(artifact_sdist) #> Build the source distribution
+	@:
+
 .PHONY: sdist-contents
-sdist-contents: $(artifact_sdist)
+sdist-contents: $(artifact_sdist) #> Show what's inside the sdist
 	$(TAR) tfz $(artifact_sdist)
 
+.PHONY: wheel
+wheel: $(artifact_wheel) #> Build the wheel
+	@:
+
 .PHONY: wheel-contents
-wheel-contents: $(artifact_wheel)
+wheel-contents: $(artifact_wheel) #> Show what's inside the wheel
 	$(UNZIP) -l $(artifact_wheel)
 
 $(artifact_sdist): $(sources)
@@ -74,11 +82,11 @@ $(artifact_wheel): $(sources)
 #. STANDARD TARGETS
 
 .PHONY: all
-all: $(artifact_sdist) $(artifact_wheel)
+all: $(artifact_sdist) $(artifact_wheel) #> Build all artifacts
 	@:
 
 .PHONY: clean
-clean:
+clean: #> Remove files built from these sources
 	$(RM) -r build dist $(package_id).egg-info
 
 .PHONY: test
@@ -94,6 +102,18 @@ debug: _debug-prefix debug-artifacts debug-programs debug-sources
 _debug-prefix:
 	$(info ==setuptools: flat structure==)
 
+# Generate help documentation from Makefiles
+# hash-dot NAME => Section titled NAME
+# TARGET: hash-greater DESCRIPTION => Target description
+# https://stackoverflow.com/a/47107132/112682
+.PHONY: help
+help: #> Show this help
+	@sed -n \
+		-e '/@sed/!s/#[.] */_margin_\n/p' \
+		-e '/@sed/!s/:.*#> /:/p' \
+		$(MAKEFILE_LIST) \
+	| column -ts : | sed -e 's/_margin_//'
+
 .PHONY: homebrew-install
-homebrew-install:
+homebrew-install: #> Install development tools with homebrew
 	$(BREW) bundle install
