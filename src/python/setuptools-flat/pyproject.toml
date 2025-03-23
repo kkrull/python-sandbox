@@ -1,0 +1,4 @@
+# https://setuptools.pypa.io/en/latest/userguide/quickstart.html#basic-use
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
