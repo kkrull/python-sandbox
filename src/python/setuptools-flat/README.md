@@ -10,3 +10,17 @@ This tutorial uses [`build`](https://build.pypa.io/en/stable/) to interface with
   `pipenv run build ...`.
 
 Source: <https://setuptools.pypa.io/en/latest/userguide/quickstart.html>
+
+## Create package
+
+```shell
+pipenv run python -m build
+```
+
+or `make`, for short.  Artifacts appear in `dist/`.
+
+## Run local code with pipenv
+
+```shell
+pipenv run main-call
+```
