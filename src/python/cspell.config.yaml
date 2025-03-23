@@ -26,6 +26,7 @@ words:
   - pyproject
   - pytest
   - PYTHONPATH
+  - sdist
   - Setuptools
   - venv
   - virtualenv
