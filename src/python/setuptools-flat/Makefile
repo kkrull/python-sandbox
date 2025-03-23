@@ -14,6 +14,8 @@ BREW ?= brew
 PIP ?= pip
 PIPENV ?= pipenv
 PYTHON ?= python
+TAR ?= tar
+UNZIP ?= unzip
 
 # Sources
 
@@ -37,17 +39,25 @@ debug-artifacts:
 	$(info - artifact_wheel=$(artifact_wheel))
 	@:
 
-$(artifact_sdist): $(sources)
-	$(PIPENV) run python -m build --sdist
-
-$(artifact_wheel): $(sources)
-	$(PIPENV) run python -m build --wheel
-
 #. PYTHON TARGETS
 
 .PHONY: pipenv-install
 pipenv-install:
 	$(PIPENV) install --dev
+
+.PHONY: sdist-contents
+sdist-contents: $(artifact_sdist)
+	$(TAR) tfz $(artifact_sdist)
+
+.PHONY: wheel-contents
+wheel-contents: $(artifact_wheel)
+	$(UNZIP) -l $(artifact_wheel)
+
+$(artifact_sdist): $(sources)
+	$(PIPENV) run python -m build --sdist
+
+$(artifact_wheel): $(sources)
+	$(PIPENV) run python -m build --wheel
 
 #. STANDARD TARGETS
 
