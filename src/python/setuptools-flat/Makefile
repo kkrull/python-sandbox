@@ -82,6 +82,10 @@ wheel-contents: $(artifact_wheel) #> Show what's inside the wheel
 wheel-install: $(artifact_wheel) #> Install the wheel as a regular package
 	$(PIP) install .
 
+.PHONY: wheel-install-editable
+wheel-install-editable: $(artifact_wheel) #> Install the wheel as an editable package
+	$(PIP) install --editable .
+
 $(artifact_sdist): $(sources)
 	$(BUILD) --sdist
 
