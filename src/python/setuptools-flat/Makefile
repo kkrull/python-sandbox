@@ -5,7 +5,7 @@ default: all
 
 # Project
 
-package_id := setuptools_flat
+package_id := setuptoolsflat
 VERSION ?= 0.0.1
 
 # Programs
@@ -29,7 +29,7 @@ debug-programs:
 
 # Sources
 
-sources_py := $(shell find setuptools-flat -iname '*.py' | sort)
+sources_py := $(shell find setuptoolsflat -iname '*.py' | sort)
 sources := Pipfile Pipfile.lock pyproject.toml $(sources_py)
 
 .PHONY: debug-sources

@@ -28,5 +28,6 @@ words:
   - PYTHONPATH
   - sdist
   - Setuptools
+  - setuptoolsflat
   - venv
   - virtualenv
