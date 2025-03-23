@@ -14,6 +14,7 @@ BREW ?= brew
 BUILD ?= $(PIPENV) run python -m build
 PIP ?= pip
 PIPENV ?= pipenv
+PIPX ?= pipx
 TAR ?= tar
 UNZIP ?= unzip
 
@@ -24,6 +25,7 @@ debug-programs:
 	$(info - BUILD=$(BUILD))
 	$(info - PIP=$(PIP))
 	$(info - PIPENV=$(PIPENV))
+	$(info - PIPX=$(PIPX))
 	$(info - TAR=$(TAR))
 	$(info - UNZIP=$(UNZIP))
 	@:
@@ -79,12 +81,16 @@ wheel-contents: $(artifact_wheel) #> Show what's inside the wheel
 	$(UNZIP) -l $(artifact_wheel)
 
 .PHONY: wheel-install
-wheel-install: $(artifact_wheel) #> Install the wheel as a regular package
-	$(PIP) install .
+wheel-install: $(artifact_wheel) #> Install the built wheel globally with pipx
+	$(PIPX) install .
 
 .PHONY: wheel-install-editable
-wheel-install-editable: $(artifact_wheel) #> Install the wheel as an editable package
-	$(PIP) install --editable .
+wheel-install-editable: $(artifact_wheel) #> Link to the wheel globally with pipx
+	$(PIPX) install --editable .
+
+.PHONY: wheel-uninstall
+wheel-uninstall:
+	$(PIPX) uninstall $(package_id)
 
 $(artifact_sdist): $(sources)
 	$(BUILD) --sdist
@@ -104,6 +110,10 @@ clean: pipenv-clean #> Remove files built from these sources
 
 .PHONY: install
 install: wheel-install #> Install wheel
+	@:
+
+.PHONY: uninstall
+uninstall: wheel-uninstall #> Uninstall wheel
 	@:
 
 .PHONY: test

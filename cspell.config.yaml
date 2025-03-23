@@ -40,7 +40,9 @@ words:
   - Piantanida
   - Pipenv
   - Pipfile
+  - pipx
   - pyenv
+  - setuptools
   - shellcheck
   - sode
   - virtualenv

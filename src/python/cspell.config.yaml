@@ -20,6 +20,7 @@ words:
   - bambam
   - pipenv
   - Pipfile
+  - PIPX
   - pydoc
   - pyenv
   - pypi
