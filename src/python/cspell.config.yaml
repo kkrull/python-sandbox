@@ -18,11 +18,20 @@ words:
   - autopep
   - awscli
   - bambam
+  - dothething
+  - mypkg
   - pipenv
   - Pipfile
+  - PIPX
   - pydoc
   - pyenv
+  - pypi
+  - pyproject
   - pytest
   - PYTHONPATH
+  - sdist
+  - Setuptools
+  - setuptoolsflat
+  - subpkg
   - venv
   - virtualenv

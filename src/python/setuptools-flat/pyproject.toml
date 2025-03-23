@@ -1,0 +1,12 @@
+# https://setuptools.pypa.io/en/latest/userguide/quickstart.html#basic-use
+[build-system]
+build-backend = "setuptools.build_meta"
+requires = ["setuptools"]
+
+[project]
+name = "setuptoolsflat"
+version = "0.0.1"
+dependencies = []
+
+[project.scripts]
+marvin = "setuptoolsflat.cli:main"

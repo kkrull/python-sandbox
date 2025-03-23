@@ -1,0 +1,17 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[packages]
+
+[dev-packages]
+build = "*"
+
+[requires]
+python_version = "3.13"
+python_full_version = "3.13.2"
+
+[scripts]
+main-call = { call = "setuptoolsflat.cli:main()" }
+main-python = 'python setuptoolsflat/cli.py'
