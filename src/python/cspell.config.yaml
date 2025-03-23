@@ -18,6 +18,8 @@ words:
   - autopep
   - awscli
   - bambam
+  - dothething
+  - mypkg
   - pipenv
   - Pipfile
   - PIPX
@@ -30,5 +32,6 @@ words:
   - sdist
   - Setuptools
   - setuptoolsflat
+  - subpkg
   - venv
   - virtualenv

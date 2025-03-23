@@ -11,6 +11,36 @@ This tutorial uses [`build`](https://build.pypa.io/en/stable/) to interface with
 
 Source: <https://setuptools.pypa.io/en/latest/userguide/quickstart.html>
 
+## Code structure
+
+This tutorial is using the "flat layout", such as in this example:
+
+```shell
+project_root_directory
+├── pyproject.toml  # AND/OR setup.cfg, setup.py
+├── ...
+└── mypkg/
+    ├── __init__.py
+    ├── ...
+    ├── module.py #contains run_main function
+    ├── subpkg1/
+    │   ├── __init__.py
+    │   ├── ...
+    │   └── module1.py
+```
+
+Specifically:
+
+- `pyproject.toml` et al live in the project's root directory
+- Each package (a directory containing `__init__.py`) is in its own directory just beneath the
+  project root.  Note that packages are generally named all lowercase without dashes, to avoid
+  incompatible syntax (e.g. `-` gets interpreted as the minus function).
+- Modules are source files within each package, containing functions, classes, etc...
+- Scripts and entrypoints refer to these with "entrypoint syntax": `package.module:function`.  In
+  this example, it would be `dothething = "mypkg.module:run_main"`.
+
+Source: <https://setuptools.pypa.io/en/latest/userguide/package_discovery.html#flat-layout>
+
 ## Create package
 
 ```shell
