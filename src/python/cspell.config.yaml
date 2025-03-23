@@ -23,6 +23,7 @@ words:
   - pydoc
   - pyenv
   - pypi
+  - pyproject
   - pytest
   - PYTHONPATH
   - Setuptools
