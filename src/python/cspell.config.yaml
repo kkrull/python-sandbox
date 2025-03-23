@@ -22,7 +22,9 @@ words:
   - Pipfile
   - pydoc
   - pyenv
+  - pypi
   - pytest
   - PYTHONPATH
+  - Setuptools
   - venv
   - virtualenv
