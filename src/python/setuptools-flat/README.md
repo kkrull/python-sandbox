@@ -19,7 +19,13 @@ pipenv run python -m build
 
 or `make`, for short.  Artifacts appear in `dist/`.
 
-## Run local code with pipenv
+## Run local code with python
+
+```shell
+pipenv run python setuptoolsflat/cli.py
+```
+
+## Run local code with pipenv script
 
 ```shell
 pipenv run main-call
