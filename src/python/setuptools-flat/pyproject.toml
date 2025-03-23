@@ -7,3 +7,6 @@ requires = ["setuptools"]
 name = "setuptools-flat"
 version = "0.0.1"
 dependencies = []
+
+[project.scripts]
+marvin = "setuptools-flat.cli:main"
