@@ -19,12 +19,14 @@ UNZIP ?= unzip
 
 # Sources
 
-sources := Pipfile Pipfile.lock pyproject.toml
+sources_py := $(shell find setuptools-flat -iname '*.py' | sort)
+sources := Pipfile Pipfile.lock pyproject.toml $(sources_py)
 
 .PHONY: debug-sources
 debug-sources:
 	$(info Sources)
 	$(info - sources=$(sources))
+	$(info - sources_py=$(sources_py))
 	@:
 
 # Artifacts
