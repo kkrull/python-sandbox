@@ -12,6 +12,7 @@ VERSION ?= 0.0.1
 
 BREW ?= brew
 BUILD ?= $(PIPENV) run python -m build
+PIP ?= pip
 PIPENV ?= pipenv
 TAR ?= tar
 UNZIP ?= unzip
@@ -21,11 +22,11 @@ debug-programs:
 	$(info Programs)
 	$(info - BREW=$(BREW))
 	$(info - BUILD=$(BUILD))
+	$(info - PIP=$(PIP))
 	$(info - PIPENV=$(PIPENV))
 	$(info - TAR=$(TAR))
 	$(info - UNZIP=$(UNZIP))
 	@:
-
 
 # Sources
 
@@ -73,6 +74,10 @@ wheel: $(artifact_wheel) #> Build the wheel
 wheel-contents: $(artifact_wheel) #> Show what's inside the wheel
 	$(UNZIP) -l $(artifact_wheel)
 
+.PHONY: wheel-install
+wheel-install: $(artifact_wheel) #> Install the wheel as a regular package
+	$(PIP) install .
+
 $(artifact_sdist): $(sources)
 	$(BUILD) --sdist
 
@@ -88,6 +93,10 @@ all: $(artifact_sdist) $(artifact_wheel) #> Build all artifacts
 .PHONY: clean
 clean: #> Remove files built from these sources
 	$(RM) -r build dist $(package_id).egg-info
+
+.PHONY: install
+install: wheel-install #> Install wheel
+	@:
 
 .PHONY: test
 test:
@@ -122,6 +131,10 @@ help: #> Show this help
 		$(MAKEFILE_LIST) \
 	| column -ts : | sed -e 's/_margin_//'
 
+.PHONY: install-tools
+install-tools: homebrew-install #> Install development tools
+	@:
+
 .PHONY: homebrew-install
-homebrew-install: #> Install development tools with homebrew
+homebrew-install:
 	$(BREW) bundle install
