@@ -95,6 +95,14 @@ test:
 
 #. SUPPORT TARGETS
 
+.PHONY: check
+check: check-bin #> Check if artifacts were installed correctly
+	@:
+
+.PHONY: check-bin
+check-bin:
+	@type marvin &> /dev/null || ( echo "marvin: not found"; exit 1 )
+
 .PHONY: debug
 debug: _debug-prefix debug-artifacts debug-programs debug-sources
 
