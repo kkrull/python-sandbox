@@ -5,8 +5,8 @@ default: all
 
 # Project
 
-package_id := unknown
-VERSION ?= 0.0.0
+package_id := setuptools_flat
+VERSION ?= 0.0.1
 
 # Programs
 
@@ -67,7 +67,7 @@ all: $(artifact_sdist) $(artifact_wheel)
 
 .PHONY: clean
 clean:
-	$(RM) -r dist
+	$(RM) -r build dist $(package_id).egg-info
 
 .PHONY: test
 test:
