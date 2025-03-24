@@ -154,8 +154,8 @@ pipenv-clean: #> Uninstall unused packages from virtualenv
 pipenv-install: #> Install development dependencies with pipenv
 	$(PIPENV) install --dev
 
-.PHONY: run-cli-all
-run-cli-all: run-cli-pipenv run-cli-python run-cli-wheel #> Run the CLI all possible ways
+.PHONY: run-cli
+run-cli: run-cli-pipenv run-cli-python run-cli-wheel #> Run the CLI all possible ways
 	@:
 
 .PHONY: run-cli-pipenv
@@ -167,12 +167,6 @@ run-cli-pipenv: #> Run the program from a pipenv script
 run-cli-python: #> Run the program from venv-managed python
 	@echo ""
 	PYTHONPATH=. $(PIPENV) run python ./setuptoolsflat/cli.py
-
-.PHONY: run-cli-wheel
-run-cli-wheel: $(artifact_wheel)
-	@echo ""
-	$(PIPX) install --force --quiet .
-	marvin
 
 #. PYTHON SOURCE DISTRIBUTION TARGETS
 
@@ -189,9 +183,11 @@ $(artifact_sdist): $(sources)
 
 #. PYTHON WHEEL TARGETS
 
+cmd_name := marvin
+
 .PHONY: check-wheel
 check-wheel:
-	@type marvin &> /dev/null || ( echo "marvin: not found"; exit 1 )
+	@type $(cmd_name) &> /dev/null || ( echo "$(cmd_name): not found"; exit 1 )
 
 .PHONY: install-editable-wheel
 install-editable-wheel: $(artifact_wheel) #> Link to the wheel globally with pipx
@@ -200,6 +196,12 @@ install-editable-wheel: $(artifact_wheel) #> Link to the wheel globally with pip
 .PHONY: install-wheel
 install-wheel: $(artifact_wheel) #> Install the wheel globally with pipx
 	$(PIPX) install .
+
+.PHONY: run-cli-wheel
+run-cli-wheel: $(artifact_wheel) #> Run the program from a (re-)installed wheel
+	@echo ""
+	$(PIPX) install --force --quiet .
+	@$(cmd_name)
 
 .PHONY: uninstall-wheel
 uninstall-wheel:
