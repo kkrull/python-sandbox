@@ -154,18 +154,13 @@ pipenv-install: #> Install development dependencies with pipenv
 	$(PIPENV) install --dev
 
 .PHONY: run-cli
-run-cli: run-cli-pipenv run-cli-python run-cli-wheel #> Run the CLI all possible ways
+run-cli: run-cli-python run-cli-wheel #> Run the CLI all possible ways
 	@:
-
-.PHONY: run-cli-pipenv
-run-cli-pipenv: #> Run the program from a pipenv script
-	@echo ""
-	$(PIPENV) run cli
 
 .PHONY: run-cli-python
 run-cli-python: #> Run the program from venv-managed python
 	@echo ""
-	PYTHONPATH=. $(PIPENV) run python ./src/setuptoolssrc/cli.py
+	PYTHONPATH=src $(PIPENV) run python ./src/setuptoolssrc/cli.py
 
 #. PYTHON SOURCE DISTRIBUTION TARGETS
 
