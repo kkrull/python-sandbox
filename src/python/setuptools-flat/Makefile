@@ -16,7 +16,8 @@ default: all
 # Project
 
 package_id := setuptoolsflat
-VERSION ?= 0.0.1
+version_file := $(package_id)/version
+VERSION := $(strip $(shell cat $(version_file)))
 
 .PHONY: debug-project
 debug-project:
@@ -24,6 +25,11 @@ debug-project:
 	$(info - package_id=$(package_id))
 	$(info - VERSION=$(VERSION))
 	@:
+
+$(version_file): setuptoolsflat/_version.py
+	$(PIPENV) run python \
+		-c 'from setuptoolsflat._version import __version__; print(__version__)' \
+		> $(version_file)
 
 # Programs
 
