@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 from setuptoolsflat.greeting import make_greeting
 
 def main():

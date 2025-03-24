@@ -131,7 +131,6 @@ help: #> Show this help
 #. PYTHON TARGETS
 
 BUILD ?= $(PIPENV) run python -m build
-PIP ?= pip
 PIPENV ?= pipenv
 PIPX ?= pipx
 
@@ -143,7 +142,6 @@ clean-build: #> Remove files from running build
 debug-python:
 	$(info Programs)
 	$(info - BUILD=$(BUILD))
-	$(info - PIP=$(PIP))
 	$(info - PIPENV=$(PIPENV))
 	$(info - PIPX=$(PIPX))
 	@:
@@ -155,6 +153,10 @@ pipenv-clean: #> Uninstall unused packages from virtualenv
 .PHONY: pipenv-install
 pipenv-install: #> Install development dependencies with pipenv
 	$(PIPENV) install --dev
+
+.PHONY: run-local-cli
+run-local-cli: #> Run the program directly from the source
+	PYTHONPATH=. $(PIPENV) run python ./setuptoolsflat/cli.py
 
 #. PYTHON SOURCE DISTRIBUTION TARGETS
 
