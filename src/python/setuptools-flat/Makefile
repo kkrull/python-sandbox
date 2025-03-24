@@ -54,49 +54,15 @@ debug-artifacts:
 	$(info - artifact_wheel=$(artifact_wheel))
 	@:
 
-#. PYTHON TARGETS
+#. DEVELOPMENT ENVIRONMENT TARGETS
 
-.PHONY: pipenv-clean
-pipenv-clean: #> Uninstall unused packages from virtualenv
-	$(PIPENV) clean
-
-.PHONY: pipenv-install
-pipenv-install: #> Install development dependencies with pipenv
-	$(PIPENV) install --dev
-
-.PHONY: sdist
-sdist: $(artifact_sdist) #> Build the source distribution
+.PHONY: install-tools
+install-tools: homebrew-install #> Install development tools
 	@:
 
-.PHONY: sdist-contents
-sdist-contents: $(artifact_sdist) #> Show what's inside the sdist
-	$(TAR) tfz $(artifact_sdist)
-
-.PHONY: wheel
-wheel: $(artifact_wheel) #> Build the wheel
-	@:
-
-.PHONY: wheel-contents
-wheel-contents: $(artifact_wheel) #> Show what's inside the wheel
-	$(UNZIP) -l $(artifact_wheel)
-
-.PHONY: wheel-install
-wheel-install: $(artifact_wheel) #> Install the built wheel globally with pipx
-	$(PIPX) install .
-
-.PHONY: wheel-install-editable
-wheel-install-editable: $(artifact_wheel) #> Link to the wheel globally with pipx
-	$(PIPX) install --editable .
-
-.PHONY: wheel-uninstall
-wheel-uninstall:
-	$(PIPX) uninstall $(package_id)
-
-$(artifact_sdist): $(sources)
-	$(BUILD) --sdist
-
-$(artifact_wheel): $(sources)
-	$(BUILD) --wheel
+.PHONY: homebrew-install
+homebrew-install:
+	$(BREW) bundle install
 
 #. STANDARD TARGETS
 
@@ -105,15 +71,15 @@ all: $(artifact_sdist) $(artifact_wheel) #> Build all artifacts
 	@:
 
 .PHONY: clean
-clean: pipenv-clean #> Remove files built from these sources
-	$(RM) -r build dist $(package_id).egg-info
+clean: build-clean pipenv-clean #> Remove files built from these sources
+	@:
 
 .PHONY: install
-install: wheel-install #> Install wheel
+install: wheel-install #> Install artifacts
 	@:
 
 .PHONY: uninstall
-uninstall: wheel-uninstall #> Uninstall wheel
+uninstall: wheel-uninstall #> Uninstall artifacts
 	@:
 
 .PHONY: test
@@ -123,12 +89,8 @@ test:
 #. SUPPORT TARGETS
 
 .PHONY: check
-check: check-bin #> Check if artifacts were installed correctly
+check: wheel-check #> Check if artifacts were installed correctly
 	@:
-
-.PHONY: check-bin
-check-bin:
-	@type marvin &> /dev/null || ( echo "marvin: not found"; exit 1 )
 
 .PHONY: debug
 debug: _debug-prefix debug-artifacts debug-programs debug-sources
@@ -149,10 +111,58 @@ help: #> Show this help
 		$(MAKEFILE_LIST) \
 	| column -ts : | sed -e 's/_margin_//'
 
-.PHONY: install-tools
-install-tools: homebrew-install #> Install development tools
+#. PYTHON TARGETS
+
+.PHONY: build-clean
+build-clean: #> Remove files from running build
+	$(RM) -r build dist $(package_id).egg-info
+
+.PHONY: pipenv-clean
+pipenv-clean: #> Uninstall unused packages from virtualenv
+	$(PIPENV) clean
+
+.PHONY: pipenv-install
+pipenv-install: #> Install development dependencies with pipenv
+	$(PIPENV) install --dev
+
+#. SOURCE DISTRIBUTION TARGETS
+
+.PHONY: sdist
+sdist: $(artifact_sdist) #> Build the source distribution
 	@:
 
-.PHONY: homebrew-install
-homebrew-install:
-	$(BREW) bundle install
+.PHONY: sdist-contents
+sdist-contents: $(artifact_sdist) #> Show what's inside the sdist
+	$(TAR) tfz $(artifact_sdist)
+
+$(artifact_sdist): $(sources)
+	$(BUILD) --sdist
+
+#. WHEEL TARGETS
+
+.PHONY: wheel
+wheel: $(artifact_wheel) #> Build the wheel
+	@:
+
+.PHONY: wheel-check
+wheel-check:
+	@type marvin &> /dev/null || ( echo "marvin: not found"; exit 1 )
+
+.PHONY: wheel-contents
+wheel-contents: $(artifact_wheel) #> Show what's inside the wheel
+	$(UNZIP) -l $(artifact_wheel)
+
+.PHONY: wheel-install
+wheel-install: $(artifact_wheel) #> Install the built wheel globally with pipx
+	$(PIPX) install .
+
+.PHONY: wheel-install-editable
+wheel-install-editable: $(artifact_wheel) #> Link to the wheel globally with pipx
+	$(PIPX) install --editable .
+
+.PHONY: wheel-uninstall
+wheel-uninstall:
+	$(PIPX) uninstall $(package_id)
+
+$(artifact_wheel): $(sources)
+	$(BUILD) --wheel
