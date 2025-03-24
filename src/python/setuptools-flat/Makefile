@@ -13,7 +13,7 @@ default: all
 # - Delegate targets to artifact- or tool-specific dependencies that start with the name of the
 #   top-level target (e.g. `install` depends upon `install-bin` and `install-lib`).
 
-# Project
+#. PROJECT TARGETS
 
 package_id := setuptoolsflat
 version_file := $(package_id)/version
@@ -26,6 +26,11 @@ debug-project:
 	$(info - VERSION=$(VERSION))
 	@:
 
+.PHONY: update-version
+update-version: $(version_file) #> Copy version information from the code into Make's world
+	@:
+
+# Copy the version from the code to a separate file for Make, so it can name artifact targets
 $(version_file): setuptoolsflat/_version.py
 	$(PIPENV) run python \
 		-c 'from setuptoolsflat._version import __version__; print(__version__)' \
