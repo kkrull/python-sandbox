@@ -1,5 +1,7 @@
+from greeting import make_greeting
+
 def main():
-    print("Greetings, Earthling")
+    print(make_greeting())
 
 if __name__ == '__main__':
     main()
