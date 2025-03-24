@@ -34,6 +34,7 @@ words:
   - sdist
   - Setuptools
   - setuptoolsflat
+  - setuptoolssrc
   - subpkg
   - venv
   - virtualenv
