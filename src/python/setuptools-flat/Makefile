@@ -81,7 +81,7 @@ all: sdist wheel #> Build all artifacts
 	@:
 
 .PHONY: clean
-clean: clean-build clean-python pipenv-clean #> Remove files built from these sources
+clean: clean-build clean-python clean-wheel pipenv-clean #> Remove files built from these sources
 	@:
 
 .PHONY: install
@@ -183,10 +183,15 @@ sdist-contents: sdist #> Show what's inside the sdist
 
 artifact_wheel = $(wildcard dist/$(package_id)*.whl)
 cmd_name := marvin
+wheel_timestamp := .wheel-timestamp
 
 .PHONY: check-wheel
 check-wheel:
 	@type $(cmd_name) &> /dev/null || ( echo "$(cmd_name): not found"; exit 1 )
+
+.PHONY: clean-wheel
+clean-wheel:
+	$(RM) $(wheel_timestamp)
 
 .PHONY: install-editable-wheel
 install-editable-wheel: wheel #> Link to the wheel globally with pipx
@@ -207,9 +212,14 @@ uninstall-wheel:
 	$(PIPX) uninstall $(package_id)
 
 .PHONY: wheel
-wheel: $(sources) #> Build the wheel
-	$(BUILD) --wheel
+wheel: $(wheel_timestamp) #> Build the wheel
+	@:
 
 .PHONY: wheel-contents
 wheel-contents: wheel #> Show what's inside the wheel
 	$(UNZIP) -l $(artifact_wheel)
+
+# Phony target timestamp, to avoid guessing target name of artifact named with source code version
+$(wheel_timestamp): $(sources)
+	$(BUILD) --wheel
+	@touch $@
