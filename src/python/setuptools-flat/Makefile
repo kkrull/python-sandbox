@@ -62,9 +62,6 @@ debug-sources:
 
 # Artifacts
 
-artifact_sdist := dist/$(package_id)-$(VERSION).tar.gz
-artifact_wheel := dist/$(package_id)-$(VERSION)-py3-none-any.whl
-
 .PHONY: debug-artifacts
 debug-artifacts:
 	$(info Artifacts:)
@@ -93,7 +90,7 @@ homebrew-install:
 #. STANDARD TARGETS
 
 .PHONY: all
-all: $(artifact_sdist) $(artifact_wheel) #> Build all artifacts
+all: sdist wheel #> Build all artifacts
 	@:
 
 .PHONY: clean
@@ -185,19 +182,21 @@ run-cli-python: #> Run the program from venv-managed python
 
 #. PYTHON SOURCE DISTRIBUTION TARGETS
 
+# artifact_sdist := $(shell find dist -iname '$(package_id)*.tar.gz' | sort)
+artifact_sdist := $(wildcard dist/$(package_id)*.tar.gz)
+
 .PHONY: sdist
-sdist: $(artifact_sdist) #> Build the source distribution
-	@:
+sdist: $(sources) #> Build the source distribution
+	$(BUILD) --sdist
 
 .PHONY: sdist-contents
-sdist-contents: $(artifact_sdist) #> Show what's inside the sdist
+sdist-contents: sdist #> Show what's inside the sdist
 	$(TAR) tfz $(artifact_sdist)
-
-$(artifact_sdist): $(sources)
-	$(BUILD) --sdist
 
 #. PYTHON WHEEL TARGETS
 
+# artifact_wheel := $(shell find dist -iname '$(package_id)*.whl' | sort)
+artifact_wheel := $(wildcard dist/$(package_id)*.whl)
 cmd_name := marvin
 
 .PHONY: check-wheel
@@ -205,15 +204,15 @@ check-wheel:
 	@type $(cmd_name) &> /dev/null || ( echo "$(cmd_name): not found"; exit 1 )
 
 .PHONY: install-editable-wheel
-install-editable-wheel: $(artifact_wheel) #> Link to the wheel globally with pipx
+install-editable-wheel: wheel #> Link to the wheel globally with pipx
 	$(PIPX) install --editable .
 
 .PHONY: install-wheel
-install-wheel: $(artifact_wheel) #> Install the wheel globally with pipx
+install-wheel: wheel #> Install the wheel globally with pipx
 	$(PIPX) install .
 
 .PHONY: run-cli-wheel
-run-cli-wheel: $(artifact_wheel) #> Run the program from a (re-)installed wheel
+run-cli-wheel: wheel #> Run the program from a (re-)installed wheel
 	@echo ""
 	$(PIPX) install --force --quiet .
 	@$(cmd_name)
@@ -223,12 +222,9 @@ uninstall-wheel:
 	$(PIPX) uninstall $(package_id)
 
 .PHONY: wheel
-wheel: $(artifact_wheel) #> Build the wheel
-	@:
+wheel: $(sources) #> Build the wheel
+	$(BUILD) --wheel
 
 .PHONY: wheel-contents
-wheel-contents: $(artifact_wheel) #> Show what's inside the wheel
+wheel-contents: wheel #> Show what's inside the wheel
 	$(UNZIP) -l $(artifact_wheel)
-
-$(artifact_wheel): $(sources)
-	$(BUILD) --wheel
