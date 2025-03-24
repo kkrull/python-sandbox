@@ -4,12 +4,15 @@ build-backend = "setuptools.build_meta"
 requires = ["setuptools"]
 
 [project]
-name = "setuptoolsflat"
-version = "0.0.1"
 dependencies = []
+dynamic = ["version"]
+name = "setuptoolsflat"
 
 [project.scripts]
 marvin = "setuptoolsflat.cli:main"
+
+[tool.setuptools.dynamic]
+version = { attr = "setuptoolsflat._version.__version__" }
 
 [tool.setuptools.package-data]
 setuptoolsflat = ['version']
