@@ -169,7 +169,7 @@ run-cli-python: #> Run the program from venv-managed python
 
 #. PYTHON SOURCE DISTRIBUTION TARGETS
 
-artifact_sdist := $(wildcard dist/$(package_id)*.tar.gz)
+artifact_sdist = $(wildcard dist/$(package_id)*.tar.gz)
 
 .PHONY: sdist
 sdist: $(sources) #> Build the source distribution
@@ -181,7 +181,7 @@ sdist-contents: sdist #> Show what's inside the sdist
 
 #. PYTHON WHEEL TARGETS
 
-artifact_wheel := $(wildcard dist/$(package_id)*.whl)
+artifact_wheel = $(wildcard dist/$(package_id)*.whl)
 cmd_name := marvin
 
 .PHONY: check-wheel
