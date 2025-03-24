@@ -154,9 +154,25 @@ pipenv-clean: #> Uninstall unused packages from virtualenv
 pipenv-install: #> Install development dependencies with pipenv
 	$(PIPENV) install --dev
 
-.PHONY: run-local-cli
-run-local-cli: #> Run the program directly from the source
+.PHONY: run-cli-all
+run-cli-all: run-cli-pipenv run-cli-python run-cli-wheel #> Run the CLI all possible ways
+	@:
+
+.PHONY: run-cli-pipenv
+run-cli-pipenv: #> Run the program from a pipenv script
+	@echo ""
+	$(PIPENV) run cli
+
+.PHONY: run-cli-python
+run-cli-python: #> Run the program from venv-managed python
+	@echo ""
 	PYTHONPATH=. $(PIPENV) run python ./setuptoolsflat/cli.py
+
+.PHONY: run-cli-wheel
+run-cli-wheel: $(artifact_wheel)
+	@echo ""
+	$(PIPX) install --force --quiet .
+	marvin
 
 #. PYTHON SOURCE DISTRIBUTION TARGETS
 
