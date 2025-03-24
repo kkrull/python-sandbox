@@ -81,7 +81,7 @@ all: sdist wheel #> Build all artifacts
 	@:
 
 .PHONY: clean
-clean: clean-build clean-python clean-wheel pipenv-clean #> Remove files built from these sources
+clean: clean-build clean-python clean-sdist clean-wheel pipenv-clean #> Remove files built from these sources
 	@:
 
 .PHONY: install
@@ -170,14 +170,24 @@ run-cli-python: #> Run the program from venv-managed python
 #. PYTHON SOURCE DISTRIBUTION TARGETS
 
 artifact_sdist = $(wildcard dist/$(package_id)*.tar.gz)
+sdist_timestamp := .sdist-timestamp
+
+.PHONY: clean-sdist
+clean-sdist:
+	$(RM) $(sdist_timestamp)
 
 .PHONY: sdist
-sdist: $(sources) #> Build the source distribution
-	$(BUILD) --sdist
+sdist: $(sdist_timestamp) #> Build the source distribution
+	@:
 
 .PHONY: sdist-contents
 sdist-contents: sdist #> Show what's inside the sdist
 	$(TAR) tfz $(artifact_sdist)
+
+# Phony target timestamp, to avoid guessing target name of artifact named with source code version
+$(sdist_timestamp): $(sources)
+	$(BUILD) --sdist
+	@touch $@
 
 #. PYTHON WHEEL TARGETS
 
