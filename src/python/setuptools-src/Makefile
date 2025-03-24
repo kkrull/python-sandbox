@@ -200,7 +200,7 @@ clean-wheel:
 
 .PHONY: install-editable-wheel
 install-editable-wheel: wheel #> Link to the wheel globally with pipx
-	$(PIPX) install --editable .
+	$(PIPX) install --editable --force .
 
 .PHONY: install-wheel
 install-wheel: wheel #> Install the wheel globally with pipx

@@ -78,11 +78,9 @@ pipx install --editable .
 ## Run local code with python
 
 ```shell
-pipenv run python setuptoolssrc/cli.py
+PYTHONPATH=src pipenv run python src/setuptoolssrc/cli.py
 ```
 
 ## Run local code with pipenv script
 
-```shell
-pipenv run main-call
-```
+This doesn't appear to work.

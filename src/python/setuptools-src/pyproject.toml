@@ -11,6 +11,11 @@ name = "setuptoolssrc"
 [project.scripts]
 marvin = "setuptoolssrc.cli:main"
 
+[tool.setuptools]
+# Support src layout for editable mode
+# https://setuptools.pypa.io/en/latest/userguide/package_discovery.html#src-layout
+package-dir = { "" = "src" }
+
 # https://setuptools.pypa.io/en/latest/userguide/pyproject_config.html#dynamic-metadata
 [tool.setuptools.dynamic]
 version = { attr = "setuptoolssrc._version.__version__" }
