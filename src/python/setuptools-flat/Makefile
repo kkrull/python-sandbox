@@ -13,28 +13,15 @@ default: all
 # - Delegate targets to artifact- or tool-specific dependencies that start with the name of the
 #   top-level target (e.g. `install` depends upon `install-bin` and `install-lib`).
 
-#. PROJECT TARGETS
+# Project
 
 package_id := setuptoolsflat
-version_file := $(package_id)/version
-VERSION := $(strip $(shell cat $(version_file)))
 
 .PHONY: debug-project
 debug-project:
 	$(info Project)
 	$(info - package_id=$(package_id))
-	$(info - VERSION=$(VERSION))
 	@:
-
-.PHONY: update-version
-update-version: $(version_file) #> Copy version information from the code into Make's world
-	@:
-
-# Copy the version from the code to a separate file for Make, so it can name artifact targets
-$(version_file): setuptoolsflat/_version.py
-	$(PIPENV) run python \
-		-c 'from setuptoolsflat._version import __version__; print(__version__)' \
-		> $(version_file)
 
 # Programs
 
@@ -182,7 +169,6 @@ run-cli-python: #> Run the program from venv-managed python
 
 #. PYTHON SOURCE DISTRIBUTION TARGETS
 
-# artifact_sdist := $(shell find dist -iname '$(package_id)*.tar.gz' | sort)
 artifact_sdist := $(wildcard dist/$(package_id)*.tar.gz)
 
 .PHONY: sdist
@@ -195,7 +181,6 @@ sdist-contents: sdist #> Show what's inside the sdist
 
 #. PYTHON WHEEL TARGETS
 
-# artifact_wheel := $(shell find dist -iname '$(package_id)*.whl' | sort)
 artifact_wheel := $(wildcard dist/$(package_id)*.whl)
 cmd_name := marvin
 
