@@ -3,29 +3,36 @@
 .PHONY: default
 default: all
 
+# Local conventions:
+# - Distinguish standard and conventional targets from project-specific ones.
+# - Add conventional targets to discover targets and troubleshoot recipes without opening Makefiles.
+# - Group non-standard targets by artifact or tool type, starting with the artifact or tool name.
+# - Create variables in CAPS with defaults that can be overridden at runtime, for external programs.
+# - Create variables in snake_case that are not meant to be overridden at runtime.
+# - Put data and variables along with the targets that use them, when possible.
+# - Delegate targets to artifact- or tool-specific dependencies that start with the name of the
+#   top-level target (e.g. `install` depends upon `install-bin` and `install-lib`).
+
 # Project
 
 package_id := setuptoolsflat
 VERSION ?= 0.0.1
 
+.PHONY: debug-project
+debug-project:
+	$(info Project)
+	$(info - package_id=$(package_id))
+	$(info - VERSION=$(VERSION))
+	@:
+
 # Programs
 
-BREW ?= brew
-BUILD ?= $(PIPENV) run python -m build
-PIP ?= pip
-PIPENV ?= pipenv
-PIPX ?= pipx
 TAR ?= tar
 UNZIP ?= unzip
 
 .PHONY: debug-programs
 debug-programs:
 	$(info Programs)
-	$(info - BREW=$(BREW))
-	$(info - BUILD=$(BUILD))
-	$(info - PIP=$(PIP))
-	$(info - PIPENV=$(PIPENV))
-	$(info - PIPX=$(PIPX))
 	$(info - TAR=$(TAR))
 	$(info - UNZIP=$(UNZIP))
 	@:
@@ -56,6 +63,14 @@ debug-artifacts:
 
 #. DEVELOPMENT ENVIRONMENT TARGETS
 
+BREW ?= brew
+
+.PHONY: debug-tools
+debug-tools:
+	$(info Development Environment)
+	$(info - BREW=$(BREW))
+	@:
+
 .PHONY: install-tools
 install-tools: homebrew-install #> Install development tools
 	@:
@@ -71,15 +86,15 @@ all: $(artifact_sdist) $(artifact_wheel) #> Build all artifacts
 	@:
 
 .PHONY: clean
-clean: build-clean pipenv-clean #> Remove files built from these sources
+clean: clean-build pipenv-clean #> Remove files built from these sources
 	@:
 
 .PHONY: install
-install: wheel-install #> Install artifacts
+install: install-wheel #> Install artifacts
 	@:
 
 .PHONY: uninstall
-uninstall: wheel-uninstall #> Uninstall artifacts
+uninstall: uninstall-wheel #> Uninstall artifacts
 	@:
 
 .PHONY: test
@@ -89,15 +104,17 @@ test:
 #. SUPPORT TARGETS
 
 .PHONY: check
-check: wheel-check #> Check if artifacts were installed correctly
+check: check-wheel #> Check if artifacts were installed correctly
 	@:
 
 .PHONY: debug
-debug: _debug-prefix debug-artifacts debug-programs debug-sources
+debug: _debug-prefix debug-artifacts debug-programs debug-project debug-python debug-sources debug-tools #> Show debugging information
+	@:
 
 .PHONY: _debug-prefix
 _debug-prefix:
 	$(info ==setuptools: flat structure==)
+	@:
 
 # Generate help documentation from Makefiles
 # hash-dot NAME => Section titled NAME
@@ -113,9 +130,23 @@ help: #> Show this help
 
 #. PYTHON TARGETS
 
-.PHONY: build-clean
-build-clean: #> Remove files from running build
+BUILD ?= $(PIPENV) run python -m build
+PIP ?= pip
+PIPENV ?= pipenv
+PIPX ?= pipx
+
+.PHONY: clean-build
+clean-build: #> Remove files from running build
 	$(RM) -r build dist $(package_id).egg-info
+
+.PHONY: debug-python
+debug-python:
+	$(info Programs)
+	$(info - BUILD=$(BUILD))
+	$(info - PIP=$(PIP))
+	$(info - PIPENV=$(PIPENV))
+	$(info - PIPX=$(PIPX))
+	@:
 
 .PHONY: pipenv-clean
 pipenv-clean: #> Uninstall unused packages from virtualenv
@@ -125,7 +156,7 @@ pipenv-clean: #> Uninstall unused packages from virtualenv
 pipenv-install: #> Install development dependencies with pipenv
 	$(PIPENV) install --dev
 
-#. SOURCE DISTRIBUTION TARGETS
+#. PYTHON SOURCE DISTRIBUTION TARGETS
 
 .PHONY: sdist
 sdist: $(artifact_sdist) #> Build the source distribution
@@ -138,31 +169,31 @@ sdist-contents: $(artifact_sdist) #> Show what's inside the sdist
 $(artifact_sdist): $(sources)
 	$(BUILD) --sdist
 
-#. WHEEL TARGETS
+#. PYTHON WHEEL TARGETS
+
+.PHONY: check-wheel
+check-wheel:
+	@type marvin &> /dev/null || ( echo "marvin: not found"; exit 1 )
+
+.PHONY: install-editable-wheel
+install-editable-wheel: $(artifact_wheel) #> Link to the wheel globally with pipx
+	$(PIPX) install --editable .
+
+.PHONY: install-wheel
+install-wheel: $(artifact_wheel) #> Install the wheel globally with pipx
+	$(PIPX) install .
+
+.PHONY: uninstall-wheel
+uninstall-wheel:
+	$(PIPX) uninstall $(package_id)
 
 .PHONY: wheel
 wheel: $(artifact_wheel) #> Build the wheel
 	@:
 
-.PHONY: wheel-check
-wheel-check:
-	@type marvin &> /dev/null || ( echo "marvin: not found"; exit 1 )
-
 .PHONY: wheel-contents
 wheel-contents: $(artifact_wheel) #> Show what's inside the wheel
 	$(UNZIP) -l $(artifact_wheel)
-
-.PHONY: wheel-install
-wheel-install: $(artifact_wheel) #> Install the built wheel globally with pipx
-	$(PIPX) install .
-
-.PHONY: wheel-install-editable
-wheel-install-editable: $(artifact_wheel) #> Link to the wheel globally with pipx
-	$(PIPX) install --editable .
-
-.PHONY: wheel-uninstall
-wheel-uninstall:
-	$(PIPX) uninstall $(package_id)
 
 $(artifact_wheel): $(sources)
 	$(BUILD) --wheel
