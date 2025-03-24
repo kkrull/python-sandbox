@@ -19,7 +19,10 @@ debug-programs:
 ## Project
 
 # https://stackoverflow.com/a/17845120/112682
-SUBDIRS := src/sode
+SUBDIRS := \
+	src/python/setuptools-flat \
+	src/python/setuptools-src \
+	src/sode
 
 .PHONY: $(SUBDIRS)
 $(SUBDIRS):
