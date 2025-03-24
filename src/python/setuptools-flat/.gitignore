@@ -1,3 +1,9 @@
+## Make
+
+# File build times for phony targets, when artifact names aren't known in advance
+.sdist-timestamp
+.wheel-timestamp
+
 ## Python
 
 # build

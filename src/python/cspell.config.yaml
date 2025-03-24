@@ -19,10 +19,12 @@ words:
   - awscli
   - bambam
   - dothething
+  - Illudium
   - mypkg
   - pipenv
   - Pipfile
   - PIPX
+  - pycache
   - pydoc
   - pyenv
   - pypi
