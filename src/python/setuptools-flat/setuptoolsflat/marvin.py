@@ -1,5 +1,4 @@
-from importlib import resources
+from setuptoolsflat import _version
 
 def suite_version():
-    version = resources.read_text(__package__, "version")
-    return version.strip()
+    return _version.__version__
