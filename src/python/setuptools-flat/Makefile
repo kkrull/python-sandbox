@@ -86,7 +86,7 @@ all: $(artifact_sdist) $(artifact_wheel) #> Build all artifacts
 	@:
 
 .PHONY: clean
-clean: clean-build pipenv-clean #> Remove files built from these sources
+clean: clean-build clean-python pipenv-clean #> Remove files built from these sources
 	@:
 
 .PHONY: install
@@ -137,6 +137,10 @@ PIPX ?= pipx
 .PHONY: clean-build
 clean-build: #> Remove files from running build
 	$(RM) -r build dist $(package_id).egg-info
+
+.PHONY: clean-python
+clean-python: #> Remove files from running python
+	$(RM) -r **/__pycache__
 
 .PHONY: debug-python
 debug-python:

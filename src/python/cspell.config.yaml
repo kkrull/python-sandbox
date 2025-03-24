@@ -24,6 +24,7 @@ words:
   - pipenv
   - Pipfile
   - PIPX
+  - pycache
   - pydoc
   - pyenv
   - pypi
