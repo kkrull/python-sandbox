@@ -10,3 +10,6 @@ dependencies = []
 
 [project.scripts]
 marvin = "setuptoolsflat.cli:main"
+
+[tool.setuptools.package-data]
+setuptoolsflat = ['version']
