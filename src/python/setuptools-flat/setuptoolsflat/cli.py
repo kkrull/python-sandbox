@@ -1,4 +1,4 @@
-from greeting import make_greeting
+from setuptoolsflat.greeting import make_greeting
 
 def main():
     print(make_greeting())
