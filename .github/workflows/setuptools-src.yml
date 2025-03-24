@@ -1,0 +1,87 @@
+name: setuptools-src
+description: Check setuptools-src
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/setuptools-src.yml'
+      - 'src/python/setuptools-src/**'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/setuptools-src.yml'
+      - 'src/python/setuptools-src/**'
+  workflow_dispatch:
+
+env:
+  python_cache: 'pipenv'
+  python_version: '3.13.2'
+  working_directory: ./src/python/setuptools-src
+
+permissions:
+  contents: read
+
+jobs:
+  setuptools-src:
+    defaults:
+      run:
+        working-directory: ${{ env.working_directory }}
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          cache: ${{ env.python_cache }}
+          cache-dependency-path: ${{ env.working_directory }}/Pipfile.lock
+          python-version: ${{ env.python_version }}
+
+      - run: python --version
+      - run: pip --version
+      - run: pipx --version
+
+      - run: pip install pipenv
+      - run: pipenv --version
+      - run: pipenv install --dev
+
+  setuptools-src-build:
+    defaults:
+      run:
+        working-directory: ${{ env.working_directory }}
+    needs: setuptools-src
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          cache: ${{ env.python_cache }}
+          cache-dependency-path: ${{ env.working_directory }}/Pipfile.lock
+          python-version: ${{ env.python_version }}
+
+      # Packages were already loaded from cache, but commands like pipenv et al won't be on the path
+      - run: pip install pipenv
+      - run: pipenv install --dev
+      - run: make
+
+  setuptools-src-install:
+    defaults:
+      run:
+        working-directory: ${{ env.working_directory }}
+    needs: setuptools-src-build
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          cache: ${{ env.python_cache }}
+          cache-dependency-path: ${{ env.working_directory }}/Pipfile.lock
+          python-version: ${{ env.python_version }}
+
+      # Packages were already loaded from cache, but commands like pipenv et al won't be on the path
+      - run: pip install pipenv
+      - run: pipenv install --dev
+      - run: make install
+      - run: marvin
