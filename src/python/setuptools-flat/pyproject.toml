@@ -11,6 +11,7 @@ name = "setuptoolsflat"
 [project.scripts]
 marvin = "setuptoolsflat.cli:main"
 
+# https://setuptools.pypa.io/en/latest/userguide/pyproject_config.html#dynamic-metadata
 [tool.setuptools.dynamic]
 version = { attr = "setuptoolsflat._version.__version__" }
 
