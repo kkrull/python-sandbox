@@ -139,7 +139,7 @@ clean-python: #> Remove files from running python
 
 .PHONY: debug-python
 debug-python:
-	$(info Programs)
+	$(info Python)
 	$(info - BUILD=$(BUILD))
 	$(info - PIPENV=$(PIPENV))
 	$(info - PIPX=$(PIPX))
