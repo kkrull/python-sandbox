@@ -17,7 +17,10 @@ version: "0.2"
 words:
   - Madoshakalaka
   - plette
+  - pycache
   - pypi
+  - pyproject
   - requirementslib
+  - sdist
   - setuptools
   - vistir
