@@ -1,0 +1,26 @@
+# https://setuptools.pypa.io/en/latest/userguide/quickstart.html#basic-use
+[build-system]
+build-backend = "setuptools.build_meta"
+requires = ["setuptools"]
+
+[project]
+dependencies = []
+dynamic = ["version"]
+name = "sode"
+
+[project.scripts]
+sode = "sode.cli:main"
+
+# https://black.readthedocs.io/en/stable/usage_and_configuration/the_basics.html#configuration-via-a-file
+[tool.black]
+line-length = 100
+
+# https://pycqa.github.io/isort/docs/configuration/config_files.html
+# https://pycqa.github.io/isort/docs/configuration/options.html
+[tool.isort]
+line_length = 100
+profile = 'black'
+
+# https://setuptools.pypa.io/en/latest/userguide/pyproject_config.html#dynamic-metadata
+[tool.setuptools.dynamic]
+version = { attr = "sode._version.__version__" }

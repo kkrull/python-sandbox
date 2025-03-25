@@ -1,5 +1,13 @@
+## Make
+
+# File build times for phony targets, when artifact names aren't known in advance
+.sdist-timestamp
+.wheel-timestamp
+
 ## Python
 
-# setuptools
+# build
+*.egg-info/
+**/__pycache__/
 build/
-sode.egg-info/
+dist/

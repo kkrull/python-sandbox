@@ -28,6 +28,7 @@ words:
   - fswatch
   - Haines
   - INSTALLFLAGS
+  - isort
   - kata
   - katas
   - kkrull
@@ -42,6 +43,7 @@ words:
   - Pipfile
   - pipx
   - pyenv
+  - pyproject
   - setuptools
   - shellcheck
   - sode

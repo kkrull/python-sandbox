@@ -1,5 +1,5 @@
-from machine import Pin
 import utime
+from machine import Pin
 
 led = Pin("LED", Pin.OUT)
 

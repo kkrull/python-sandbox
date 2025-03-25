@@ -7,32 +7,9 @@ include ../../../make.d/help.mk
 include ../../../make.d/homebrew.mk
 include ../../../make.d/paths-system.mk
 
-## Sources
+## Environment
 
-# NB: the wildcard function is not recursive: https://stackoverflow.com/a/2483203/112682
-source_main := src/sode/sode.py
-source_version := version
-sources := $(shell find src -type f -name '*.py' | sort)
-
-.PHONY: debug-sources
-debug-sources:
-	$(info Sources:)
-	$(info - source_main: $(source_main))
-	$(info - source_version: $(source_version))
-	$(info - sources: $(sources))
-	@:
-
-## Artifacts
-
-executable := sode.py
-
-.PHONY: debug-artifacts
-debug-artifacts:
-	$(info Artifacts:)
-	$(info - executable: $(executable))
-	@:
-
-## Paths
+### Paths
 
 .PHONY: debug-paths
 debug-paths:
@@ -42,70 +19,79 @@ debug-paths:
 	$(info - libexecdirpkg: $(libexecdirpkg))
 	@:
 
-## Programs
+### Programs
 
-INSTALL ?= install
-INSTALLFLAGS := -g 0 -o 0
-
-PIP ?= pip
-PIPENV ?= pipenv
-PYTHON ?= python
+TAR ?= tar
+UNZIP ?= unzip
 
 .PHONY: debug-programs
 debug-programs:
-	$(info Programs:)
-	$(info - INSTALL: $(INSTALL))
-	$(info - INSTALLFLAGS: $(INSTALLFLAGS))
-	$(info - PIP: $(PIP))
-	$(info - PIPENV: $(PIPENV))
-	$(info - PYTHON: $(PYTHON))
+	$(info Programs)
+	$(info - TAR=$(TAR))
+	$(info - UNZIP=$(UNZIP))
 	@:
 
-#. PYTHON TARGETS
+## Project
 
-.PHONY: pipenv-clean
-pipenv-clean: #> Uninstall packages not listed in Pipfile
-	$(PIPENV) clean
+package_id := sode
 
-.PHONY: pipenv-lint-flake8
-pipenv-lint-flake8: #> Lint sources with flake8
-	$(PIPENV) run lint-flake8
+.PHONY: debug-project
+debug-project:
+	$(info Project)
+	$(info - package_id=$(package_id))
+	@:
 
-.PHONY: pipenv-main
-pipenv-main: #> Run the main script with pipenv
-	$(PIPENV) run main
+### Sources
+
+sources_py := $(shell find sode -type f -iname '*.py' | sort)
+sources := Pipfile Pipfile.lock pyproject.toml $(sources_py)
+
+.PHONY: debug-sources
+debug-sources:
+	$(info Sources:)
+	$(info - sources=$(sources))
+	$(info - sources_py=$(sources_py))
+	@:
+
+### Artifacts
+
+.PHONY: debug-artifacts
+debug-artifacts:
+	$(info Artifacts:)
+	$(info - artifact_sdist=$(artifact_sdist))
+	$(info - artifact_wheel=$(artifact_wheel))
+	@:
 
 #. STANDARD TARGETS
 
-.NOTPARALLEL: all
 .PHONY: all
-all:
+all: sdist wheel #> Build all artifacts
 	@:
 
 .PHONY: clean
-clean: pipenv-clean
-	$(RM) -r src/build src/sode.egg-info
+clean: clean-build clean-pipenv clean-python clean-sdist clean-wheel #> Remove files built from these sources
+	@:
 
 .PHONY: install
-install: #> Install package and links with pip
-	( cd src && $(PIP) install . )
+install: install-wheel #> Install artifacts
+	@:
 
 .PHONY: test
-test: pipenv-lint-flake8
+test: black-check isort-check #> Run checks
 
 .PHONY: uninstall
-uninstall: #> Uninstall package with pip
-	$(PIP) uninstall -y sode
+uninstall: uninstall-wheel #> Uninstall artifacts
+	@:
 
 #. SUPPORT TARGETS
 
 .PHONY: check
-check: #> Check if `make install` worked
-	@type sode &> /dev/null || ( echo "sode: Not found"; exit 1)
+check: check-wheel #> Check if artifacts were installed correctly
+	@:
 
 .PHONY: debug
 .NOTPARALLEL: debug
-debug: _debug-prefix debug-artifacts debug-paths debug-programs debug-sources #> Show debugging information
+debug: _debug-prefix debug-artifacts debug-paths debug-programs debug-project debug-python debug-sources #> Show debugging information
 	@:
 
 .PHONY: _debug-prefix
@@ -113,9 +99,141 @@ _debug-prefix:
 	$(info ==sode python==)
 	@:
 
-.PHONY: install-assets
-install-assets:
+.PHONY: format
+format: black-format isort-format
 	@:
 
+#. DEVELOPMENT ENVIRONMENT TARGETS
+
 .PHONY: install-tools
-install-tools: homebrew-bundle-install
+install-tools: homebrew-bundle-install #> Install development tools
+	@:
+
+#. PYTHON TARGETS
+
+BUILD ?= $(PIPENV) run python -m build
+PIPENV ?= pipenv
+PIPX ?= pipx
+
+.PHONY: black-check
+black-check: #> Check sources with black
+	$(PIPENV) run black-check
+
+.PHONY: black-format
+black-format: #> Format sources with black
+	$(PIPENV) run black-format
+
+.PHONY: clean-build
+clean-build: #> Remove files from running build
+	$(RM) -r build dist $(package_id).egg-info
+
+.PHONY: clean-pipenv
+clean-pipenv: #> Uninstall packages not listed in Pipfile
+	$(PIPENV) clean
+
+.PHONY: clean-python
+clean-python: #> Remove files from running python
+	$(RM) -r **/__pycache__
+
+.PHONY: debug-python
+debug-python:
+	$(info Python)
+	$(info - BUILD=$(BUILD))
+	$(info - PIPENV=$(PIPENV))
+	$(info - PIPX=$(PIPX))
+	@:
+
+.PHONY: isort-check
+isort-check: #> Check sources with isort
+	$(PIPENV) run isort-check
+
+.PHONY: isort-format
+isort-format: #> Format sources with isort
+	$(PIPENV) run isort-format
+
+.PHONY: pipenv-install
+pipenv-install: #> Install development dependencies with pipenv
+	$(PIPENV) install --dev
+
+#. PYTHON SOURCE DISTRIBUTION TARGETS
+
+artifact_sdist = $(wildcard dist/$(package_id)*.tar.gz)
+sdist_timestamp := .sdist-timestamp
+
+.PHONY: clean-sdist
+clean-sdist:
+	$(RM) $(sdist_timestamp)
+
+.PHONY: sdist
+sdist: $(sdist_timestamp) #> Build the source distribution
+	@:
+
+.PHONY: sdist-contents
+sdist-contents: sdist #> Show what's inside the sdist
+	$(TAR) tfz $(artifact_sdist)
+
+# Phony target timestamp, to avoid guessing target name of artifact named with source code version
+$(sdist_timestamp): $(sources)
+	$(BUILD) --sdist
+	@touch $@
+
+#. PYTHON WHEEL TARGETS
+
+artifact_wheel = $(wildcard dist/$(package_id)*.whl)
+cmd_name := sode
+wheel_timestamp := .wheel-timestamp
+
+.PHONY: check-wheel
+check-wheel:
+	@type $(cmd_name) &> /dev/null || ( echo "$(cmd_name): not found"; exit 1 )
+
+.PHONY: clean-wheel
+clean-wheel:
+	$(RM) $(wheel_timestamp)
+
+.PHONY: install-editable-wheel
+install-editable-wheel: wheel #> Link to the wheel globally with pipx
+	$(PIPX) install --editable .
+
+.PHONY: install-wheel
+install-wheel: wheel #> Install the wheel globally with pipx
+	$(PIPX) install .
+
+.PHONY: uninstall-wheel
+uninstall-wheel:
+	$(PIPX) uninstall $(package_id)
+
+.PHONY: wheel
+wheel: $(wheel_timestamp) #> Build the wheel
+	@:
+
+.PHONY: wheel-contents
+wheel-contents: wheel #> Show what's inside the wheel
+	$(UNZIP) -l $(artifact_wheel)
+
+# Phony target timestamp, to avoid guessing target name of artifact named with source code version
+$(wheel_timestamp): $(sources)
+	$(BUILD) --wheel
+	@touch $@
+
+#. SODE TARGETS
+
+.PHONY: run-cli
+run-cli: run-cli-pipenv run-cli-python run-cli-wheel #> Run the CLI all possible ways
+	@:
+
+.PHONY: run-cli-pipenv
+run-cli-pipenv: #> Run the program from a pipenv script
+	@echo ""
+	$(PIPENV) run sode-cli
+
+.PHONY: run-cli-python
+run-cli-python: #> Run the program from venv-managed python
+	@echo ""
+	PYTHONPATH=. $(PIPENV) run python ./sode/cli.py
+
+.PHONY: run-cli-wheel
+run-cli-wheel: wheel #> Run the program from a (re-)installed wheel
+	@echo ""
+	$(PIPX) install --force --quiet .
+	@$(cmd_name)

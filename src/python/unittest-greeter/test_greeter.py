@@ -1,5 +1,7 @@
 import unittest
+
 from greeter import greet
+
 
 class GreeterGreetTest(unittest.TestCase):
     def test_no_args(self):

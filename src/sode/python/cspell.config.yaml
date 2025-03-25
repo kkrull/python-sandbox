@@ -15,9 +15,16 @@ import:
   - ../cspell.config.yaml
 version: "0.2"
 words:
+  - autopep
+  - isort
   - Madoshakalaka
   - plette
+  - pycache
   - pypi
+  - pyproject
+  - PYTHONPATH
   - requirementslib
+  - sdist
   - setuptools
+  - venv
   - vistir

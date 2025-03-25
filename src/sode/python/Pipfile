@@ -9,13 +9,17 @@ sort_pipfile = true
 [packages]
 
 [dev-packages]
-flake8 = "*"
+black = "*"
+build = "*"
+isort = "*"
 setuptools = "*"
 
 [requires]
 python_version = "3.13"
 
 [scripts]
-lint-flake8 = 'flake8 --max-line-length=120 --ignore=E402,F401,E126,E128'
-main-package = { call = "sode.sode:main()" }
-main-python = 'python src/sode/sode.py'
+black-check = 'black --check sode'
+black-format = 'black sode'
+isort-check = 'isort --check sode'
+isort-format = 'isort sode'
+sode-cli = { call = "sode.cli:main()" }
