@@ -21,9 +21,14 @@ debug-paths:
 
 ### Programs
 
+TAR ?= tar
+UNZIP ?= unzip
+
 .PHONY: debug-programs
 debug-programs:
-	$(info Programs:)
+	$(info Programs)
+	$(info - TAR=$(TAR))
+	$(info - UNZIP=$(UNZIP))
 	@:
 
 ## Project
