@@ -77,7 +77,7 @@ install: install-wheel #> Install artifacts
 	@:
 
 .PHONY: test
-test: black-check #> Run checks
+test: black-check isort-check #> Run checks
 
 .PHONY: uninstall
 uninstall: uninstall-wheel #> Uninstall artifacts
@@ -100,7 +100,7 @@ _debug-prefix:
 	@:
 
 .PHONY: format
-format: black-format
+format: black-format isort-format
 	@:
 
 #. DEVELOPMENT ENVIRONMENT TARGETS
@@ -142,6 +142,14 @@ debug-python:
 	$(info - PIPENV=$(PIPENV))
 	$(info - PIPX=$(PIPX))
 	@:
+
+.PHONY: isort-check
+isort-check: #> Check sources with isort
+	$(PIPENV) run isort-check
+
+.PHONY: isort-format
+isort-format: #> Format sources with isort
+	$(PIPENV) run isort-format
 
 .PHONY: pipenv-install
 pipenv-install: #> Install development dependencies with pipenv

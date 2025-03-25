@@ -11,6 +11,7 @@ sort_pipfile = true
 [dev-packages]
 black = "*"
 build = "*"
+isort = "*"
 setuptools = "*"
 
 [requires]
@@ -19,4 +20,6 @@ python_version = "3.13"
 [scripts]
 black-check = 'black --check sode'
 black-format = 'black sode'
+isort-check = 'isort --check sode'
+isort-format = 'isort sode'
 sode-cli = { call = "sode.cli:main()" }

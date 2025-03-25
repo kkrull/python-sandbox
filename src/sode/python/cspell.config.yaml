@@ -16,6 +16,7 @@ import:
 version: "0.2"
 words:
   - autopep
+  - isort
   - Madoshakalaka
   - plette
   - pycache
