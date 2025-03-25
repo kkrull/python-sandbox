@@ -38,7 +38,7 @@ debug-programs:
 #. DEVELOPMENT ENVIRONMENT TARGETS
 
 .PHONY: install-tools
-install-tools: homebrew-bundle-install #> Install development tools
+install-tools: homebrew-bundle-install $(SUBDIRS) #> Install development tools
 	@:
 
 #. STANDARD TARGETS

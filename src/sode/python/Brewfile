@@ -1,3 +1,4 @@
 tap "homebrew/bundle"
-brew "pyenv"
 brew "pipenv"
+brew "pipx"
+brew "pyenv"

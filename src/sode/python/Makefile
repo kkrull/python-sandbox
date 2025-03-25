@@ -61,6 +61,12 @@ debug-programs:
 	$(info - PYTHON: $(PYTHON))
 	@:
 
+#. DEVELOPMENT ENVIRONMENT TARGETS
+
+.PHONY: install-tools
+install-tools: homebrew-bundle-install #> Install development tools
+	@:
+
 #. PYTHON TARGETS
 
 .PHONY: pipenv-clean
@@ -112,10 +118,3 @@ debug: _debug-prefix debug-artifacts debug-paths debug-programs debug-sources #>
 _debug-prefix:
 	$(info ==sode python==)
 	@:
-
-.PHONY: install-assets
-install-assets:
-	@:
-
-.PHONY: install-tools
-install-tools: homebrew-bundle-install

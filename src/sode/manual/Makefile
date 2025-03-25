@@ -10,7 +10,7 @@ include ../../../make.d/help.mk
 include ../../../make.d/homebrew.mk
 include ../../../make.d/paths-system.mk
 
-### Sources
+## Sources
 
 sources := $(shell find . -type f -name '*.md' | sort)
 sources_man1 := $(filter %.1.md,$(sources))
@@ -38,7 +38,7 @@ debug-artifacts:
 	$(info - objects_man7: $(objects_man7))
 	@:
 
-### Paths
+## Paths
 
 prefix ?= /usr/local
 datarootdir := $(prefix)/share
@@ -73,6 +73,12 @@ debug-programs:
 	$(info - MANDOC: $(MANDOC))
 	$(info - PANDOC: $(PANDOC))
 	$(info - PANDOCFLAGS: $(PANDOCFLAGS))
+	@:
+
+#. DEVELOPMENT ENVIRONMENT TARGETS
+
+.PHONY: install-tools
+install-tools: homebrew-bundle-install #> Install development tools
 	@:
 
 #. GROFF TARGETS
@@ -135,10 +141,3 @@ debug: _debug-prefix debug-artifacts debug-paths debug-programs debug-sources #>
 _debug-prefix:
 	$(info ==sode manuals==)
 	@:
-
-.PHONY: install-assets
-install-assets:
-	@:
-
-.PHONY: install-tools
-install-tools: homebrew-bundle-install
