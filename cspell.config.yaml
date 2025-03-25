@@ -43,6 +43,7 @@ words:
   - Pipfile
   - pipx
   - pyenv
+  - pyproject
   - setuptools
   - shellcheck
   - sode

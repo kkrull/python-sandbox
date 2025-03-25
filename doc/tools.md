@@ -1,5 +1,17 @@
 # Tools
 
+## [Black](https://black.readthedocs.io/en/stable/index.html)
+
+_The uncompromising code formatter_
+
+- Documentation:
+  - Configuration: <https://black.readthedocs.io/en/stable/usage_and_configuration/the_basics.html#configuration-via-a-file>
+  - Version control integration: <https://black.readthedocs.io/en/stable/integrations/source_version_control.html#version-control-integration>
+- Files:
+  - `pyproject.toml`: `[tool.black]` section.
+- Related tools:
+  - [`pre-commit`](#pre-commit)
+
 ## [`checkmake`](https://github.com/mrtazz/checkmake)
 
 _checkmake is an experimental tool for linting and checking Makefiles._
@@ -64,6 +76,18 @@ _Automates project-related tasks, such as rendering project audio._
   - Portable Makefiles: <https://www.oreilly.com/openbook/make3/book/ch07.pdf>
 - Files:
   - `Makefile`
+
+## [isort](https://pycqa.github.io/isort/index.html)
+
+_isort your imports, so you don't have to._
+
+- Documentation:
+  - Options: <https://pycqa.github.io/isort/index.html>
+  - Pre-commit integration: <https://pycqa.github.io/isort/docs/configuration/pre-commit.html>
+- Files:
+  - `pyproject.toml`: `[tool.isort]` section.
+- Related tools:
+  - [`pre-commit`](#pre-commit)
 
 ## [Markdown](https://daringfireball.net/projects/markdown/)
 
