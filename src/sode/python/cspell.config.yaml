@@ -20,7 +20,9 @@ words:
   - pycache
   - pypi
   - pyproject
+  - PYTHONPATH
   - requirementslib
   - sdist
   - setuptools
+  - venv
   - vistir
