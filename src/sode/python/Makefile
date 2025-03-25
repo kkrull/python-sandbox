@@ -77,7 +77,7 @@ install: install-wheel #> Install artifacts
 	@:
 
 .PHONY: test
-test: pipenv-lint-autopep8 #> Run checks
+test: pipenv-black-check #> Run checks
 
 .PHONY: uninstall
 uninstall: uninstall-wheel #> Uninstall artifacts
@@ -135,9 +135,13 @@ pipenv-clean: #> Uninstall packages not listed in Pipfile
 pipenv-install: #> Install development dependencies with pipenv
 	$(PIPENV) install --dev
 
-.PHONY: pipenv-lint-autopep8
-pipenv-lint-autopep8: #> Lint sources with autopep8
-	$(PIPENV) run lint-autopep8
+.PHONY: pipenv-black
+pipenv-black: #> Format sources with black
+	$(PIPENV) run black
+
+.PHONY: pipenv-black-check
+pipenv-black-check: #> Check sources with black
+	$(PIPENV) run black-check
 
 .PHONY: run-cli
 run-cli: run-cli-pipenv run-cli-python run-cli-wheel #> Run the CLI all possible ways
@@ -146,7 +150,7 @@ run-cli: run-cli-pipenv run-cli-python run-cli-wheel #> Run the CLI all possible
 .PHONY: run-cli-pipenv
 run-cli-pipenv: #> Run the program from a pipenv script
 	@echo ""
-	$(PIPENV) run cli
+	$(PIPENV) run sode-cli
 
 .PHONY: run-cli-python
 run-cli-python: #> Run the program from venv-managed python
