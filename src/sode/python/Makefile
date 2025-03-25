@@ -38,7 +38,7 @@ debug-project:
 
 ### Sources
 
-sources_py := $(shell find sode -type f -iname '*.py' | sort)
+sources_py := $(shell find src -type f -iname '*.py' | sort)
 sources := Pipfile Pipfile.lock pyproject.toml $(sources_py)
 
 .PHONY: debug-sources
