@@ -46,7 +46,7 @@ repos:
         language_version: python3.13
         args:
         - --line-length=100
-        - src/sode/python/**
+        - src/sode/python
 
   # https://pycqa.github.io/isort/docs/configuration/pre-commit.html
   - repo: https://github.com/pycqa/isort
@@ -57,4 +57,4 @@ repos:
         args:
         - --line-length 100
         - --profile black
-        - src/sode/python/**
+        - src/sode/python

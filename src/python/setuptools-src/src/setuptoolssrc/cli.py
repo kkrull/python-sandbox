@@ -8,5 +8,6 @@ def main():
     print(f"Version: {suite_version()}")
     print(make_greeting())
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()
