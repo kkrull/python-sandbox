@@ -4,20 +4,8 @@
 default: all
 
 include ../../make.d/help.mk
+include ../../make.d/homebrew.mk
 include ../../make.d/pre-commit.mk
-
-## Sources
-
-## Artifacts
-
-## Paths
-
-## Programs
-
-.PHONY: debug-programs
-debug-programs:
-	$(info Programs:)
-	@:
 
 ## Project
 
@@ -32,6 +20,25 @@ $(SUBDIRS):
 debug-project:
 	$(info Project:)
 	$(info - SUBDIRS: $(SUBDIRS))
+	@:
+
+## Sources
+
+## Artifacts
+
+## Paths
+
+## Programs
+
+.PHONY: debug-programs
+debug-programs:
+	$(info Programs:)
+	@:
+
+#. DEVELOPMENT ENVIRONMENT TARGETS
+
+.PHONY: install-tools
+install-tools: homebrew-bundle-install #> Install development tools
 	@:
 
 #. STANDARD TARGETS
@@ -61,9 +68,3 @@ debug: _debug-prefix debug-programs debug-project $(SUBDIRS) #> Show debugging i
 _debug-prefix:
 	$(info ==(Brode)sode==)
 	@:
-
-.PHONY: install-assets
-install-assets: $(SUBDIRS)
-
-.PHONY: install-tools
-install-tools: $(SUBDIRS)
