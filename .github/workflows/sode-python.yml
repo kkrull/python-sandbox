@@ -63,7 +63,7 @@ jobs:
       # Packages were already loaded from cache, but commands like pipenv et al won't be on the path
       - run: pip install pipenv
       - run: pipenv install --dev
-      - run: make
+      - run: make all
 
   sode-python-check:
     defaults:
@@ -83,7 +83,7 @@ jobs:
       # Packages were already loaded from cache, but commands like pipenv et al won't be on the path
       - run: pip install pipenv
       - run: pipenv install --dev
-      - run: pipenv run lint-flake8 --verbose
+      - run: make test
 
   sode-python-install:
     defaults:

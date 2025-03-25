@@ -7,15 +7,15 @@ verify_ssl = true
 sort_pipfile = true
 
 [packages]
+autopep8 = "*"
 
 [dev-packages]
 build = "*"
-flake8 = "*"
 setuptools = "*"
 
 [requires]
 python_version = "3.13"
 
 [scripts]
-lint-flake8 = 'flake8 --max-line-length=120 --ignore=E402,F401,E126,E128'
 cli = { call = "sode.cli:main()" }
+lint-autopep8 = 'autopep8 sode'

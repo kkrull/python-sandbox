@@ -11,6 +11,15 @@ name = "sode"
 [project.scripts]
 sode = "sode.cli:main"
 
+# https://pypi.org/project/autopep8/
+[tool.autopep8]
+aggressive = 3
+exit_code = true
+ignore = []
+in-place = true
+max_line_length = 120
+recursive = true
+
 # https://setuptools.pypa.io/en/latest/userguide/pyproject_config.html#dynamic-metadata
 [tool.setuptools.dynamic]
 version = { attr = "sode._version.__version__" }

@@ -77,7 +77,7 @@ install: install-wheel #> Install artifacts
 	@:
 
 .PHONY: test
-test: pipenv-lint-flake8 #> Run checks
+test: pipenv-lint-autopep8 #> Run checks
 
 .PHONY: uninstall
 uninstall: uninstall-wheel #> Uninstall artifacts
@@ -135,9 +135,9 @@ pipenv-clean: #> Uninstall packages not listed in Pipfile
 pipenv-install: #> Install development dependencies with pipenv
 	$(PIPENV) install --dev
 
-.PHONY: pipenv-lint-flake8
-pipenv-lint-flake8: #> Lint sources with flake8
-	$(PIPENV) run lint-flake8
+.PHONY: pipenv-lint-autopep8
+pipenv-lint-autopep8: #> Lint sources with autopep8
+	$(PIPENV) run lint-autopep8
 
 .PHONY: run-cli
 run-cli: run-cli-pipenv run-cli-python run-cli-wheel #> Run the CLI all possible ways
