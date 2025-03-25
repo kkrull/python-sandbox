@@ -134,9 +134,19 @@ pipenv-install: #> Install development dependencies with pipenv
 pipenv-lint-flake8: #> Lint sources with flake8
 	$(PIPENV) run lint-flake8
 
-.PHONY: pipenv-main
-pipenv-main: #> Run the main script with pipenv
-	$(PIPENV) run main
+.PHONY: run-cli
+run-cli: run-cli-pipenv run-cli-python run-cli-wheel #> Run the CLI all possible ways
+	@:
+
+.PHONY: run-cli-pipenv
+run-cli-pipenv: #> Run the program from a pipenv script
+	@echo ""
+	$(PIPENV) run cli
+
+.PHONY: run-cli-python
+run-cli-python: #> Run the program from venv-managed python
+	@echo ""
+	PYTHONPATH=. $(PIPENV) run python ./sode/cli.py
 
 #. PYTHON SOURCE DISTRIBUTION TARGETS
 
