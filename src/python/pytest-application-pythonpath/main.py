@@ -2,6 +2,7 @@ import sys
 
 from greeter import Greeter
 
+
 def main():
     greeter = Greeter()
     print("{}".format(greeter.make_greeting()))

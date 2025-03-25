@@ -1,5 +1,6 @@
 from greeter import Greeter
 
+
 class TestGreeter:
     def test_greet_with_no_name(self):
         subject = Greeter()

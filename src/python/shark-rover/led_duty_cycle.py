@@ -1,5 +1,5 @@
-from machine import Pin, PWM
 import utime
+from machine import PWM, Pin
 
 led = PWM(Pin(16, Pin.OUT))
 led.freq(1000)

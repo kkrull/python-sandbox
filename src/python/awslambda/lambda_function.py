@@ -1,5 +1,6 @@
 import json
 
+
 def lambda_handler(event, context):
     print('Hello from awscli-greeter!')
     print('Event: {}'.format(json.dumps(event)))

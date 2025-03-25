@@ -1,6 +1,8 @@
-import re
 import os
+import re
+
 from . import greeter
+
 
 class TestGreeter:
     def test_greet_with_no_name(self):

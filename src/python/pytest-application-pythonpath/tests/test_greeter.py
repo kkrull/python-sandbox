@@ -1,5 +1,4 @@
 import pytest
-
 from greeter import Greeter
 
 

@@ -37,3 +37,14 @@ repos:
       - id: check-yaml
       - id: trailing-whitespace
         exclude: '.*[.][1-8][.]md$'
+
+  # https://pycqa.github.io/isort/docs/configuration/pre-commit.html
+  - repo: https://github.com/pycqa/isort
+    rev: 6.0.1
+    hooks:
+      - id: isort
+        name: isort-sode
+        args:
+        - --line-length 100
+        - --profile black
+        - src/sode/python

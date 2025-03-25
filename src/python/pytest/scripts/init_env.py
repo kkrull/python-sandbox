@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
-from os import path
 import shutil
 import sys
+from os import path
+
 
 def main():
     target_file = '.env'

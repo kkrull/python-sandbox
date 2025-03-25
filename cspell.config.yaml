@@ -28,6 +28,7 @@ words:
   - fswatch
   - Haines
   - INSTALLFLAGS
+  - isort
   - kata
   - katas
   - kkrull
