@@ -7,6 +7,30 @@ include ../../../make.d/help.mk
 include ../../../make.d/homebrew.mk
 include ../../../make.d/paths-system.mk
 
+## Programs
+
+PIP ?= pip
+PIPENV ?= pipenv
+PYTHON ?= python
+
+.PHONY: debug-programs
+debug-programs:
+	$(info Programs:)
+	$(info - PIP: $(PIP))
+	$(info - PIPENV: $(PIPENV))
+	$(info - PYTHON: $(PYTHON))
+	@:
+
+## Project
+
+package_id := sode
+
+.PHONY: debug-project
+debug-project:
+	$(info Project)
+	$(info - package_id=$(package_id))
+	@:
+
 ## Sources
 
 # NB: the wildcard function is not recursive: https://stackoverflow.com/a/2483203/112682
@@ -40,25 +64,6 @@ debug-paths:
 	$(info - bindir: $(bindir))
 	$(info - datadirpkg: $(datadirpkg))
 	$(info - libexecdirpkg: $(libexecdirpkg))
-	@:
-
-## Programs
-
-INSTALL ?= install
-INSTALLFLAGS := -g 0 -o 0
-
-PIP ?= pip
-PIPENV ?= pipenv
-PYTHON ?= python
-
-.PHONY: debug-programs
-debug-programs:
-	$(info Programs:)
-	$(info - INSTALL: $(INSTALL))
-	$(info - INSTALLFLAGS: $(INSTALLFLAGS))
-	$(info - PIP: $(PIP))
-	$(info - PIPENV: $(PIPENV))
-	$(info - PYTHON: $(PYTHON))
 	@:
 
 #. DEVELOPMENT ENVIRONMENT TARGETS
