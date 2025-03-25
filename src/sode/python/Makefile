@@ -69,7 +69,7 @@ all: sdist wheel #> Build all artifacts
 	@:
 
 .PHONY: clean
-clean: clean-build clean-python clean-sdist clean-wheel pipenv-clean #> Remove files built from these sources
+clean: clean-build clean-pipenv clean-python clean-sdist clean-wheel #> Remove files built from these sources
 	@:
 
 .PHONY: install
@@ -77,7 +77,7 @@ install: install-wheel #> Install artifacts
 	@:
 
 .PHONY: test
-test: pipenv-black-check #> Run checks
+test: black-check #> Run checks
 
 .PHONY: uninstall
 uninstall: uninstall-wheel #> Uninstall artifacts
@@ -99,6 +99,10 @@ _debug-prefix:
 	$(info ==sode python==)
 	@:
 
+.PHONY: format
+format: black-format
+	@:
+
 #. DEVELOPMENT ENVIRONMENT TARGETS
 
 .PHONY: install-tools
@@ -111,9 +115,21 @@ BUILD ?= $(PIPENV) run python -m build
 PIPENV ?= pipenv
 PIPX ?= pipx
 
+.PHONY: black-check
+black-check: #> Check sources with black
+	$(PIPENV) run black-check
+
+.PHONY: black-format
+black-format: #> Format sources with black
+	$(PIPENV) run black-format
+
 .PHONY: clean-build
 clean-build: #> Remove files from running build
 	$(RM) -r build dist $(package_id).egg-info
+
+.PHONY: clean-pipenv
+clean-pipenv: #> Uninstall packages not listed in Pipfile
+	$(PIPENV) clean
 
 .PHONY: clean-python
 clean-python: #> Remove files from running python
@@ -127,35 +143,9 @@ debug-python:
 	$(info - PIPX=$(PIPX))
 	@:
 
-.PHONY: pipenv-clean
-pipenv-clean: #> Uninstall packages not listed in Pipfile
-	$(PIPENV) clean
-
 .PHONY: pipenv-install
 pipenv-install: #> Install development dependencies with pipenv
 	$(PIPENV) install --dev
-
-.PHONY: pipenv-black
-pipenv-black: #> Format sources with black
-	$(PIPENV) run black
-
-.PHONY: pipenv-black-check
-pipenv-black-check: #> Check sources with black
-	$(PIPENV) run black-check
-
-.PHONY: run-cli
-run-cli: run-cli-pipenv run-cli-python run-cli-wheel #> Run the CLI all possible ways
-	@:
-
-.PHONY: run-cli-pipenv
-run-cli-pipenv: #> Run the program from a pipenv script
-	@echo ""
-	$(PIPENV) run sode-cli
-
-.PHONY: run-cli-python
-run-cli-python: #> Run the program from venv-managed python
-	@echo ""
-	PYTHONPATH=. $(PIPENV) run python ./sode/cli.py
 
 #. PYTHON SOURCE DISTRIBUTION TARGETS
 
@@ -201,12 +191,6 @@ install-editable-wheel: wheel #> Link to the wheel globally with pipx
 install-wheel: wheel #> Install the wheel globally with pipx
 	$(PIPX) install .
 
-.PHONY: run-cli-wheel
-run-cli-wheel: wheel #> Run the program from a (re-)installed wheel
-	@echo ""
-	$(PIPX) install --force --quiet .
-	@$(cmd_name)
-
 .PHONY: uninstall-wheel
 uninstall-wheel:
 	$(PIPX) uninstall $(package_id)
@@ -223,3 +207,25 @@ wheel-contents: wheel #> Show what's inside the wheel
 $(wheel_timestamp): $(sources)
 	$(BUILD) --wheel
 	@touch $@
+
+#. SODE TARGETS
+
+.PHONY: run-cli
+run-cli: run-cli-pipenv run-cli-python run-cli-wheel #> Run the CLI all possible ways
+	@:
+
+.PHONY: run-cli-pipenv
+run-cli-pipenv: #> Run the program from a pipenv script
+	@echo ""
+	$(PIPENV) run sode-cli
+
+.PHONY: run-cli-python
+run-cli-python: #> Run the program from venv-managed python
+	@echo ""
+	PYTHONPATH=. $(PIPENV) run python ./sode/cli.py
+
+.PHONY: run-cli-wheel
+run-cli-wheel: wheel #> Run the program from a (re-)installed wheel
+	@echo ""
+	$(PIPX) install --force --quiet .
+	@$(cmd_name)

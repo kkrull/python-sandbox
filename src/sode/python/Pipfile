@@ -17,6 +17,6 @@ setuptools = "*"
 python_version = "3.13"
 
 [scripts]
-black = 'black sode'
 black-check = 'black --check sode'
+black-format = 'black sode'
 sode-cli = { call = "sode.cli:main()" }
