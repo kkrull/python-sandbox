@@ -161,9 +161,9 @@ isort-format: #> Format sources with isort
 mypy-check: #> Type check sources with mypy
 	$(PIPENV) run mypy-check
 
-.PHONY: mypy-watch
-mypy-watch: #> Type check sources with mypy (watch mode)
-	$(PIPENV) run mypy-watch
+.PHONY: mypy-daemon
+mypy-daemon: #> Start a mypy daemon to speed up type checking
+	$(PIPENV) run mypy-daemon
 
 #. SOURCE DISTRIBUTION TARGETS
 
