@@ -15,6 +15,13 @@ sode = "sode.cli:main"
 [tool.black]
 line-length = 100
 
+# https://mypy.readthedocs.io/en/stable/config_file.html
+[tool.mypy]
+packages = ["sode"]
+python_version = "3.13"
+strict = true
+verbosity = 0
+
 # https://pycqa.github.io/isort/docs/configuration/config_files.html
 # https://pycqa.github.io/isort/docs/configuration/options.html
 [tool.isort]

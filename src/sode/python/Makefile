@@ -161,10 +161,6 @@ isort-format: #> Format sources with isort
 mypy-check: #> Type check sources with mypy
 	$(PIPENV) run mypy-check
 
-.PHONY: mypy-daemon
-mypy-daemon: #> Start a mypy daemon to speed up type checking
-	$(PIPENV) run mypy-daemon
-
 #. SOURCE DISTRIBUTION TARGETS
 
 artifact_sdist = $(wildcard dist/$(package_id)*.tar.gz)
