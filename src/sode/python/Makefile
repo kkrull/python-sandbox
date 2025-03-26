@@ -115,14 +115,6 @@ BUILD ?= $(PIPENV) run python -m build
 PIPENV ?= pipenv
 PIPX ?= pipx
 
-.PHONY: black-check
-black-check: #> Check sources with black
-	$(PIPENV) run black-check
-
-.PHONY: black-format
-black-format: #> Format sources with black
-	$(PIPENV) run black-format
-
 .PHONY: clean-build
 clean-build: #> Remove files from running build
 	$(RM) -r build dist $(package_id).egg-info
@@ -143,6 +135,20 @@ debug-python:
 	$(info - PIPX=$(PIPX))
 	@:
 
+.PHONY: pipenv-install
+pipenv-install: #> Install development dependencies with pipenv
+	$(PIPENV) install --dev
+
+#. PYTHON SUPPORT TARGETS
+
+.PHONY: black-check
+black-check: #> Check sources with black
+	$(PIPENV) run black-check
+
+.PHONY: black-format
+black-format: #> Format sources with black
+	$(PIPENV) run black-format
+
 .PHONY: isort-check
 isort-check: #> Check sources with isort
 	$(PIPENV) run isort-check
@@ -151,11 +157,7 @@ isort-check: #> Check sources with isort
 isort-format: #> Format sources with isort
 	$(PIPENV) run isort-format
 
-.PHONY: pipenv-install
-pipenv-install: #> Install development dependencies with pipenv
-	$(PIPENV) install --dev
-
-#. PYTHON SOURCE DISTRIBUTION TARGETS
+#. SOURCE DISTRIBUTION TARGETS
 
 artifact_sdist = $(wildcard dist/$(package_id)*.tar.gz)
 sdist_timestamp := .sdist-timestamp
@@ -177,7 +179,7 @@ $(sdist_timestamp): $(sources)
 	$(BUILD) --sdist
 	@touch $@
 
-#. PYTHON WHEEL TARGETS
+#. WHEEL TARGETS
 
 artifact_wheel = $(wildcard dist/$(package_id)*.whl)
 cmd_name := sode
