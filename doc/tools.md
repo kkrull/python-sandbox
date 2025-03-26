@@ -136,6 +136,7 @@ _a Python virtualenv management tool that supports a multitude of systems and ni
 gaps between pip, python (using system python, pyenv or asdf) and virtualenv._
 
 - Documentation:
+  - Advanced usage: <https://docs.pipenv.org/advanced/>
   - Environment configuration: <https://pipenv.pypa.io/en/latest/shell.html>
   - Installation: <https://pipenv.pypa.io/en/stable/installation.html>
 - Files
@@ -149,6 +150,8 @@ gaps between pip, python (using system python, pyenv or asdf) and virtualenv._
 
 _Python is a programming language that lets you work quickly and integrate systems more effectively_
 
+- Documentation:
+  - Library reference: <https://docs.python.org/3.13/library/index.html>
 - Related:
   - Override the path to the Python executable you want with [`direnv`](#direnv)
   - Automate installation with [Pipenv](#pipenv).
