@@ -136,6 +136,7 @@ _a Python virtualenv management tool that supports a multitude of systems and ni
 gaps between pip, python (using system python, pyenv or asdf) and virtualenv._
 
 - Documentation:
+  - Environment configuration: <https://pipenv.pypa.io/en/latest/shell.html>
   - Installation: <https://pipenv.pypa.io/en/stable/installation.html>
 - Files
   - `Pipfile`
