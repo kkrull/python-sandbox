@@ -2,16 +2,17 @@
 
 import sys
 from argparse import ArgumentError, ArgumentParser
+from typing import NoReturn
 
 import sode._version
 
 
-def main():
+def main() -> NoReturn:
     status = do_main(sys.argv)
     sys.exit(status)
 
 
-def do_main(argv):
+def do_main(argv: list[str]) -> int:
     parser = ArgumentParser(
         add_help=True,
         description="BRODE SODE",
