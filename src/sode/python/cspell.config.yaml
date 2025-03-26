@@ -16,8 +16,10 @@ import:
 version: "0.2"
 words:
   - autopep
+  - dmypy
   - isort
   - Madoshakalaka
+  - mypy
   - plette
   - pycache
   - pypi

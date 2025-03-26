@@ -36,6 +36,7 @@ words:
   - libexecdirpkg
   - Makefiles
   - minphony
+  - Mypy
   - Nystrom
   - pandoc
   - Piantanida

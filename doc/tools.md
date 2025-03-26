@@ -111,6 +111,16 @@ _Checks Markdown files for style or formatting errors._
 - VS Code extensions:
   - <https://marketplace.visualstudio.com/items?itemName=DavidAnson.vscode-markdownlint>
 
+## [`mypy`](https://mypy-lang.org/)
+
+_Mypy is an optional static type checker for Python_
+
+- Documentation:
+  - GitHub repository: <https://github.com/python/mypy>
+  - Getting started: <https://mypy.readthedocs.io/en/stable/getting_started.html>
+- Related:
+  - `mypy` performs static type checking on [Python](#python-3) sources.
+
 ## [`pre-commit`](https://pre-commit.com/)
 
 _A framework for managing and maintaining multi-language pre-commit hooks in Git repositories._
