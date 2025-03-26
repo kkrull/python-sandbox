@@ -28,7 +28,7 @@ def do_main(argv):
 
     args = parser.parse_args(args=argv[1:])
     if args.version:
-        print(f"Version {sode._version.__version__}")
+        print(f"{sode._version.__version__}")
         return 0
 
     print("Hello world!")
