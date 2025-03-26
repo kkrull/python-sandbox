@@ -163,6 +163,8 @@ _Python is a programming language that lets you work quickly and integrate syste
 
 - Documentation:
   - Library reference: <https://docs.python.org/3.13/library/index.html>
+  - Structural pattern matching: <https://docs.python.org/3/whatsnew/3.10.html#pep-634-structural-pattern-matching>
+  - Typing: <https://docs.python.org/3/library/typing.html>
 - Related:
   - Override the path to the Python executable you want with [`direnv`](#direnv)
   - Automate installation with [Pipenv](#pipenv).
