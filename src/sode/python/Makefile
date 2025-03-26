@@ -225,15 +225,15 @@ run-cli: run-cli-pipenv run-cli-python run-cli-wheel #> Run the CLI all possible
 .PHONY: run-cli-pipenv
 run-cli-pipenv: #> Run the program from a pipenv script
 	@echo ""
-	$(PIPENV) run sode-cli
+	$(PIPENV) run sode-cli --version
 
 .PHONY: run-cli-python
 run-cli-python: #> Run the program from venv-managed python
 	@echo ""
-	PYTHONPATH=. $(PIPENV) run python ./sode/cli.py
+	PYTHONPATH=. $(PIPENV) run python ./sode/cli.py --version
 
 .PHONY: run-cli-wheel
 run-cli-wheel: wheel #> Run the program from a (re-)installed wheel
 	@echo ""
 	$(PIPX) install --force --quiet .
-	@$(cmd_name)
+	@$(cmd_name) --version
