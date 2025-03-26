@@ -1,20 +1,22 @@
 #!/usr/bin/env python3
 
 import sys
-from argparse import ArgumentParser
+from argparse import ArgumentError, ArgumentParser
+from typing import NoReturn
 
 import sode._version
 
 
-def main():
+def main() -> NoReturn:
     status = do_main(sys.argv)
     sys.exit(status)
 
 
-def do_main(argv):
+def do_main(argv: list[str]) -> int:
     parser = ArgumentParser(
         add_help=True,
         description="BRODE SODE",
+        exit_on_error=False,
         prog=argv[0],
     )
 
@@ -26,9 +28,14 @@ def do_main(argv):
         help="Print version",
     )
 
-    args = parser.parse_args(args=argv[1:])
+    try:
+        args = parser.parse_args(args=argv[1:])
+    except ArgumentError as error:
+        print(error)
+        return 1
+
     if args.version:
-        print(f"{sode._version.__version__}")
+        print(sode._version.__version__)
         return 0
 
     print("Hello world!")

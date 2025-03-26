@@ -111,6 +111,16 @@ _Checks Markdown files for style or formatting errors._
 - VS Code extensions:
   - <https://marketplace.visualstudio.com/items?itemName=DavidAnson.vscode-markdownlint>
 
+## [`mypy`](https://mypy-lang.org/)
+
+_Mypy is an optional static type checker for Python_
+
+- Documentation:
+  - GitHub repository: <https://github.com/python/mypy>
+  - Getting started: <https://mypy.readthedocs.io/en/stable/getting_started.html>
+- Related:
+  - `mypy` performs static type checking on [Python](#python-3) sources.
+
 ## [`pre-commit`](https://pre-commit.com/)
 
 _A framework for managing and maintaining multi-language pre-commit hooks in Git repositories._
@@ -136,6 +146,9 @@ _a Python virtualenv management tool that supports a multitude of systems and ni
 gaps between pip, python (using system python, pyenv or asdf) and virtualenv._
 
 - Documentation:
+  - Advanced usage: <https://docs.pipenv.org/advanced/>
+  - Custom script shortcuts: <https://pipenv.pypa.io/en/latest/scripts.html>
+  - Environment configuration: <https://pipenv.pypa.io/en/latest/shell.html>
   - Installation: <https://pipenv.pypa.io/en/stable/installation.html>
 - Files
   - `Pipfile`
@@ -148,6 +161,10 @@ gaps between pip, python (using system python, pyenv or asdf) and virtualenv._
 
 _Python is a programming language that lets you work quickly and integrate systems more effectively_
 
+- Documentation:
+  - Library reference: <https://docs.python.org/3.13/library/index.html>
+  - Structural pattern matching: <https://docs.python.org/3/whatsnew/3.10.html#pep-634-structural-pattern-matching>
+  - Typing: <https://docs.python.org/3/library/typing.html>
 - Related:
   - Override the path to the Python executable you want with [`direnv`](#direnv)
   - Automate installation with [Pipenv](#pipenv).

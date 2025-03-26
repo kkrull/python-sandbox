@@ -12,6 +12,7 @@ sort_pipfile = true
 black = "*"
 build = "*"
 isort = "*"
+mypy = "*"
 setuptools = "*"
 
 [requires]
@@ -22,4 +23,5 @@ black-check = 'black --check sode'
 black-format = 'black sode'
 isort-check = 'isort --check sode'
 isort-format = 'isort sode'
-sode-cli = { call = "sode.cli:main()" }
+mypy-check = 'mypy --config-file pyproject.toml'
+sode-cli = './sode/cli.py'
