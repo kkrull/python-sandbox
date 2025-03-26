@@ -21,6 +21,14 @@ def do_main(argv: list[str]) -> int:
     )
 
     parser.add_argument(
+        "-d",
+        "--debug",
+        action="store_true",
+        default=False,
+        help="Log debugging output",
+    )
+
+    parser.add_argument(
         "-v",
         "--version",
         action="store_true",
