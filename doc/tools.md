@@ -137,6 +137,7 @@ gaps between pip, python (using system python, pyenv or asdf) and virtualenv._
 
 - Documentation:
   - Advanced usage: <https://docs.pipenv.org/advanced/>
+  - Custom script shortcuts: <https://pipenv.pypa.io/en/latest/scripts.html>
   - Environment configuration: <https://pipenv.pypa.io/en/latest/shell.html>
   - Installation: <https://pipenv.pypa.io/en/stable/installation.html>
 - Files
