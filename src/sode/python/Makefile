@@ -77,7 +77,7 @@ install: install-wheel #> Install artifacts
 	@:
 
 .PHONY: test
-test: black-check isort-check #> Run checks
+test: black-check isort-check mypy-check #> Run checks
 
 .PHONY: uninstall
 uninstall: uninstall-wheel #> Uninstall artifacts
@@ -156,6 +156,14 @@ isort-check: #> Check sources with isort
 .PHONY: isort-format
 isort-format: #> Format sources with isort
 	$(PIPENV) run isort-format
+
+.PHONY: mypy-check
+mypy-check: #> Type check sources with mypy
+	$(PIPENV) run mypy-check
+
+.PHONY: mypy-watch
+mypy-watch: #> Type check sources with mypy (watch mode)
+	$(PIPENV) run mypy-watch
 
 #. SOURCE DISTRIBUTION TARGETS
 
