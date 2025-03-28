@@ -17,10 +17,6 @@ line-length = 100
 
 # https://mypy.readthedocs.io/en/stable/config_file.html
 [tool.mypy]
-exclude = "^src/python"
-strict = false
-
-["tool.mypy-sode.*"]
 packages = ["sode"]
 python_version = "3.13"
 strict = true

@@ -49,10 +49,12 @@ repos:
         - src/sode/python
 
   # https://github.com/pre-commit/mirrors-mypy
+  # Use hooks[].id.exclude to avoid pre-commit's list of files from overriding the --exclude arg
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: v1.15.0
     hooks:
     - id: mypy
+      exclude: ^src/python/.*$
       args:
       - --config-file=src/sode/python/pyproject.toml
 
