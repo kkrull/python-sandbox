@@ -2,6 +2,7 @@
 
 import sys
 from argparse import ArgumentError, ArgumentParser
+from io import StringIO
 from typing import NoReturn
 
 import sode._version
@@ -44,14 +45,14 @@ def do_main(state: MainState) -> int:
     try:
         args = parser.parse_args(args=state.arguments)
     except ArgumentError as error:
-        print(error)
+        print(error, file=state.stderr)
         return 1
 
     if args.version:
-        print(sode._version.__version__)
+        print(sode._version.__version__, file=state.stdout)
         return 0
 
-    print("Hello world!")
+    print("Hello world!", file=state.stdout)
     return 0
 
 
