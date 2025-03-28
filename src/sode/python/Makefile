@@ -21,12 +21,14 @@ debug-paths:
 
 ### Programs
 
+FSWATCH ?= fswatch
 TAR ?= tar
 UNZIP ?= unzip
 
 .PHONY: debug-programs
 debug-programs:
 	$(info Programs)
+	$(info - FSWATCH=$(FSWATCH))
 	$(info - TAR=$(TAR))
 	$(info - UNZIP=$(UNZIP))
 	@:
@@ -141,6 +143,8 @@ pipenv-install: #> Install development dependencies with pipenv
 
 #. PYTHON SUPPORT TARGETS
 
+MYPY ?= $(PIPENV) run mypy-check
+
 .PHONY: black-check
 black-check: #> Check sources with black
 	$(PIPENV) run black-check
@@ -160,6 +164,11 @@ isort-format: #> Format sources with isort
 .PHONY: mypy-check
 mypy-check: #> Type check sources with mypy
 	$(PIPENV) run mypy-check
+
+.PHONY: mypy-watch
+mypy-watch: #> Type check sources with mypy (watch mode)
+	$(FSWATCH) $(sources) -0 \
+		| xargs -0 -I {} $(MYPY) {}
 
 #. SOURCE DISTRIBUTION TARGETS
 

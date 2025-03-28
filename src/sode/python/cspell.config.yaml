@@ -20,6 +20,7 @@ words:
   - isort
   - Madoshakalaka
   - mypy
+  - MYPYFLAGS
   - plette
   - pycache
   - pypi
