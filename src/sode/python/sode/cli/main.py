@@ -5,6 +5,7 @@ from argparse import ArgumentError, ArgumentParser
 from typing import NoReturn
 
 import sode._version
+from sode.cli.state import MainState
 
 
 def main() -> NoReturn:
@@ -14,19 +15,6 @@ def main() -> NoReturn:
 
     status = do_main(state)
     sys.exit(status)
-
-
-class MainState:
-    _argv: list[str]
-
-    def __init__(self, argv: list[str]):
-        self._argv = argv
-
-    def arguments(self) -> list[str]:
-        return self._argv[1:]
-
-    def program_name(self) -> str:
-        return self._argv[0]
 
 
 def do_main(state: MainState) -> int:
