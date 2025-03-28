@@ -2,6 +2,7 @@ from argparse import ArgumentError, ArgumentParser, Namespace
 from typing import Union
 
 from sode.cli.state import MainState
+from sode.shared.either import Either, Left, Right
 
 
 class SodeNamespace(Namespace):
@@ -9,7 +10,7 @@ class SodeNamespace(Namespace):
     version: bool
 
 
-def parse_args(state: MainState) -> Union[str, SodeNamespace]:
+def parse_args(state: MainState) -> Either[str, SodeNamespace]:
     parser = ArgumentParser(
         add_help=True,
         description="BRODE SODE",
@@ -34,6 +35,6 @@ def parse_args(state: MainState) -> Union[str, SodeNamespace]:
     )
 
     try:
-        return parser.parse_args(args=state.arguments, namespace=SodeNamespace())
+        return Right(parser.parse_args(args=state.arguments, namespace=SodeNamespace()))
     except ArgumentError as error:
-        return str(error)
+        return Left(str(error))

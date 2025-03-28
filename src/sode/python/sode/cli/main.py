@@ -2,34 +2,38 @@
 
 import logging
 import sys
-import typing
 from typing import NoReturn
 
 import sode._version
 from sode.cli.args import SodeNamespace, parse_args
 from sode.cli.state import MainState
+from sode.shared.either import Either, Left, Right
 
 
 def main() -> NoReturn:
-    state = MainState(
-        argv=sys.argv,
-    )
-
-    status = do_main(state)
+    state = MainState(argv=sys.argv)
+    status = mainFn(state)
     sys.exit(status)
 
 
-def do_main(state: MainState) -> int:
-    args: str | SodeNamespace = parse_args(state)
-    if args is str:
-        print(args, file=state.stderr)
-        return 1
+def mainFn(state: MainState) -> int:
+    args: Either[str, SodeNamespace] = parse_args(state)
+    match args:
+        case Left(error):
+            print(error, file=state.stderr)
+            return 1
+        case Right(sodeArgs):
+            return mainFnArgs(state, sodeArgs)
+        case _:
+            print(f"Unrecognized argument parse result: {args}", file=state.stderr)
+            return 2
 
-    # Try making typings for Either: https://stackoverflow.com/a/62282621/112682
-    sodeArgs = typing.cast(SodeNamespace, args)
+
+def mainFnArgs(state: MainState, sodeArgs: SodeNamespace) -> int:
     if sodeArgs.debug:
         root_logger = logging.getLogger()
         root_logger.setLevel(logging.DEBUG)
+
     if sodeArgs.version:
         print(sode._version.__version__, file=state.stdout)
         return 0
