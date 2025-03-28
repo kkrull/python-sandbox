@@ -1,5 +1,6 @@
 import argparse
 import pathlib
+import re
 
 from sode.cli.option import BoolOption, regex_type
 from sode.cli.state import MainState
@@ -9,6 +10,11 @@ from sode.shared.either import Either, Left, Right
 class SodeNamespace(argparse.Namespace):
     debug: bool
     version: bool
+
+
+class SodeFsFindNamespace(argparse.Namespace):
+    path: pathlib.Path
+    pattern: re.Pattern[str]
 
 
 def parse_args(state: MainState) -> Either[str, SodeNamespace]:

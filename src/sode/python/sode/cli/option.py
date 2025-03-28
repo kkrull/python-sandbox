@@ -21,12 +21,12 @@ class BoolOption:
         )
 
 
-def regex_type(pattern: str | re.Pattern[str]) -> Callable[[str], str]:
+def regex_type(pattern: str | re.Pattern[str]) -> Callable[[str], re.Pattern[str]]:
     """Argument type for matching a regex pattern."""
 
-    def closure_check_regex(arg_value: str) -> str:
+    def closure_check_regex(arg_value: str) -> re.Pattern[str]:
         if not re.match(pattern, arg_value):
             raise argparse.ArgumentTypeError("invalid value")
-        return arg_value
+        return re.compile(arg_value)
 
     return closure_check_regex
