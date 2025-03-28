@@ -21,12 +21,14 @@ debug-paths:
 
 ### Programs
 
+FSWATCH ?= fswatch
 TAR ?= tar
 UNZIP ?= unzip
 
 .PHONY: debug-programs
 debug-programs:
 	$(info Programs)
+	$(info - FSWATCH=$(FSWATCH))
 	$(info - TAR=$(TAR))
 	$(info - UNZIP=$(UNZIP))
 	@:
@@ -69,7 +71,7 @@ all: sdist wheel #> Build all artifacts
 	@:
 
 .PHONY: clean
-clean: clean-build clean-pipenv clean-python clean-sdist clean-wheel #> Remove files built from these sources
+clean: clean-build clean-mypy clean-pipenv clean-python clean-sdist clean-wheel #> Remove files built from these sources
 	@:
 
 .PHONY: install
@@ -141,6 +143,9 @@ pipenv-install: #> Install development dependencies with pipenv
 
 #. PYTHON SUPPORT TARGETS
 
+ISORT ?= $(PIPENV) run isort-format
+MYPY ?= $(PIPENV) run mypy-check
+
 .PHONY: black-check
 black-check: #> Check sources with black
 	$(PIPENV) run black-check
@@ -148,6 +153,10 @@ black-check: #> Check sources with black
 .PHONY: black-format
 black-format: #> Format sources with black
 	$(PIPENV) run black-format
+
+.PHONY: clean-mypy
+clean-mypy:
+	$(RM) -r .mypy_cache
 
 .PHONY: isort-check
 isort-check: #> Check sources with isort
@@ -157,9 +166,19 @@ isort-check: #> Check sources with isort
 isort-format: #> Format sources with isort
 	$(PIPENV) run isort-format
 
+.PHONY: mypy-watch
+isort-watch: #> Format sources with isort (watch mode)
+	$(FSWATCH) $(sources) -0 \
+		| xargs -0 -I {} $(ISORT) {}
+
 .PHONY: mypy-check
 mypy-check: #> Type check sources with mypy
 	$(PIPENV) run mypy-check
+
+.PHONY: mypy-watch
+mypy-watch: #> Type check sources with mypy (watch mode)
+	$(FSWATCH) $(sources) -0 \
+		| xargs -0 -I {} $(MYPY) {}
 
 #. SOURCE DISTRIBUTION TARGETS
 
@@ -236,7 +255,7 @@ run-cli-pipenv: #> Run the program from a pipenv script
 .PHONY: run-cli-python
 run-cli-python: #> Run the program from venv-managed python
 	@echo ""
-	PYTHONPATH=. $(PIPENV) run python ./sode/cli.py --version
+	PYTHONPATH=. $(PIPENV) run python ./sode/cli/main.py --version
 
 .PHONY: run-cli-wheel
 run-cli-wheel: wheel #> Run the program from a (re-)installed wheel

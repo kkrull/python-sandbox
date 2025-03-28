@@ -3,7 +3,7 @@ root = false
 # Python
 
 [*.py]
-indent_size = 2
+indent_size = 4
 indent_style = space
 max_line_length = 100
 trim_trailing_whitespace = true

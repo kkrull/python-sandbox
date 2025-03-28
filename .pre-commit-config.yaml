@@ -29,6 +29,16 @@ repos:
         args:
         - --config=.checkmake-module.ini
 
+  # https://github.com/pre-commit/mirrors-mypy
+  # Use hooks[].id.exclude to avoid pre-commit's list of files from overriding the --exclude arg
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.15.0
+    hooks:
+    - id: mypy
+      exclude: ^src/python/.*$
+      args:
+      - --config-file=src/sode/python/pyproject.toml
+
   # https://pre-commit.com/hooks.html
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0

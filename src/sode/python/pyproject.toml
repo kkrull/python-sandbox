@@ -9,7 +9,7 @@ dynamic = ["version"]
 name = "sode"
 
 [project.scripts]
-sode = "sode.cli:main"
+sode = "sode.cli.main:main"
 
 # https://black.readthedocs.io/en/stable/usage_and_configuration/the_basics.html#configuration-via-a-file
 [tool.black]
@@ -21,6 +21,7 @@ packages = ["sode"]
 python_version = "3.13"
 strict = true
 verbosity = 0
+warn_unused_configs = true
 
 # https://pycqa.github.io/isort/docs/configuration/config_files.html
 # https://pycqa.github.io/isort/docs/configuration/options.html
