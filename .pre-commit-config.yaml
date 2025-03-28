@@ -48,6 +48,14 @@ repos:
         - --line-length=100
         - src/sode/python
 
+  # https://github.com/pre-commit/mirrors-mypy
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.15.0
+    hooks:
+    - id: mypy
+      args:
+      - --config-file=src/sode/python/pyproject.toml
+
   # https://pycqa.github.io/isort/docs/configuration/pre-commit.html
   - repo: https://github.com/pycqa/isort
     rev: 6.0.1
