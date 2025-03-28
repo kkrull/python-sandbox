@@ -3,11 +3,10 @@
 import logging
 import sys
 import typing
-from argparse import ArgumentError, ArgumentParser
-from typing import NoReturn, Union
+from typing import NoReturn
 
 import sode._version
-from sode.cli.args import SodeNamespace
+from sode.cli.args import SodeNamespace, parse_args
 from sode.cli.state import MainState
 
 
@@ -37,36 +36,6 @@ def do_main(state: MainState) -> int:
 
     print("Hello world!", file=state.stdout)
     return 0
-
-
-def parse_args(state: MainState) -> Union[str, SodeNamespace]:
-    parser = ArgumentParser(
-        add_help=True,
-        description="BRODE SODE",
-        exit_on_error=False,
-        prog=state.program_name,
-    )
-
-    parser.add_argument(
-        "-d",
-        "--debug",
-        action="store_true",
-        default=False,
-        help="Log debugging output",
-    )
-
-    parser.add_argument(
-        "-v",
-        "--version",
-        action="store_true",
-        default=False,
-        help="Print version",
-    )
-
-    try:
-        return parser.parse_args(args=state.arguments, namespace=SodeNamespace())
-    except ArgumentError as error:
-        return str(error)
 
 
 if __name__ == "__main__":
