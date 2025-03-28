@@ -1,9 +1,7 @@
 import argparse
 import pathlib
-import re
-from typing import Callable
 
-from sode.cli.option import BoolOption
+from sode.cli.option import BoolOption, regex_type
 from sode.cli.state import MainState
 from sode.shared.either import Either, Left, Right
 
@@ -11,17 +9,6 @@ from sode.shared.either import Either, Left, Right
 class SodeNamespace(argparse.Namespace):
     debug: bool
     version: bool
-
-
-def regex_type(pattern: str | re.Pattern[str]) -> Callable[[str], str]:
-    """Argument type for matching a regex pattern."""
-
-    def closure_check_regex(arg_value: str) -> str:
-        if not re.match(pattern, arg_value):
-            raise argparse.ArgumentTypeError("invalid value")
-        return arg_value
-
-    return closure_check_regex
 
 
 def parse_args(state: MainState) -> Either[str, SodeNamespace]:

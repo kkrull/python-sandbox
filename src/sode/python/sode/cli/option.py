@@ -1,5 +1,8 @@
+import argparse
+import re
 from argparse import ArgumentParser
 from dataclasses import dataclass
+from typing import Callable
 
 
 @dataclass
@@ -16,3 +19,14 @@ class BoolOption:
             default=False,
             help=self.help,
         )
+
+
+def regex_type(pattern: str | re.Pattern[str]) -> Callable[[str], str]:
+    """Argument type for matching a regex pattern."""
+
+    def closure_check_regex(arg_value: str) -> str:
+        if not re.match(pattern, arg_value):
+            raise argparse.ArgumentTypeError("invalid value")
+        return arg_value
+
+    return closure_check_regex
