@@ -5,8 +5,7 @@ from argparse import ArgumentError, ArgumentParser
 from typing import NoReturn
 
 import sode._version
-
-from .state import MainState
+from sode.cli.state import MainState
 
 
 def main() -> NoReturn:
