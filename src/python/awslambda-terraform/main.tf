@@ -63,7 +63,7 @@ resource "aws_lambda_function" "echo" {
   description      = "[awslambda-terraform 02] Echos events received from SNS"
   filename         = "awslambda-terraform.zip"
   function_name    = "awslambda-terraform-echo"
-  handler          = "lambda_function.lambda_handler"
+  handler          = "tf_lambda_function.lambda_handler"
   role             = aws_iam_role.echo_role.arn
   runtime          = "python3.8"
   source_code_hash = filebase64sha256("awslambda-terraform.zip")
