@@ -12,11 +12,11 @@ type Either[A, B] = Union[Left[A, B], Right[A, B]]
 
 class EitherBase[A, B]:
     @abstractmethod
-    def flatMap(self, fn: Callable[[B], Either[A, C]]) -> Either[A, C]:
+    def flat_map(self, fn: Callable[[B], Either[A, C]]) -> Either[A, C]:
         pass
 
     @abstractmethod
-    def getOrElse(self, fallbackValue: B) -> B:
+    def get_or_else(self, fallbackValue: B) -> B:
         pass
 
     @abstractmethod
@@ -38,10 +38,10 @@ class Left[A, B](EitherBase[A, B]):
     def __init__(self, value: A):
         self.value = value
 
-    def flatMap(self, _fn: Callable[[B], Either[A, C]]) -> Either[A, C]:
+    def flat_map(self, _fn: Callable[[B], Either[A, C]]) -> Either[A, C]:
         return Left[A, C](self.value)
 
-    def getOrElse(self, fallbackValue: B) -> B:
+    def get_or_else(self, fallbackValue: B) -> B:
         return fallbackValue
 
     def map(self, _fn: Callable[[B], C]) -> Either[A, C]:
@@ -60,10 +60,10 @@ class Right[A, B](EitherBase[A, B]):
     def __init__(self, value: B):
         self.value = value
 
-    def flatMap(self, fn: Callable[[B], Either[A, C]]) -> Either[A, C]:
+    def flat_map(self, fn: Callable[[B], Either[A, C]]) -> Either[A, C]:
         return fn(self.value)
 
-    def getOrElse(self, _fallbackValue: B) -> B:
+    def get_or_else(self, _fallbackValue: B) -> B:
         return self.value
 
     def map(self, fn: Callable[[B], C]) -> Either[A, C]:
