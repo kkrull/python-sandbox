@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import logging
 import sys
 from argparse import ArgumentError, ArgumentParser
 from io import StringIO
@@ -48,6 +49,9 @@ def do_main(state: MainState) -> int:
         print(error, file=state.stderr)
         return 1
 
+    if args.debug:
+        root_logger = logging.getLogger()
+        root_logger.setLevel(logging.DEBUG)
     if args.version:
         print(sode._version.__version__, file=state.stdout)
         return 0
