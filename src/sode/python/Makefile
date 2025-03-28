@@ -143,6 +143,7 @@ pipenv-install: #> Install development dependencies with pipenv
 
 #. PYTHON SUPPORT TARGETS
 
+ISORT ?= $(PIPENV) run isort-format
 MYPY ?= $(PIPENV) run mypy-check
 
 .PHONY: black-check
@@ -160,6 +161,11 @@ isort-check: #> Check sources with isort
 .PHONY: isort-format
 isort-format: #> Format sources with isort
 	$(PIPENV) run isort-format
+
+.PHONY: mypy-watch
+isort-watch: #> Format sources with isort (watch mode)
+	$(FSWATCH) $(sources) -0 \
+		| xargs -0 -I {} $(ISORT) {}
 
 .PHONY: mypy-check
 mypy-check: #> Type check sources with mypy
