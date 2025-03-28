@@ -2,17 +2,12 @@
 
 import logging
 import sys
-from argparse import ArgumentError, ArgumentParser, Namespace
-from io import StringIO
+from argparse import ArgumentError, ArgumentParser
 from typing import NoReturn
 
 import sode._version
+from sode.cli.args import SodeNamespace
 from sode.cli.state import MainState
-
-
-class ArgNamespace(Namespace):
-    debug: bool
-    version: bool
 
 
 def main() -> NoReturn:
@@ -49,7 +44,7 @@ def do_main(state: MainState) -> int:
     )
 
     try:
-        args: ArgNamespace = parser.parse_args(args=state.arguments, namespace=ArgNamespace())
+        args: SodeNamespace = parser.parse_args(args=state.arguments, namespace=SodeNamespace())
     except ArgumentError as error:
         print(error, file=state.stderr)
         return 1
