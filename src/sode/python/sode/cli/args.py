@@ -1,24 +1,8 @@
 from argparse import ArgumentError, ArgumentParser, Namespace
-from dataclasses import dataclass
 
+from sode.cli.option import BoolOption
 from sode.cli.state import MainState
 from sode.shared.either import Either, Left, Right
-
-
-@dataclass
-class BoolOption:
-    help: str
-    long_name: str
-    short_name: str
-
-    def add_to(self, parser: ArgumentParser) -> None:
-        parser.add_argument(
-            self.short_name,
-            self.long_name,
-            action="store_true",
-            default=False,
-            help=self.help,
-        )
 
 
 class SodeNamespace(Namespace):
@@ -34,7 +18,7 @@ def parse_args(state: MainState) -> Either[str, SodeNamespace]:
         prog=state.program_name,
     )
 
-    for option in global_options():
+    for option in _global_options:
         option.add_to(parser)
 
     try:
@@ -43,16 +27,15 @@ def parse_args(state: MainState) -> Either[str, SodeNamespace]:
         return Left(str(error))
 
 
-def global_options() -> list[BoolOption]:
-    return [
-        BoolOption(
-            short_name="-d",
-            long_name="--debug",
-            help="Log debugging output",
-        ),
-        BoolOption(
-            short_name="-v",
-            long_name="--version",
-            help="Print version",
-        ),
-    ]
+_global_options = [
+    BoolOption(
+        short_name="-d",
+        long_name="--debug",
+        help="Log debugging output",
+    ),
+    BoolOption(
+        short_name="-v",
+        long_name="--version",
+        help="Print version",
+    ),
+]
