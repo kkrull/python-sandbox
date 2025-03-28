@@ -8,6 +8,7 @@ from sode.shared.either import Either, Left, Right
 
 
 class SodeNamespace(argparse.Namespace):
+    command_name: str
     debug: bool
     version: bool
 
@@ -28,7 +29,10 @@ def parse_args(state: MainState) -> Either[str, SodeNamespace]:
     for option in _global_options:
         option.add_to(parser)
 
-    sode_command_parsers = parser.add_subparsers(title="commands")
+    sode_command_parsers = parser.add_subparsers(
+        dest="command_name",
+        title="commands",
+    )
     fs_parser = sode_command_parsers.add_parser(
         "fs",
         description="sode fs: hack the local filesystem",

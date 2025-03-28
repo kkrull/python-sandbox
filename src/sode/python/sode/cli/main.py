@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import logging
+import pprint
 import sys
 from typing import NoReturn
 
@@ -37,7 +38,7 @@ def main_fn_args(state: MainState, args: SodeNamespace) -> int:
         print(sode._version.__version__, file=state.stdout)
         return 0
 
-    print("Hello world!", file=state.stdout)
+    pprint.pp(args)
     return 0
 
 
