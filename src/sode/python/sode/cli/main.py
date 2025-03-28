@@ -22,7 +22,7 @@ def do_main(state: MainState) -> int:
         add_help=True,
         description="BRODE SODE",
         exit_on_error=False,
-        prog=state.program_name(),
+        prog=state.program_name,
     )
 
     parser.add_argument(
@@ -42,7 +42,7 @@ def do_main(state: MainState) -> int:
     )
 
     try:
-        args = parser.parse_args(args=state.arguments())
+        args = parser.parse_args(args=state.arguments)
     except ArgumentError as error:
         print(error)
         return 1
