@@ -2,4 +2,4 @@
 
 set -e
 
-zip awslambda-terraform.zip tf_lambda_function.py
+zip awslambda-terraform.zip lambda_function.py
