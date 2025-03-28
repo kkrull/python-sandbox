@@ -1,13 +1,12 @@
 from abc import abstractmethod
 from typing import Callable, Generic, NewType, Protocol, TypeVar, Union
 
-StringList = NewType("StringList", list[str])
-
 A = TypeVar("A")
 B = TypeVar("B")
 C = TypeVar("C")
 
 
+# Based upon: https://stackoverflow.com/a/62282621/112682
 type Either[A, B] = Union[Left[A, B], Right[A, B]]
 
 
