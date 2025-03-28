@@ -71,7 +71,7 @@ all: sdist wheel #> Build all artifacts
 	@:
 
 .PHONY: clean
-clean: clean-build clean-pipenv clean-python clean-sdist clean-wheel #> Remove files built from these sources
+clean: clean-build clean-mypy clean-pipenv clean-python clean-sdist clean-wheel #> Remove files built from these sources
 	@:
 
 .PHONY: install
@@ -153,6 +153,10 @@ black-check: #> Check sources with black
 .PHONY: black-format
 black-format: #> Format sources with black
 	$(PIPENV) run black-format
+
+.PHONY: clean-mypy
+clean-mypy:
+	$(RM) -r .mypy_cache
 
 .PHONY: isort-check
 isort-check: #> Check sources with isort
