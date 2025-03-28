@@ -3,7 +3,7 @@
 import logging
 import sys
 from argparse import ArgumentError, ArgumentParser
-from typing import NoReturn
+from typing import NoReturn, Union
 
 import sode._version
 from sode.cli.args import SodeNamespace
@@ -20,6 +20,24 @@ def main() -> NoReturn:
 
 
 def do_main(state: MainState) -> int:
+    args: str | SodeNamespace = parse_args(state)
+    match args:
+        case str(error):
+            print(error, file=state.stderr)
+            return 1
+        case SodeNamespace():
+            if args.debug:
+                root_logger = logging.getLogger()
+                root_logger.setLevel(logging.DEBUG)
+            if args.version:
+                print(sode._version.__version__, file=state.stdout)
+                return 0
+
+            print("Hello world!", file=state.stdout)
+            return 0
+
+
+def parse_args(state: MainState) -> Union[str, SodeNamespace]:
     parser = ArgumentParser(
         add_help=True,
         description="BRODE SODE",
@@ -44,20 +62,9 @@ def do_main(state: MainState) -> int:
     )
 
     try:
-        args: SodeNamespace = parser.parse_args(args=state.arguments, namespace=SodeNamespace())
+        return parser.parse_args(args=state.arguments, namespace=SodeNamespace())
     except ArgumentError as error:
-        print(error, file=state.stderr)
-        return 1
-
-    if args.debug:
-        root_logger = logging.getLogger()
-        root_logger.setLevel(logging.DEBUG)
-    if args.version:
-        print(sode._version.__version__, file=state.stdout)
-        return 0
-
-    print("Hello world!", file=state.stdout)
-    return 0
+        return str(error)
 
 
 if __name__ == "__main__":
