@@ -251,7 +251,7 @@ run-cli-pipenv: #> Run the program from a pipenv script
 .PHONY: run-cli-python
 run-cli-python: #> Run the program from venv-managed python
 	@echo ""
-	PYTHONPATH=. $(PIPENV) run python ./sode/cli.py --version
+	PYTHONPATH=. $(PIPENV) run python ./sode/cli/main.py --version
 
 .PHONY: run-cli-wheel
 run-cli-wheel: wheel #> Run the program from a (re-)installed wheel

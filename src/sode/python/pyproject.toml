@@ -9,7 +9,7 @@ dynamic = ["version"]
 name = "sode"
 
 [project.scripts]
-sode = "sode.cli:main"
+sode = "sode.cli.main:main"
 
 # https://black.readthedocs.io/en/stable/usage_and_configuration/the_basics.html#configuration-via-a-file
 [tool.black]
