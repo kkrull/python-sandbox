@@ -222,7 +222,7 @@ install-editable-wheel: wheel #> Link to the wheel globally with pipx
 
 .PHONY: install-wheel
 install-wheel: wheel #> Install the wheel globally with pipx
-	$(PIPX) install .
+	$(PIPX) install --force .
 
 .PHONY: uninstall-wheel
 uninstall-wheel:
