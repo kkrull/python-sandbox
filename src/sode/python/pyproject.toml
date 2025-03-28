@@ -17,10 +17,14 @@ line-length = 100
 
 # https://mypy.readthedocs.io/en/stable/config_file.html
 [tool.mypy]
+strict = false
+
+["tool.mypy-sode.*"]
 packages = ["sode"]
 python_version = "3.13"
 strict = true
 verbosity = 0
+warn_unused_configs = true
 
 # https://pycqa.github.io/isort/docs/configuration/config_files.html
 # https://pycqa.github.io/isort/docs/configuration/options.html
