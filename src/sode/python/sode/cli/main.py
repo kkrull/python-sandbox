@@ -6,7 +6,7 @@ import sys
 from typing import NoReturn
 
 import sode._version
-from sode.cli.args.root import RootNamespace, parse_args
+from sode.cli.args.root import RootArgs, parse_args
 from sode.cli.state import MainState
 from sode.shared.either import Left, Right
 
@@ -29,7 +29,7 @@ def main_fn(state: MainState) -> int:
             return 2
 
 
-def main_fn_args(state: MainState, args: RootNamespace) -> int:
+def main_fn_args(state: MainState, args: RootArgs) -> int:
     if args.debug:
         root_logger = logging.getLogger()
         root_logger.setLevel(logging.DEBUG)
@@ -40,8 +40,8 @@ def main_fn_args(state: MainState, args: RootNamespace) -> int:
 
     pprint.pp(args)
     match args.command:
-        case "fs-find":
-            print("fs-find command", file=state.stdout)
+        case "fs":
+            print("fs command", file=state.stdout)
             return 0
         case _:
             print("unknown command", file=state.stdout)

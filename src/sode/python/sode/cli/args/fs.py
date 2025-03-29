@@ -1,54 +1,66 @@
 import argparse
 import pathlib
 import re
-from typing import Any, TypeVar
+from argparse import Action, ArgumentParser, Namespace
+from typing import Any
 
 from sode.cli.shared.option import regex_type
 
 
-def add_parser_to(
+def _add_find_parser(
     parent: argparse._SubParsersAction,  # type: ignore[type-arg]
 ) -> None:
-    fs_find_parser = parent.add_parser(
-        "fs-find",
-        description="sode fs-find: find files in a filesystem",
-        help="find files in a filesystem",
+    find_parser: argparse.ArgumentParser = parent.add_parser(
+        "find",
+        description="sode fs find: find files in the ether",
+        help="find files in the ether",
     )
-    fs_find_parser.add_argument(
+    find_parser.add_argument(
         "PATH",
-        action=FsFindAction,
+        action=FindAction,
         default=argparse.SUPPRESS,
         help="path in which to search",
         type=pathlib.Path,
     )
-    fs_find_parser.add_argument(
+    find_parser.add_argument(
         "PATTERN",
-        action=FsFindAction,
+        action=FindAction,
         default=argparse.SUPPRESS,
-        help="pattern for which to search: ^.+$",
+        help="pattern for which to search",
         type=regex_type(r"^.+$"),
     )
 
 
-class FsFindNamespace(argparse.Namespace):
+class FindAction(Action):
+    def __call__(
+        self, parser: ArgumentParser, root: Namespace, values: Any, _options: Any = None
+    ) -> None:
+        dest = self.dest.lower()
+        print(f"__call__: dest={dest}, namespace={root}, parser={parser.prog}, values={values}")
+        fs = getattr(root, "fs", FsArgs())
+        find = getattr(fs, "find", FindArgs())
+        setattr(find, dest, values)
+        setattr(fs, "find", find)
+        setattr(root, "fs", fs)
+
+
+class FindArgs(Namespace):
     path: pathlib.Path
     pattern: re.Pattern[str]
 
 
-class FsNamespace(argparse.Namespace):
-    find: FsFindNamespace
+def add_fs_parser(
+    parent: argparse._SubParsersAction,  # type: ignore[type-arg]
+) -> None:
+    fs_parser: argparse.ArgumentParser = parent.add_parser(
+        "fs",
+        description="sode fs: hack the local filesystem",
+        help="hack the local filesystem",
+    )
+
+    subcommand_parsers = fs_parser.add_subparsers(title="sub-commands")
+    _add_find_parser(subcommand_parsers)
 
 
-class FsFindAction(argparse.Action):
-    def __call__(
-        self,
-        _parser: Any,
-        namespace: argparse.Namespace,
-        values: Any,
-        _option_string: Any = None,
-    ) -> None:
-        dest = self.dest.lower()
-        print(f"__call__: dest={dest}, values={values}")
-        fs_find = getattr(namespace, "fs_find", FsFindNamespace())
-        setattr(fs_find, dest, values)
-        setattr(namespace, "fs_find", fs_find)
+class FsArgs(Namespace):
+    find: FindArgs

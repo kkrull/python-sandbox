@@ -6,17 +6,17 @@ from sode.cli.state import MainState
 from sode.shared.either import Either, Left, Right
 
 
-class RootNamespace(argparse.Namespace):
+class RootArgs(argparse.Namespace):
     command: str
-    fs: fs.FsNamespace
+    fs: fs.FsArgs
     debug: bool
     version: bool
 
 
-def parse_args(state: MainState) -> Either[str, RootNamespace]:
+def parse_args(state: MainState) -> Either[str, RootArgs]:
     parser = root_parser(state.program_name)
     try:
-        return Right(parser.parse_args(args=state.arguments, namespace=RootNamespace()))
+        return Right(parser.parse_args(args=state.arguments, namespace=RootArgs()))
     except argparse.ArgumentError as error:
         return Left(str(error))
 
@@ -34,7 +34,7 @@ def root_parser(program_name: str) -> argparse.ArgumentParser:
 
     # Look here for inspiration: https://stackoverflow.com/questions/18668227/argparse-subcommands-with-nested-namespaces
     sode_parsers = parser.add_subparsers(dest="command", title="commands")
-    fs.add_parser_to(sode_parsers)
+    fs.add_fs_parser(sode_parsers)
     return parser
 
 
