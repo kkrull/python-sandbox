@@ -20,11 +20,11 @@ def main() -> NoReturn:
 
 def main_fn(state: MainState) -> int:
     match parse_args(state):
+        case Right(args):
+            return main_fn_args(state, args)
         case Left(error):
             print(error, file=state.stderr)
             return 1
-        case Right(args):
-            return main_fn_args(state, args)
         case _:
             print(f"Unrecognized argument parse result: {state.arguments}", file=state.stderr)
             return 2
