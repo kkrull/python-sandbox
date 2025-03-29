@@ -5,6 +5,7 @@ from argparse import Action, ArgumentParser, Namespace
 from typing import Any
 
 from sode.cli.shared.option import regex_type
+from sode.shared.attr import ensure_attr
 
 
 def _add_find_parser(
@@ -32,16 +33,12 @@ def _add_find_parser(
 
 
 class FindAction(Action):
-    def __call__(
-        self, parser: ArgumentParser, root: Namespace, values: Any, _options: Any = None
-    ) -> None:
+    def __call__(self, p: ArgumentParser, root: Namespace, values: Any, _opt: Any = None) -> None:
         dest = self.dest.lower()
-        print(f"__call__: dest={dest}, namespace={root}, parser={parser.prog}, values={values}")
-        fs = getattr(root, "fs", FsArgs())
-        find = getattr(fs, "find", FindArgs())
+        print(f"__call__: dest={dest}, namespace={root}, parser={p.prog}, values={values}")
+        fs = ensure_attr(root, "fs", FsArgs())
+        find = ensure_attr(fs, "find", FindArgs())
         setattr(find, dest, values)
-        setattr(fs, "find", find)
-        setattr(root, "fs", fs)
 
 
 class FindArgs(Namespace):
