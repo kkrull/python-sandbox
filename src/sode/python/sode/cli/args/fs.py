@@ -2,7 +2,7 @@ import argparse
 import pathlib
 import re
 from argparse import Action, ArgumentParser, Namespace
-from typing import Any
+from typing import Any, Optional
 
 from sode.cli.shared.option import regex_type
 from sode.shared.attr import ensure_attr
@@ -35,7 +35,7 @@ def _add_find_parser(
 class FindAction(Action):
     def __call__(self, p: ArgumentParser, root: Namespace, values: Any, _opt: Any = None) -> None:
         dest = self.dest.lower()
-        print(f"__call__: dest={dest}, namespace={root}, parser={p.prog}, values={values}")
+        # print(f"__call__: dest={dest}, namespace={root}, parser={p.prog}, values={values}")
         fs = ensure_attr(root, "fs", FsArgs())
         find = ensure_attr(fs, "find", FindArgs())
         setattr(find, dest, values)
@@ -60,4 +60,4 @@ def add_fs_parser(
 
 
 class FsArgs(Namespace):
-    find: FindArgs
+    find: Optional[FindArgs] = None

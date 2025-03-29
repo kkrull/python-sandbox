@@ -1,6 +1,7 @@
 import argparse
+from typing import Optional
 
-from sode.cli.args import fs
+from sode.cli.args.fs import FsArgs, add_fs_parser
 from sode.cli.shared.option import BoolOption
 from sode.cli.state import MainState
 from sode.shared.either import Either, Left, Right
@@ -8,7 +9,7 @@ from sode.shared.either import Either, Left, Right
 
 class RootArgs(argparse.Namespace):
     command: str
-    fs: fs.FsArgs
+    fs: Optional[FsArgs] = None
     debug: bool
     version: bool
 
@@ -34,7 +35,7 @@ def root_parser(program_name: str) -> argparse.ArgumentParser:
 
     # Look here for inspiration: https://stackoverflow.com/questions/18668227/argparse-subcommands-with-nested-namespaces
     sode_parsers = parser.add_subparsers(dest="command", title="commands")
-    fs.add_fs_parser(sode_parsers)
+    add_fs_parser(sode_parsers)
     return parser
 
 

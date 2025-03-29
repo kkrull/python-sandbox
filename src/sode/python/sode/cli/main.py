@@ -40,12 +40,15 @@ def main_fn_args(state: MainState, args: RootArgs) -> int:
 
     pprint.pp(args)
     match args.command:
-        case "fs":
-            print("fs command", file=state.stdout)
+        case "fs" if args.fs is not None and args.fs.find is not None:
+            print(f"fs-find command: fs-find={args.fs.find}", file=state.stdout)
             return 0
+        case "fs":
+            print(f"fs command: fs={args.fs}", file=state.stdout)
+            return 2
         case _:
             print("unknown command", file=state.stdout)
-            return 0
+            return 2
 
 
 if __name__ == "__main__":
