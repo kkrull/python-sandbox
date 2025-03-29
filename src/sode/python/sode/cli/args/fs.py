@@ -1,12 +1,14 @@
 import argparse
 import pathlib
 import re
-from typing import Any
+from typing import Any, TypeVar
 
 from sode.cli.shared.option import regex_type
 
 
-def add_parser_to(parent: argparse._SubParsersAction[Any]) -> None:
+def add_parser_to(
+    parent: argparse._SubParsersAction,  # type: ignore[type-arg]
+) -> None:
     fs_find_parser = parent.add_parser(
         "fs-find",
         description="sode fs-find: find files in a filesystem",
