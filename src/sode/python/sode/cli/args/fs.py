@@ -1,13 +1,11 @@
 import argparse
-import io
 import pathlib
 import re
-import typing
-from abc import abstractmethod
 from argparse import Action, ArgumentParser, Namespace
 from dataclasses import dataclass
-from typing import Any, Callable, Optional, override
+from typing import Any, Optional, override
 
+from sode.cli.command import CliCommand, RunState
 from sode.cli.shared.option import regex_type
 from sode.shared.attr import ensure_attr
 
@@ -61,18 +59,6 @@ def add_fs_parser(
 
     subcommand_parsers = fs_parser.add_subparsers(title="sub-commands")
     _add_find_parser(subcommand_parsers)
-
-
-@dataclass
-class RunState:
-    stderr: io.TextIOBase
-    stdout: io.TextIOBase
-
-
-class CliCommand:
-    @abstractmethod
-    def run(self, state: RunState) -> int:
-        pass
 
 
 class FsArgs(Namespace):

@@ -6,8 +6,8 @@ import sys
 from typing import NoReturn
 
 import sode._version
-from sode.cli.args.fs import RunState
 from sode.cli.args.root import RootArgs, parse_args
+from sode.cli.command import RunState
 from sode.cli.state import MainState
 from sode.shared.either import Left, Right
 
@@ -42,7 +42,6 @@ def main_fn_args(state: MainState, args: RootArgs) -> int:
     pprint.pp(args)
     match args.command:
         case "fs" if args.fs is not None:
-            print(f"fs command: fs={args.fs}", file=state.stdout)
             command = args.fs.to_command()
             run_state = RunState(stderr=state.stderr, stdout=state.stdout)
             return command.run(run_state)
