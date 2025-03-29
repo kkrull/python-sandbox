@@ -1,4 +1,6 @@
 # https://pre-commit.com/index.html#adding-pre-commit-plugins-to-your-project
+default_language_version:
+  python: python3.12
 repos:
   # https://github.com/editorconfig-checker/editorconfig-checker.python?tab=readme-ov-file#usage-with-the-pre-commit-git-hooks-framework
   - repo: https://github.com/editorconfig-checker/editorconfig-checker.python
