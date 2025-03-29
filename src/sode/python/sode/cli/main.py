@@ -6,7 +6,7 @@ import sys
 from typing import NoReturn
 
 import sode._version
-from sode.cli.args import SodeNamespace, parse_args
+from sode.cli.args.root import RootNamespace, parse_args
 from sode.cli.state import MainState
 from sode.shared.either import Left, Right
 
@@ -29,7 +29,7 @@ def main_fn(state: MainState) -> int:
             return 2
 
 
-def main_fn_args(state: MainState, args: SodeNamespace) -> int:
+def main_fn_args(state: MainState, args: RootNamespace) -> int:
     if args.debug:
         root_logger = logging.getLogger()
         root_logger.setLevel(logging.DEBUG)

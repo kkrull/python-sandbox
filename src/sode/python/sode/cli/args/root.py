@@ -1,0 +1,52 @@
+import argparse
+
+from sode.cli.args import fs
+from sode.cli.shared.option import BoolOption
+from sode.cli.state import MainState
+from sode.shared.either import Either, Left, Right
+
+
+class RootNamespace(argparse.Namespace):
+    command: str
+    fs: fs.FsNamespace
+    debug: bool
+    version: bool
+
+
+def parse_args(state: MainState) -> Either[str, RootNamespace]:
+    parser = root_parser(state.program_name)
+    try:
+        return Right(parser.parse_args(args=state.arguments, namespace=RootNamespace()))
+    except argparse.ArgumentError as error:
+        return Left(str(error))
+
+
+def root_parser(program_name: str) -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(
+        add_help=True,
+        description="BRODE SODE: hack away at deadly computing scenarios",
+        exit_on_error=False,
+        prog=program_name,
+    )
+
+    for option in _global_options:
+        option.add_to(parser)
+
+    # Look here for inspiration: https://stackoverflow.com/questions/18668227/argparse-subcommands-with-nested-namespaces
+    sode_parsers = parser.add_subparsers(dest="command", title="commands")
+    fs.add_parser_to(sode_parsers)
+    return parser
+
+
+_global_options = [
+    BoolOption(
+        short_name="-d",
+        long_name="--debug",
+        help="log debugging output",
+    ),
+    BoolOption(
+        short_name="-v",
+        long_name="--version",
+        help="print version",
+    ),
+]
