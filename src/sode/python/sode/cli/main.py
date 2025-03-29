@@ -22,8 +22,8 @@ def main_fn(state: MainState) -> int:
         case Left(error):
             print(error, file=state.stderr)
             return 1
-        case Right(sodeArgs):
-            return main_fn_args(state, sodeArgs)
+        case Right(args):
+            return main_fn_args(state, args)
         case _:
             print(f"Unrecognized argument parse result: {state.arguments}", file=state.stderr)
             return 2

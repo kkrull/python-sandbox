@@ -7,6 +7,8 @@ from typing import Callable
 
 @dataclass
 class BoolOption:
+    """Optional argument for argparse that defaults to off."""
+
     help: str
     long_name: str
     short_name: str
@@ -22,7 +24,7 @@ class BoolOption:
 
 
 def regex_type(pattern: str | re.Pattern[str]) -> Callable[[str], re.Pattern[str]]:
-    """Argument type for matching a regex pattern."""
+    """argparse argument type for matching a regex pattern."""
 
     def closure_check_regex(arg_value: str) -> re.Pattern[str]:
         if not re.match(pattern, arg_value):
