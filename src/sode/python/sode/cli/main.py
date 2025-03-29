@@ -40,17 +40,12 @@ def main_fn_args(state: MainState, args: RootArgs) -> int:
         return 0
 
     pprint.pp(args)
-    match args.command:
-        case "fs" if args.fs is not None:
-            match args.fs.to_command():
-                case None:
-                    print("unknown fs command: fs={args.fs}", file=state.stdout)
-                    return 2
-                case CliCommand() as command:
-                    run_state = RunState(stderr=state.stderr, stdout=state.stdout)
-                    return command.run(run_state)
-        case _:
-            print("unknown command", file=state.stdout)
+    match args.to_command():
+        case CliCommand() as command:
+            run_state = RunState(stderr=state.stderr, stdout=state.stdout)
+            return command.run(run_state)
+        case None | _:
+            print(f"unknown command: args={args}", file=state.stdout)
             return 2
 
 

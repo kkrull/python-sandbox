@@ -68,7 +68,7 @@ class FsArgs(Namespace):
         match self.find:
             case FindArgs():
                 return FsCommand(self)
-            case _:
+            case None:
                 return None
 
 

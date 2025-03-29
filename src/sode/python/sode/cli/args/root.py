@@ -2,6 +2,7 @@ import argparse
 from typing import Optional
 
 from sode.cli.args.fs import FsArgs, add_fs_parser
+from sode.cli.command import CliCommand
 from sode.cli.shared.option import BoolOption
 from sode.cli.state import MainState
 from sode.shared.either import Either, Left, Right
@@ -12,6 +13,13 @@ class RootArgs(argparse.Namespace):
     fs: Optional[FsArgs] = None
     debug: bool
     version: bool
+
+    def to_command(self) -> Optional[CliCommand]:
+        match self.fs:
+            case FsArgs():
+                return self.fs.to_command()
+            case None:
+                return None
 
 
 def parse_args(state: MainState) -> Either[str, RootArgs]:
