@@ -64,8 +64,12 @@ def add_fs_parser(
 class FsArgs(Namespace):
     find: Optional[FindArgs] = None
 
-    def to_command(self) -> CliCommand:
-        return FsCommand(self)
+    def to_command(self) -> Optional[CliCommand]:
+        match self.find:
+            case FindArgs():
+                return FsCommand(self)
+            case _:
+                return None
 
 
 @dataclass
