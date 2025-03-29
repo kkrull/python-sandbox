@@ -37,7 +37,6 @@ def _add_find_parser(
 class FindAction(Action):
     def __call__(self, p: ArgumentParser, root: Namespace, values: Any, _opt: Any = None) -> None:
         dest = self.dest.lower()
-        # print(f"__call__: dest={dest}, namespace={root}, parser={p.prog}, values={values}")
         fs = ensure_attr(root, "fs", FsArgs())
         find = ensure_attr(fs, "find", FindArgs())
         setattr(find, dest, values)

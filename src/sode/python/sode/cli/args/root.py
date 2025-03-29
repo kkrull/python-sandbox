@@ -41,7 +41,6 @@ def root_parser(program_name: str) -> argparse.ArgumentParser:
     for option in _global_options:
         option.add_to(parser)
 
-    # Look here for inspiration: https://stackoverflow.com/questions/18668227/argparse-subcommands-with-nested-namespaces
     sode_parsers = parser.add_subparsers(dest="command", title="commands")
     add_fs_parser(sode_parsers)
     return parser
