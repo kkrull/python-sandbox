@@ -39,7 +39,13 @@ def main_fn_args(state: MainState, args: SodeNamespace) -> int:
         return 0
 
     pprint.pp(args)
-    return 0
+    match args.command:
+        case "fs-find":
+            print("fs-find command", file=state.stdout)
+            return 0
+        case _:
+            print("unknown command", file=state.stdout)
+            return 0
 
 
 if __name__ == "__main__":

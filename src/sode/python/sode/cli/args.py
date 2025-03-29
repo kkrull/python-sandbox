@@ -1,21 +1,38 @@
 import argparse
 import pathlib
 import re
+from typing import Any
 
 from sode.cli.option import BoolOption, regex_type
 from sode.cli.state import MainState
 from sode.shared.either import Either, Left, Right
 
 
+class FsFindNamespace(argparse.Namespace):
+    path: pathlib.Path
+    pattern: re.Pattern[str]
+
+
 class SodeNamespace(argparse.Namespace):
-    command_name: str
+    command: str
+    fs_find: FsFindNamespace = FsFindNamespace()
     debug: bool
     version: bool
 
 
-class SodeFsFindNamespace(argparse.Namespace):
-    path: pathlib.Path
-    pattern: re.Pattern[str]
+class FsFindAction(argparse.Action):
+    def __call__(
+        self,
+        _parser: Any,
+        namespace: argparse.Namespace,
+        values: Any,
+        _option_string: Any = None,
+    ) -> None:
+        dest = self.dest.lower()
+        print(f"__call__: dest={dest}, values={values}")
+        fs_find = getattr(namespace, "fs_find", FsFindNamespace())
+        setattr(fs_find, dest, values)
+        setattr(namespace, "fs_find", fs_find)
 
 
 def parse_args(state: MainState) -> Either[str, SodeNamespace]:
@@ -29,29 +46,28 @@ def parse_args(state: MainState) -> Either[str, SodeNamespace]:
     for option in _global_options:
         option.add_to(parser)
 
-    sode_command_parsers = parser.add_subparsers(
-        dest="command_name",
+    # Look here for inspiration: https://stackoverflow.com/questions/18668227/argparse-subcommands-with-nested-namespaces
+    sode_parsers = parser.add_subparsers(
+        dest="command",
         title="commands",
     )
-    fs_parser = sode_command_parsers.add_parser(
-        "fs",
-        description="sode fs: hack the local filesystem",
-        help="hack the local file system",
-    )
 
-    fs_command_parsers = fs_parser.add_subparsers(title="sub-commands")
-    fs_find_parser = fs_command_parsers.add_parser(
-        "find",
+    fs_find_parser = sode_parsers.add_parser(
+        "fs-find",
         description="sode fs-find: find files in a filesystem",
         help="find files in a filesystem",
     )
     fs_find_parser.add_argument(
         "PATH",
+        action=FsFindAction,
+        default=argparse.SUPPRESS,
         help="path in which to search",
         type=pathlib.Path,
     )
     fs_find_parser.add_argument(
         "PATTERN",
+        action=FsFindAction,
+        default=argparse.SUPPRESS,
         help="pattern for which to search: ^.+$",
         type=regex_type(r"^.+$"),
     )
