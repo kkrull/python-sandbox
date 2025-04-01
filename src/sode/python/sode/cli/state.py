@@ -4,6 +4,8 @@ import typing
 
 
 class MainState:
+    """Everything the program needs to run"""
+
     _argv: list[str]
 
     # I/O interfaces that bypass the "any trick" of `TextWrapper | None` typing

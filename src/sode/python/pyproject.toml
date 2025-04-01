@@ -29,4 +29,4 @@ warn_unused_configs = true
 
 # https://setuptools.pypa.io/en/latest/userguide/pyproject_config.html#dynamic-metadata
 [tool.setuptools.dynamic]
-version = { attr = "sode._version.__version__" }
+version = { attr = "sode.version.__version__" }
