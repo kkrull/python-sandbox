@@ -45,13 +45,15 @@ debug-project:
 
 ### Sources
 
-sources_py := $(shell find sode -type f -iname '*.py' | sort)
 sources := Pipfile Pipfile.lock pyproject.toml $(sources_py)
+sources_dir := sode
+sources_py := $(shell find $(sources_dir) -type f -iname '*.py' | sort)
 
 .PHONY: debug-sources
 debug-sources:
 	$(info Sources:)
 	$(info - sources=$(sources))
+	$(info - sources_dir=$(sources_dir))
 	$(info - sources_py=$(sources_py))
 	@:
 
@@ -177,7 +179,7 @@ mypy-check: #> Type check sources with mypy
 
 .PHONY: mypy-watch
 mypy-watch: #> Type check sources with mypy (watch mode)
-	$(FSWATCH) $(sources) -0 \
+	$(FSWATCH) $(sources_dir) -0 \
 		| xargs -0 -I {} $(MYPY) {}
 
 #. SOURCE DISTRIBUTION TARGETS

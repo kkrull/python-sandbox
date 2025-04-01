@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from typing import Callable, Generic, NewType, Protocol, TypeVar, Union
+from typing import Callable, TypeVar, Union, override
 
 A = TypeVar("A")
 B = TypeVar("B")
@@ -11,16 +11,28 @@ type Either[A, B] = Union[Left[A, B], Right[A, B]]
 
 
 class EitherBase[A, B]:
+    """
+    An immutable container of either a left-hand value of type Left[A] or a right-hand value of type
+    Right[B].
+
+    Left-hand values are typically used for errors or lack of ability to proceed further with an
+    algorithm. Mapping functions are right-associative.  In other words, mapping functions are
+    applied to right-hand values, but left-hand values are returned as-is.
+    """
+
     @abstractmethod
     def flat_map(self, fn: Callable[[B], Either[A, C]]) -> Either[A, C]:
+        """Replace Right with the result of calling the given function, or return Left unchanged."""
         pass
 
     @abstractmethod
     def get_or_else(self, fallbackValue: B) -> B:
+        """Get Right's inner value, or-in the case of Left-the given fallback value."""
         pass
 
     @abstractmethod
-    def map(self, _fn: Callable[[B], C]) -> Either[A, C]:
+    def map(self, fn: Callable[[B], C]) -> Either[A, C]:
+        """Transform Right's inner value with the given function, or return Left unchanged."""
         pass
 
     @abstractmethod
@@ -38,18 +50,23 @@ class Left[A, B](EitherBase[A, B]):
     def __init__(self, value: A):
         self.value = value
 
+    @override
     def flat_map(self, _fn: Callable[[B], Either[A, C]]) -> Either[A, C]:
         return Left[A, C](self.value)
 
+    @override
     def get_or_else(self, fallbackValue: B) -> B:
         return fallbackValue
 
+    @override
     def map(self, _fn: Callable[[B], C]) -> Either[A, C]:
         return Left[A, C](self.value)
 
+    @override
     def __repr__(self) -> str:
-        return str(self)
+        return f"Left({self.value})"
 
+    @override
     def __str__(self) -> str:
         return f"Left({self.value})"
 
@@ -60,17 +77,22 @@ class Right[A, B](EitherBase[A, B]):
     def __init__(self, value: B):
         self.value = value
 
+    @override
     def flat_map(self, fn: Callable[[B], Either[A, C]]) -> Either[A, C]:
         return fn(self.value)
 
+    @override
     def get_or_else(self, _fallbackValue: B) -> B:
         return self.value
 
+    @override
     def map(self, fn: Callable[[B], C]) -> Either[A, C]:
         return Right(fn(self.value))
 
+    @override
     def __repr__(self) -> str:
-        return str(self)
+        return f"Right({self.value})"
 
+    @override
     def __str__(self) -> str:
         return f"Right({self.value})"
