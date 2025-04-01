@@ -19,6 +19,9 @@ def main() -> NoReturn:
 
 
 def main_fn(state: MainState) -> int:
+    # TODO KDK: Make ArgumentParser in main.  There's really not a good abstraction over a
+    # plugin-based architecture where commands add themselves to a namespace that figures out its
+    # own command.
     match parse_args(state):
         case Right(args):
             return main_fn_args(state, args)
