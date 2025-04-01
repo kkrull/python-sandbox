@@ -14,6 +14,10 @@ sode = "sode.cli.main:main"
 # https://black.readthedocs.io/en/stable/usage_and_configuration/the_basics.html#configuration-via-a-file
 [tool.black]
 line-length = 100
+target-version = ["py313"]
+
+# isort has its own file (.isort.cfg) because pre-commit hook does not read this file
+# https://pycqa.github.io/isort/docs/configuration/config_files.html#isortcfg-preferred-format
 
 # https://mypy.readthedocs.io/en/stable/config_file.html
 [tool.mypy]
@@ -22,12 +26,6 @@ python_version = "3.13"
 strict = true
 verbosity = 0
 warn_unused_configs = true
-
-# https://pycqa.github.io/isort/docs/configuration/config_files.html
-# https://pycqa.github.io/isort/docs/configuration/options.html
-[tool.isort]
-line_length = 100
-profile = 'black'
 
 # https://setuptools.pypa.io/en/latest/userguide/pyproject_config.html#dynamic-metadata
 [tool.setuptools.dynamic]

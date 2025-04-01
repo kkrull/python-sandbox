@@ -95,6 +95,9 @@ _File format and syntax for documentation._
 
 - Documentation:
   - Syntax: <https://daringfireball.net/projects/markdown/syntax>
+- Interactions;
+  - [Mermaid](#mermaid) is embedded in some Markdown documents
+  - [Markdownlint](#markdownlint-markdownlint-cli2) lints markdown sources
 - VS Code extensions:
   - <https://marketplace.visualstudio.com/items?itemName=yzhang.markdown-all-in-one>
 
@@ -110,6 +113,19 @@ _Checks Markdown files for style or formatting errors._
   - [`pre-commit`](#pre-commit): Runs checks for this tool.
 - VS Code extensions:
   - <https://marketplace.visualstudio.com/items?itemName=DavidAnson.vscode-markdownlint>
+
+## [Mermaid](https://mermaid-js.github.io/mermaid)
+
+- Documentation:
+  - Customized styling directives: <https://stackoverflow.com/q/71864287/112682>
+  - Syntax: <https://mermaid.js.org/intro/n00b-syntaxReference.html>
+- Interactions:
+  - Mermaid is embedded in some [Markdown](#markdown) documents
+- VS Code extensions:
+  - Markdown Preview Mermaid Support:
+    <https://marketplace.visualstudio.com/items?itemName=bierner.markdown-mermaid>
+  - Mermaid Editor:
+    <https://marketplace.visualstudio.com/items?itemName=tomoyukim.vscode-mermaid-editor>
 
 ## [`mypy`](https://mypy-lang.org/)
 

@@ -5,7 +5,7 @@ from sode.cli.args.fs import FsArgs, add_fs_parser
 from sode.cli.command import CliCommand
 from sode.cli.shared.option import BoolOption
 from sode.cli.state import MainState
-from sode.shared.either import Either, Left, Right
+from sode.shared.fp.either import Either, Left, Right
 
 
 class RootArgs(argparse.Namespace):

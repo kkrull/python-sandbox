@@ -9,7 +9,7 @@ import sode._version
 from sode.cli.args.root import RootArgs, parse_args
 from sode.cli.command import CliCommand, RunState
 from sode.cli.state import MainState
-from sode.shared.either import Left, Right
+from sode.shared.fp.either import Left, Right
 
 
 def main() -> NoReturn:
