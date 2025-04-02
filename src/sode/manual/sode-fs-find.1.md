@@ -40,7 +40,7 @@ Glob patterns allow `**` for recursive matching.
 
 ## Look up Makefiles in local repositories
 
-    sode fs find 'Makefile' ~/git
+    sode fs find --glob '**/Makefile' ~/git
 
 # SEE ALSO
 
