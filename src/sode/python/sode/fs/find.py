@@ -1,4 +1,5 @@
 from argparse import _SubParsersAction
+from pathlib import Path
 from pprint import pprint
 
 from sode.fs.shared import FS_COMMAND
@@ -46,5 +47,10 @@ def _run_find(args: ProgramNamespace, state: RunState) -> int:
         },
         stream=state.stdout,
     )
+
+    for search_glob in args.name:
+        for search_root in [Path(p) for p in args.path]:
+            for search_hit in search_root.glob(search_glob):
+                print(search_hit, file=state.stdout)
 
     return 0
