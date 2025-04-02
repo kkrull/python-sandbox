@@ -1,7 +1,7 @@
 from argparse import _SubParsersAction
 from pprint import pprint
 
-from sode.fs.cli import FS_COMMAND
+from sode.fs.shared import FS_COMMAND
 from sode.shared.cli import namespace
 from sode.shared.cli.namespace import ProgramNamespace
 from sode.shared.cli.state import RunState

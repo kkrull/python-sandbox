@@ -4,7 +4,7 @@ from pprint import pprint
 from sode.shared.cli import namespace
 from sode.shared.cli.namespace import ProgramNamespace
 from sode.shared.cli.state import RunState
-from sode.soundcloud.cli import SC_COMMAND
+from sode.soundcloud.shared import SC_COMMAND
 
 
 def add_auth(

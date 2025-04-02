@@ -1,9 +1,7 @@
 from argparse import _SubParsersAction
-from typing import Final
 
 from sode.fs.find import add_find
-
-FS_COMMAND: Final[str] = "command.fs"
+from sode.fs.shared import FS_COMMAND
 
 
 def add_fs(

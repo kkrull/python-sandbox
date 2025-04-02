@@ -1,10 +1,8 @@
 from argparse import _SubParsersAction
-from typing import Final
 
 from sode.soundcloud.auth import add_auth
+from sode.soundcloud.shared import SC_COMMAND
 from sode.soundcloud.track import add_track
-
-SC_COMMAND: Final[str] = "command.soundcloud"
 
 
 def add_soundcloud(
