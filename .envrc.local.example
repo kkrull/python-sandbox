@@ -1,7 +1,13 @@
 ## direnv: machine-specific settings
 # https://direnv.net/
 
+## fswatch
+
+# WSL
+#export FSWATCHFLAGS='--monitor=poll_monitor'
+
 ## Python
 
+# WSL
 #export PIP=pip3
 #export PYTHON=python3

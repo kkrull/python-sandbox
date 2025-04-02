@@ -6,7 +6,6 @@ B = TypeVar("B")
 C = TypeVar("C")
 
 
-# Based upon: https://stackoverflow.com/a/62282621/112682
 type Either[A, B] = Union[Left[A, B], Right[A, B]]
 
 

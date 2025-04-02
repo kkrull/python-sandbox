@@ -22,6 +22,7 @@ debug-paths:
 ### Programs
 
 FSWATCH ?= fswatch
+FSWATCHFLAGS ?= ''
 TAR ?= tar
 UNZIP ?= unzip
 
@@ -29,6 +30,7 @@ UNZIP ?= unzip
 debug-programs:
 	$(info Programs)
 	$(info - FSWATCH=$(FSWATCH))
+	$(info - FSWATCHFLAGS=$(FSWATCHFLAGS))
 	$(info - TAR=$(TAR))
 	$(info - UNZIP=$(UNZIP))
 	@:
@@ -168,9 +170,9 @@ isort-check: #> Check sources with isort
 isort-format: #> Format sources with isort
 	$(PIPENV) run isort-format
 
-.PHONY: mypy-watch
+.PHONY: isort-watch
 isort-watch: #> Format sources with isort (watch mode)
-	$(FSWATCH) $(sources) -0 \
+	$(FSWATCH) $(FSWATCHFLAGS) $(sources) -0 \
 		| xargs -0 -I {} $(ISORT) {}
 
 .PHONY: mypy-check
@@ -179,8 +181,8 @@ mypy-check: #> Type check sources with mypy
 
 .PHONY: mypy-watch
 mypy-watch: #> Type check sources with mypy (watch mode)
-	$(FSWATCH) $(sources_dir) -0 \
-		| xargs -0 -I {} $(MYPY) {}
+	$(FSWATCH) $(FSWATCHFLAGS) --recursive -d $(sources_dir) -0 \
+		| xargs -0 -I {} $(MYPY) $(sources_dir)
 
 #. SOURCE DISTRIBUTION TARGETS
 
@@ -224,7 +226,7 @@ install-editable-wheel: wheel #> Link to the wheel globally with pipx
 
 .PHONY: install-wheel
 install-wheel: wheel #> Install the wheel globally with pipx
-	$(PIPX) install --force .
+	$(PIPX) install --force --python=python .
 
 .PHONY: uninstall-wheel
 uninstall-wheel:
@@ -260,7 +262,6 @@ run-cli-python: #> Run the program from venv-managed python
 	PYTHONPATH=. $(PIPENV) run python ./sode/cli/main.py --version
 
 .PHONY: run-cli-wheel
-run-cli-wheel: wheel #> Run the program from a (re-)installed wheel
+run-cli-wheel: install-wheel #> Run the program from a (re-)installed wheel
 	@echo ""
-	$(PIPX) install --force --quiet .
 	@$(cmd_name) --version

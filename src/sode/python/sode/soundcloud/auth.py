@@ -4,29 +4,32 @@ from pprint import pprint
 from sode.shared.cli import namespace
 from sode.shared.cli.namespace import ProgramNamespace
 from sode.shared.cli.state import RunState
+from sode.soundcloud.shared import SC_COMMAND
 
 
 def add_auth(
-    sc_subcommands: _SubParsersAction,  # type: ignore[type-arg]
+    subcommands: _SubParsersAction,  # type: ignore[type-arg]
 ) -> None:
-    sc_auth_parser = sc_subcommands.add_parser(
+    """Add the auth sub-command"""
+
+    auth_parser = subcommands.add_parser(
         "auth",
         description="Authorize with the SoundCloud API",
         help="authorize with SoundCloud API [start here]",
     )
-    namespace.set_parser_command(sc_auth_parser, _run_auth)
+    namespace.set_parser_command(auth_parser, _run_auth)
 
-    sc_auth_parser.add_argument(
+    auth_parser.add_argument(
         "--check-token-expiration",
         action="store_true",
         help="check if persisted access token has expired",
     )
-    sc_auth_parser.add_argument(
+    auth_parser.add_argument(
         "--client-id",
         help="OAuth2 client id with which to request access",
         nargs="?",
     )
-    sc_auth_parser.add_argument(
+    auth_parser.add_argument(
         "--client-secret",
         help="OAuth2 client secret with which to request access",
         nargs="?",
@@ -39,7 +42,7 @@ def _run_auth(args: ProgramNamespace, state: RunState) -> int:
             "soundcloud-auth": {
                 "args": args,
                 "command": args.command,
-                "command.soundcloud": getattr(args, "command.soundcloud"),
+                SC_COMMAND: getattr(args, SC_COMMAND),
                 "check_token_expiration": args.check_token_expiration,
                 "client_id": args.client_id,
                 "client_secret": args.client_secret,

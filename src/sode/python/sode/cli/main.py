@@ -53,8 +53,5 @@ def new_main_parser(state: MainState) -> tuple[  # type: ignore[type-arg]
     )
 
 
-## main
-
-
 if __name__ == "__main__":
     main()

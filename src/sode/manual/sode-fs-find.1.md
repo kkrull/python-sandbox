@@ -1,4 +1,4 @@
-% SODE(1) Version 0.0.2 | BRODE SODE
+% SODE(1) Version 0.0.1 | BRODE SODE
 % Kyle Krull
 % March 2025
 
@@ -9,14 +9,21 @@
 # SYNOPSIS
 
 **sode fs find** \[**\-\-help**\]  
-**sode fs find** *glob pattern* \[*path* …\]
+**sode fs find** \[**\-\-exclude**\] *glob* **\-\-glob** *glob*
+\[\-\-\] \[*path* …\]
 
 # DESCRIPTION
 
-List filenames matching *glob pattern* in each *path*.  Glob patterns are those
-compatible with `find`.
+List filenames matching any *glob*-but not an excluded pattern-in any *path*.
+Glob patterns allow `**` for recursive matching.
 
 # OPTIONS
+
+  - **\-\-exclude**
+    path pattern(s) to exclude (repeatable)
+
+  - **\-\-glob**
+    path pattern(s) to match (repeatable)
 
   - **\-\-help**
     Show help
@@ -33,7 +40,7 @@ compatible with `find`.
 
 ## Look up Makefiles in local repositories
 
-    sode fs find 'Makefile' ~/git
+    sode fs find --glob '**/Makefile' ~/git
 
 # SEE ALSO
 
