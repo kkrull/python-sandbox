@@ -51,6 +51,11 @@ def _run_find(args: ProgramNamespace, state: RunState) -> int:
     for search_glob in args.glob:
         for search_root in [Path(p) for p in args.path]:
             for search_hit in search_root.glob(search_glob):
-                print(search_hit, file=state.stdout)
+                exclude = excluded(search_hit)
+                print(f"[{exclude}] {search_hit}", file=state.stdout)
 
     return 0
+
+
+def excluded(path: Path) -> bool:
+    return path.full_match("**/node_modules/**")
