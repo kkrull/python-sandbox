@@ -15,7 +15,46 @@ class CommandNamespace(Namespace):
     run_selected: Callable[["CommandNamespace", MainState], int]
 
 
-def fs_find(args: CommandNamespace, state: MainState) -> int:
+def fs_add_parser(
+    command_parsers: _SubParsersAction,  # type: ignore[type-arg]
+) -> None:
+    fs_parser = command_parsers.add_parser(
+        "fs",
+        description="Hack a local filesystem",
+        help="hack a local filesystem",
+    )
+    fs_subcommands = fs_parser.add_subparsers(
+        dest="command.fs",
+        metavar="SUBCOMMAND",
+        title="subcommands",
+    )
+
+    fs_find_add_parser(fs_subcommands)
+
+
+def fs_find_add_parser(
+    fs_subcommands: _SubParsersAction,  # type: ignore[type-arg]
+) -> None:
+    find_parser = fs_subcommands.add_parser(
+        "find",
+        description="Find files lurking in the dark",
+        help="find files",
+    )
+    find_parser.set_defaults(run_selected=fs_find_run)
+    find_parser.add_argument(
+        "--name",
+        help="pattern to match filenames",
+        metavar="PATTERN",
+        nargs=1,
+    )
+    find_parser.add_argument(
+        "path",
+        help="path(s) in which to search for files",
+        nargs="+",
+    )
+
+
+def fs_find_run(args: CommandNamespace, state: MainState) -> int:
     pprint(
         {
             "fs-find": {
@@ -134,34 +173,7 @@ def main_fn(state: MainState) -> int:
         title="commands",
     )
 
-    fs_parser = command_parsers.add_parser(
-        "fs",
-        description="Hack a local filesystem",
-        help="hack a local filesystem",
-    )
-    fs_subcommands = fs_parser.add_subparsers(
-        dest="command.fs",
-        metavar="SUBCOMMAND",
-        title="subcommands",
-    )
-    find_parser = fs_subcommands.add_parser(
-        "find",
-        description="Find files lurking in the dark",
-        help="find files",
-    )
-    find_parser.set_defaults(run_selected=fs_find)
-    find_parser.add_argument(
-        "--name",
-        help="pattern to match filenames",
-        metavar="PATTERN",
-        nargs=1,
-    )
-    find_parser.add_argument(
-        "path",
-        help="path(s) in which to search for files",
-        nargs="+",
-    )
-
+    fs_add_parser(command_parsers)
     greet_add_parser(command_parsers)
 
     soundcloud_parser = command_parsers.add_parser(
