@@ -1,25 +1,25 @@
-import io
 import sys
 import typing
 
+from sode.shared.cli.state import RunState
 
-class MainState:
+
+class MainState(RunState):
+    """Everything the program needs to run"""
+
     _argv: list[str]
-
-    # I/O interfaces that bypass the "any trick" of `TextWrapper | None` typing
-    # https://stackoverflow.com/questions/79448057/how-does-maybenone-also-known-as-the-any-trick-work-in-python-type-hints
-    stderr: io.TextIOBase
-    stdout: io.TextIOBase
+    version: str
 
     def __init__(
         self,
         argv: list[str],
-        stderr: io.TextIOBase = typing.cast(io.TextIOWrapper, sys.stderr),
-        stdout: io.TextIOBase = typing.cast(io.TextIOWrapper, sys.stdout),
+        version: str,
+        stderr: typing.IO[str] = sys.stderr,
+        stdout: typing.IO[str] = sys.stdout,
     ):
+        super().__init__(stderr=stderr, stdout=stdout)
         self._argv = argv
-        self.stderr = stderr
-        self.stdout = stdout
+        self.version = version
 
     @property
     def arguments(self) -> list[str]:

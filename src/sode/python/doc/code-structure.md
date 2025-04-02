@@ -3,10 +3,14 @@
 ## Principles
 
 1. Adding a new (sub-)command should not require modifying any other command's code.
-2. All code for parsing and running each (sub-)command should be in its own package, to group
-   together code that has the same reasons to change (e.g. package by feature).
-3. A separate main package is responsible for creation, wiring, and orchestration.  It is the only
+2. A separate main package is responsible for creation, wiring, and orchestration.  It is the only
    package that may depend upon-and have code references to-everything else.
+3. ~~All code for parsing and running each (sub-)command should be in its own package, to group
+   together code that has the same reasons to change (e.g. package by feature).~~
+
+   _Note: Delegating logic to configure argparse to another package is proving to be difficult.  Try
+   doing it all from main for now.  Maybe there will be a way to delegate some of that behavior
+   later._
 
 ## Package dependencies
 
