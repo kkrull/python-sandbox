@@ -12,10 +12,10 @@ from sode.cli.state import MainState
 class CommandNamespace(Namespace):
     command: str
     debug: bool
-    run_selected: Callable[["CommandNamespace"], int]
+    run_selected: Callable[["CommandNamespace", MainState], int]
 
 
-def fs_find(args: CommandNamespace) -> int:
+def fs_find(args: CommandNamespace, state: MainState) -> int:
     pprint(
         {
             "fs-find": {
@@ -26,12 +26,13 @@ def fs_find(args: CommandNamespace) -> int:
                 "name": args.name,
                 "path": args.path,
             }
-        }
+        },
+        stream=state.stdout,
     )
     return 0
 
 
-def greet(args: CommandNamespace) -> int:
+def greet(args: CommandNamespace, state: MainState) -> int:
     pprint(
         {
             "greet": {
@@ -40,12 +41,13 @@ def greet(args: CommandNamespace) -> int:
                 "debug": args.debug,
                 "who": args.who,
             }
-        }
+        },
+        stream=state.stdout,
     )
     return 0
 
 
-def sc_auth(args: CommandNamespace) -> int:
+def sc_auth(args: CommandNamespace, state: MainState) -> int:
     pprint(
         {
             "soundcloud-auth": {
@@ -57,12 +59,13 @@ def sc_auth(args: CommandNamespace) -> int:
                 "client_secret": args.client_secret,
                 "debug": args.debug,
             }
-        }
+        },
+        stream=state.stdout,
     )
     return 0
 
 
-def sc_track(args: CommandNamespace) -> int:
+def sc_track(args: CommandNamespace, state: MainState) -> int:
     pprint(
         {
             "soundcloud-auth": {
@@ -72,7 +75,8 @@ def sc_track(args: CommandNamespace) -> int:
                 "debug": args.debug,
                 "list": args.list,
             }
-        }
+        },
+        stream=state.stdout,
     )
     return 0
 
@@ -197,11 +201,11 @@ def main_fn(state: MainState) -> int:
     try:
         args = main_parser.parse_args(state.arguments, namespace=CommandNamespace())
     except ArgumentError as error:
-        print(str(error))
+        print(str(error), file=state.stderr)
         return 1
 
-    pprint({"main": {"args": args}})
-    return args.run_selected(args)
+    pprint({"main": {"args": args}}, stream=state.stdout)
+    return args.run_selected(args, state)
 
 
 if __name__ == "__main__":

@@ -1,4 +1,3 @@
-import io
 import sys
 import typing
 
@@ -7,17 +6,14 @@ class MainState:
     """Everything the program needs to run"""
 
     _argv: list[str]
-
-    # I/O interfaces that bypass the "any trick" of `TextWrapper | None` typing
-    # https://stackoverflow.com/questions/79448057/how-does-maybenone-also-known-as-the-any-trick-work-in-python-type-hints
-    stderr: io.TextIOBase
-    stdout: io.TextIOBase
+    stderr: typing.IO[str]
+    stdout: typing.IO[str]
 
     def __init__(
         self,
         argv: list[str],
-        stderr: io.TextIOBase = typing.cast(io.TextIOWrapper, sys.stderr),
-        stdout: io.TextIOBase = typing.cast(io.TextIOWrapper, sys.stdout),
+        stderr: typing.IO[str] = sys.stderr,
+        stdout: typing.IO[str] = sys.stdout,
     ):
         self._argv = argv
         self.stderr = stderr
