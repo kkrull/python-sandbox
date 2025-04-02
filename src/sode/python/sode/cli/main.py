@@ -8,8 +8,9 @@ from typing import Callable, NoReturn
 from sode import version
 
 
-class SodeNamespace(Namespace):
-    run_selected: Callable[["SodeNamespace"], int]
+class CommandNamespace(Namespace):
+    command: str
+    run_selected: Callable[["CommandNamespace"], int]
 
 
 def fs_find(args: Namespace) -> int:
@@ -175,7 +176,7 @@ def main() -> NoReturn:
     )
 
     try:
-        args = main_parser.parse_args(sys.argv[1:], namespace=SodeNamespace())
+        args = main_parser.parse_args(sys.argv[1:], namespace=CommandNamespace())
     except ArgumentError as error:
         print(str(error))
         sys.exit(1)
