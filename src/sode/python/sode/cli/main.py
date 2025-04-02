@@ -10,6 +10,7 @@ from sode import version
 
 class CommandNamespace(Namespace):
     command: str
+    debug: bool
     run_selected: Callable[["CommandNamespace"], int]
 
 
