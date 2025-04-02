@@ -1,11 +1,13 @@
 from argparse import _SubParsersAction
 from pathlib import Path
 from pprint import pprint
+from typing import Iterable
 
 from sode.fs.shared import FS_COMMAND
 from sode.shared.cli import namespace
 from sode.shared.cli.namespace import ProgramNamespace
 from sode.shared.cli.state import RunState
+from sode.shared.fp.option import Empty, Value
 
 
 def add_find(
@@ -50,11 +52,19 @@ def _run_find(args: ProgramNamespace, state: RunState) -> int:
 
     for search_glob in args.glob:
         for search_root in [Path(p) for p in args.path]:
-            for search_hit in [p for p in search_root.glob(search_glob) if not excluded(p)]:
-                print(f"{search_hit}", file=state.stdout)
+            for hit in [p for p in search_root.glob(search_glob) if not _excluded(p)]:
+                print(f"{hit}", file=state.stdout)
 
     return 0
 
 
-def excluded(path: Path) -> bool:
-    return path.full_match("**/node_modules/**")
+def _excluded(
+    path: Path,
+    exclude_patterns: Iterable[str] = ["**/.git/**", "**/node_modules/**"],
+) -> bool:
+    matching_pattern = next(
+        (Value(x) for x in exclude_patterns if path.full_match(x)),
+        Empty[str](),
+    )
+
+    return matching_pattern.map(lambda _: True).get_or_else(False)
