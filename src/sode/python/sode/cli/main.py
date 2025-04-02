@@ -43,8 +43,23 @@ def sc_auth(args: Namespace) -> int:
                 "args": args,
                 "command": args.command,
                 "command.soundcloud": getattr(args, "command.soundcloud"),
+                "check_token_expiration": args.check_token_expiration,
                 "client_id": args.client_id,
                 "client_secret": args.client_secret,
+            }
+        }
+    )
+    return 0
+
+
+def sc_track(args: Namespace) -> int:
+    pprint(
+        {
+            "soundcloud-auth": {
+                "args": args,
+                "command": args.command,
+                "command.soundcloud": getattr(args, "command.soundcloud"),
+                "list": args.list,
             }
         }
     )
@@ -54,7 +69,7 @@ def sc_auth(args: Namespace) -> int:
 def main() -> NoReturn:
     main_parser = ArgumentParser(
         add_help=True,
-        description="BRODE SODE: hack away at deadly computing scenarios",
+        description="BRODE SODE: Hack away at deadly computing scenarios",
         exit_on_error=False,
         prog=sys.argv[0],
     )
@@ -72,7 +87,7 @@ def main() -> NoReturn:
     )
     fs_parser = command_parsers.add_parser(
         "fs",
-        description="hack a local filesystem",
+        description="Hack a local filesystem",
         help="hack a local filesystem",
     )
     fs_subcommands = fs_parser.add_subparsers(
@@ -82,7 +97,7 @@ def main() -> NoReturn:
     )
     find_parser = fs_subcommands.add_parser(
         "find",
-        description="find files lurking in the dark",
+        description="Find files lurking in the dark",
         help="find files",
     )
     find_parser.set_defaults(func=fs_find)
@@ -100,7 +115,7 @@ def main() -> NoReturn:
 
     greet_parser = command_parsers.add_parser(
         "greet",
-        description="start with a greeting",
+        description="Start with a greeting",
         help="greet somebody",
     )
     greet_parser.set_defaults(func=greet)
@@ -113,7 +128,7 @@ def main() -> NoReturn:
 
     soundcloud_parser = command_parsers.add_parser(
         "soundcloud",
-        description="hack SoundCloud",
+        description="Hack SoundCloud",
         help="hack SoundCloud",
     )
     soundcloud_subcommands = soundcloud_parser.add_subparsers(
@@ -123,24 +138,36 @@ def main() -> NoReturn:
     )
     sc_auth_parser = soundcloud_subcommands.add_parser(
         "auth",
-        description="Authorize with the API",
-        help="Authorize with SoundCloud [start here]",
+        description="Authorize with the SoundCloud API",
+        help="authorize with SoundCloud API [start here]",
     )
     sc_auth_parser.set_defaults(func=sc_auth)
     sc_auth_parser.add_argument(
         "--check-token-expiration",
         action="store_true",
-        help="Check if persisted access token has expired",
+        help="check if persisted access token has expired",
     )
     sc_auth_parser.add_argument(
         "--client-id",
-        help="OAuth2 client id to use",
+        help="OAuth2 client id with which to request access",
         nargs="?",
     )
     sc_auth_parser.add_argument(
         "--client-secret",
-        help="OAuth2 client secret to use",
+        help="OAuth2 client secret with which to request access",
         nargs="?",
+    )
+
+    sc_track_parser = soundcloud_subcommands.add_parser(
+        "track",
+        description="Work with tracks",
+        help="hack tracks",
+    )
+    sc_track_parser.set_defaults(func=sc_track)
+    sc_track_parser.add_argument(
+        "--list",
+        action="store_true",
+        help="list tracks",
     )
 
     try:
