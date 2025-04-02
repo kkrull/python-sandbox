@@ -21,8 +21,8 @@ def add_find(
     namespace.set_parser_command(find_parser, _run_find)
 
     find_parser.add_argument(
-        "--name",
-        help="pattern to match filenames",
+        "--glob",
+        help="glob pattern to match filenames",
         metavar="PATTERN",
         nargs=1,
     )
@@ -41,14 +41,14 @@ def _run_find(args: ProgramNamespace, state: RunState) -> int:
                 "command": args.command,
                 FS_COMMAND: getattr(args, FS_COMMAND),
                 "debug": args.debug,
-                "name": args.name,
+                "glob": args.glob,
                 "path": args.path,
             }
         },
         stream=state.stdout,
     )
 
-    for search_glob in args.name:
+    for search_glob in args.glob:
         for search_root in [Path(p) for p in args.path]:
             for search_hit in search_root.glob(search_glob):
                 print(search_hit, file=state.stdout)
