@@ -77,11 +77,16 @@ def sc_track(args: Namespace) -> int:
 
 
 def main() -> NoReturn:
+    status = main_fn(sys.argv)
+    sys.exit(status)
+
+
+def main_fn(argv: list[str]) -> int:
     main_parser = ArgumentParser(
         add_help=True,
         description="BRODE SODE: Hack away at deadly computing scenarios",
         exit_on_error=False,
-        prog=sys.argv[0],
+        prog=argv[0],
     )
 
     main_parser.add_argument(
@@ -188,14 +193,13 @@ def main() -> NoReturn:
     )
 
     try:
-        args = main_parser.parse_args(sys.argv[1:], namespace=CommandNamespace())
+        args = main_parser.parse_args(argv[1:], namespace=CommandNamespace())
     except ArgumentError as error:
         print(str(error))
-        sys.exit(1)
+        return 1
 
     pprint({"main": {"args": args}})
-    status = args.run_selected(args)
-    sys.exit(status)
+    return args.run_selected(args)
 
 
 if __name__ == "__main__":
