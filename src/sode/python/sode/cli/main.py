@@ -12,29 +12,6 @@ from sode.greet.cli import add_greet
 from sode.shared.cli.namespace import ProgramNamespace, add_command_subparsers, add_global_arguments
 from sode.soundcloud.cli import add_soundcloud
 
-## program module: stuff about the top-level program
-
-
-def new_main_parser(name: str) -> tuple[  # type: ignore[type-arg]
-    ArgumentParser,
-    _SubParsersAction,
-]:
-    main_parser = ArgumentParser(
-        add_help=True,
-        description="BRODE SODE: Hack away at deadly computing scenarios",
-        exit_on_error=False,
-        prog=name,
-    )
-
-    add_global_arguments(main_parser, version.__version__)
-    return (
-        main_parser,
-        add_command_subparsers(main_parser),
-    )
-
-
-## main
-
 
 def main() -> NoReturn:
     state = MainState(sys.argv)
@@ -56,6 +33,27 @@ def main_fn(state: MainState) -> int:
 
     pprint({"main": {"args": args}}, stream=state.stdout)
     return args.run_selected(args, state)
+
+
+def new_main_parser(name: str) -> tuple[  # type: ignore[type-arg]
+    ArgumentParser,
+    _SubParsersAction,
+]:
+    main_parser = ArgumentParser(
+        add_help=True,
+        description="BRODE SODE: Hack away at deadly computing scenarios",
+        exit_on_error=False,
+        prog=name,
+    )
+
+    add_global_arguments(main_parser, version.__version__)
+    return (
+        main_parser,
+        add_command_subparsers(main_parser),
+    )
+
+
+## main
 
 
 if __name__ == "__main__":
