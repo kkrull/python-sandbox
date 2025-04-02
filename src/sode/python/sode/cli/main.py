@@ -36,6 +36,21 @@ def greet(args: Namespace) -> int:
     return 0
 
 
+def sc_auth(args: Namespace) -> int:
+    pprint(
+        {
+            "soundcloud-auth": {
+                "args": args,
+                "command": args.command,
+                "command.soundcloud": getattr(args, "command.soundcloud"),
+                "client_id": args.client_id,
+                "client_secret": args.client_secret,
+            }
+        }
+    )
+    return 0
+
+
 def main() -> NoReturn:
     main_parser = ArgumentParser(
         add_help=True,
@@ -88,13 +103,45 @@ def main() -> NoReturn:
         description="start with a greeting",
         help="greet somebody",
     )
+    greet_parser.set_defaults(func=greet)
     greet_parser.add_argument(
         "who",
         default="World",
         help="whom to greet",
         nargs="?",
     )
-    greet_parser.set_defaults(func=greet)
+
+    soundcloud_parser = command_parsers.add_parser(
+        "soundcloud",
+        description="hack SoundCloud",
+        help="hack SoundCloud",
+    )
+    soundcloud_subcommands = soundcloud_parser.add_subparsers(
+        dest="command.soundcloud",
+        metavar="SUBCOMMAND",
+        title="subcommands",
+    )
+    sc_auth_parser = soundcloud_subcommands.add_parser(
+        "auth",
+        description="Authorize with the API",
+        help="Authorize with SoundCloud [start here]",
+    )
+    sc_auth_parser.set_defaults(func=sc_auth)
+    sc_auth_parser.add_argument(
+        "--check-token-expiration",
+        action="store_true",
+        help="Check if persisted access token has expired",
+    )
+    sc_auth_parser.add_argument(
+        "--client-id",
+        help="OAuth2 client id to use",
+        nargs="?",
+    )
+    sc_auth_parser.add_argument(
+        "--client-secret",
+        help="OAuth2 client secret to use",
+        nargs="?",
+    )
 
     try:
         args = main_parser.parse_args(sys.argv[1:])

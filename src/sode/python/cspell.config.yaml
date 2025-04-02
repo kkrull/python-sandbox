@@ -30,5 +30,6 @@ words:
   - requirementslib
   - sdist
   - setuptools
+  - soundcloud
   - venv
   - vistir
