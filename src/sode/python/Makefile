@@ -264,5 +264,5 @@ run-cli-python: #> Run the program from venv-managed python
 .PHONY: run-cli-wheel
 run-cli-wheel: wheel #> Run the program from a (re-)installed wheel
 	@echo ""
-	$(PIPX) install --force --quiet .
+	$(PIPX) install --force .
 	@$(cmd_name) --version
