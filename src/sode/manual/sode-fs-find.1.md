@@ -9,14 +9,21 @@
 # SYNOPSIS
 
 **sode fs find** \[**\-\-help**\]  
-**sode fs find** *glob pattern* \[*path* …\]
+**sode fs find** \[**\-\-exclude**\] *glob* **\-\-glob** *glob*
+\[\-\-\] \[*path* …\]
 
 # DESCRIPTION
 
-List filenames matching *glob pattern* in each *path*.  Glob patterns are those
-compatible with `find`.
+List filenames matching any *glob*-but not an excluded pattern-in any *path*.
+Glob patterns allow `**` for recursive matching.
 
 # OPTIONS
+
+  - **\-\-exclude**
+    path pattern(s) to exclude (repeatable)
+
+  - **\-\-glob**
+    path pattern(s) to match (repeatable)
 
   - **\-\-help**
     Show help
