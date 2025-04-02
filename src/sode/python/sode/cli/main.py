@@ -20,6 +20,7 @@ def fs_find(args: Namespace) -> int:
                 "args": args,
                 "command": args.command,
                 "command.fs": getattr(args, "command.fs"),
+                "debug": args.debug,
                 "name": args.name,
                 "path": args.path,
             }
@@ -34,6 +35,7 @@ def greet(args: Namespace) -> int:
             "greet": {
                 "args": args,
                 "command": args.command,
+                "debug": args.debug,
                 "who": args.who,
             }
         }
@@ -51,6 +53,7 @@ def sc_auth(args: Namespace) -> int:
                 "check_token_expiration": args.check_token_expiration,
                 "client_id": args.client_id,
                 "client_secret": args.client_secret,
+                "debug": args.debug,
             }
         }
     )
@@ -64,6 +67,7 @@ def sc_track(args: Namespace) -> int:
                 "args": args,
                 "command": args.command,
                 "command.soundcloud": getattr(args, "command.soundcloud"),
+                "debug": args.debug,
                 "list": args.list,
             }
         }
@@ -80,6 +84,11 @@ def main() -> NoReturn:
     )
 
     main_parser.add_argument(
+        "--debug",
+        action="store_true",
+        help="turn on the debug logger",
+    )
+    main_parser.add_argument(
         "--version",
         action="version",
         version=version.__version__,
@@ -88,8 +97,10 @@ def main() -> NoReturn:
     command_parsers = main_parser.add_subparsers(
         dest="command",
         metavar="COMMAND",
+        required=True,
         title="commands",
     )
+
     fs_parser = command_parsers.add_parser(
         "fs",
         description="Hack a local filesystem",
