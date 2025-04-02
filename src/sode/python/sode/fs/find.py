@@ -1,11 +1,12 @@
 import textwrap
-from argparse import RawTextHelpFormatter, _SubParsersAction
+from argparse import _SubParsersAction
 from pathlib import Path
 from pprint import pprint
 from typing import Iterable
 
 from sode.fs.shared import FS_COMMAND
 from sode.shared.cli import namespace
+from sode.shared.cli.format import DefaultsAndRawTextFormatter
 from sode.shared.cli.namespace import ProgramNamespace
 from sode.shared.cli.state import RunState
 from sode.shared.fp.option import Empty, Value
@@ -20,7 +21,7 @@ def add_find(
         "find",
         description="Find files matching any of the specified criteria",
         epilog="""Example: %(prog)s --glob '**/index.[j,t]s' ~/git/node-sandbox ~/git/react""",
-        formatter_class=RawTextHelpFormatter,
+        formatter_class=DefaultsAndRawTextFormatter,
         help="find files lurking in the dark",
     )
     namespace.set_parser_command(find_parser, _run_find)
