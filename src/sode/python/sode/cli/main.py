@@ -2,18 +2,19 @@
 
 import sys
 from argparse import ArgumentError, ArgumentParser, Namespace
+from pprint import pprint
 from typing import NoReturn
 
 from sode import version
 
 
 def fs_find(args: Namespace) -> int:
-    print(f"[fs-find] args=${args}")
+    pprint({"fs-find": {"args": args}})
     return 0
 
 
 def greet(args: Namespace) -> int:
-    print(f"[greet] args=${args}")
+    pprint({"greet": {"args": args}})
     return 0
 
 
@@ -83,7 +84,7 @@ def main() -> NoReturn:
         print(str(error))
         sys.exit(1)
 
-    print(f"args=${args}")
+    pprint({"main": {"args": args}})
     status = args.func(args)
     sys.exit(status)
 
