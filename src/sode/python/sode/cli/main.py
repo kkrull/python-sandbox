@@ -8,11 +8,45 @@ from typing import Callable, NoReturn
 from sode import version
 from sode.cli.state import MainState
 
+## program module: stuff about the top-level program
 
-class CommandNamespace(Namespace):
+
+class ProgramNamespace(Namespace):
     command: str
     debug: bool
-    run_selected: Callable[["CommandNamespace", MainState], int]
+    run_selected: Callable[["ProgramNamespace", MainState], int]
+
+
+def program_parser(name: str) -> ArgumentParser:
+    main_parser = ArgumentParser(
+        add_help=True,
+        description="BRODE SODE: Hack away at deadly computing scenarios",
+        exit_on_error=False,
+        prog=name,
+    )
+
+    main_parser.add_argument(
+        "--debug",
+        action="store_true",
+        help="turn on the debug logger",
+    )
+    main_parser.add_argument(
+        "--version",
+        action="version",
+        version=version.__version__,
+    )
+
+    return main_parser
+
+
+def program_set_command(
+    parser: ArgumentParser,
+    run_command: Callable[["ProgramNamespace", MainState], int],
+) -> None:
+    parser.set_defaults(run_selected=run_command)
+
+
+## fs module
 
 
 def fs_add_parser(
@@ -40,7 +74,8 @@ def fs_find_add_parser(
         description="Find files lurking in the dark",
         help="find files",
     )
-    find_parser.set_defaults(run_selected=fs_find_run)
+    program_set_command(find_parser, fs_find_run)
+
     find_parser.add_argument(
         "--name",
         help="pattern to match filenames",
@@ -54,7 +89,7 @@ def fs_find_add_parser(
     )
 
 
-def fs_find_run(args: CommandNamespace, state: MainState) -> int:
+def fs_find_run(args: ProgramNamespace, state: MainState) -> int:
     pprint(
         {
             "fs-find": {
@@ -72,6 +107,9 @@ def fs_find_run(args: CommandNamespace, state: MainState) -> int:
     return 0
 
 
+## greet module
+
+
 def greet_add_parser(
     command_parsers: _SubParsersAction,  # type: ignore[type-arg]
 ) -> None:
@@ -80,7 +118,7 @@ def greet_add_parser(
         description="Start with a greeting",
         help="greet somebody",
     )
-    greet_parser.set_defaults(run_selected=greet_run)
+    program_set_command(greet_parser, greet_run)
     greet_parser.add_argument(
         "who",
         default="World",
@@ -89,7 +127,7 @@ def greet_add_parser(
     )
 
 
-def greet_run(args: CommandNamespace, state: MainState) -> int:
+def greet_run(args: ProgramNamespace, state: MainState) -> int:
     pprint(
         {
             "greet": {
@@ -103,6 +141,9 @@ def greet_run(args: CommandNamespace, state: MainState) -> int:
     )
 
     return 0
+
+
+## sc module: stuff about SoundCloud
 
 
 def sc_add_parser(
@@ -131,7 +172,7 @@ def sc_auth_add_parser(
         description="Authorize with the SoundCloud API",
         help="authorize with SoundCloud API [start here]",
     )
-    sc_auth_parser.set_defaults(run_selected=sc_auth_run)
+    program_set_command(sc_auth_parser, sc_auth_run)
     sc_auth_parser.add_argument(
         "--check-token-expiration",
         action="store_true",
@@ -149,7 +190,7 @@ def sc_auth_add_parser(
     )
 
 
-def sc_auth_run(args: CommandNamespace, state: MainState) -> int:
+def sc_auth_run(args: ProgramNamespace, state: MainState) -> int:
     pprint(
         {
             "soundcloud-auth": {
@@ -176,7 +217,8 @@ def sc_track_add_parser(
         description="Work with tracks",
         help="hack tracks",
     )
-    sc_track_parser.set_defaults(run_selected=sc_track_run)
+
+    program_set_command(sc_track_parser, sc_track_run)
     sc_track_parser.add_argument(
         "--list",
         action="store_true",
@@ -184,7 +226,7 @@ def sc_track_add_parser(
     )
 
 
-def sc_track_run(args: CommandNamespace, state: MainState) -> int:
+def sc_track_run(args: ProgramNamespace, state: MainState) -> int:
     pprint(
         {
             "soundcloud-auth": {
@@ -201,6 +243,9 @@ def sc_track_run(args: CommandNamespace, state: MainState) -> int:
     return 0
 
 
+## main
+
+
 def main() -> NoReturn:
     state = MainState(sys.argv)
     status = main_fn(state)
@@ -208,24 +253,7 @@ def main() -> NoReturn:
 
 
 def main_fn(state: MainState) -> int:
-    main_parser = ArgumentParser(
-        add_help=True,
-        description="BRODE SODE: Hack away at deadly computing scenarios",
-        exit_on_error=False,
-        prog=state.program_name,
-    )
-
-    main_parser.add_argument(
-        "--debug",
-        action="store_true",
-        help="turn on the debug logger",
-    )
-    main_parser.add_argument(
-        "--version",
-        action="version",
-        version=version.__version__,
-    )
-
+    main_parser = program_parser(state.program_name)
     command_parsers = main_parser.add_subparsers(
         dest="command",
         metavar="COMMAND",
@@ -238,7 +266,7 @@ def main_fn(state: MainState) -> int:
     sc_add_parser(command_parsers)
 
     try:
-        args = main_parser.parse_args(state.arguments, namespace=CommandNamespace())
+        args = main_parser.parse_args(state.arguments, namespace=ProgramNamespace())
     except ArgumentError as error:
         print(str(error), file=state.stderr)
         return 1
