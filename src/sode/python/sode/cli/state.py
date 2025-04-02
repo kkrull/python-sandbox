@@ -1,13 +1,13 @@
 import sys
 import typing
 
+from sode.shared.cli.state import RunState
 
-class MainState:
+
+class MainState(RunState):
     """Everything the program needs to run"""
 
     _argv: list[str]
-    stderr: typing.IO[str]
-    stdout: typing.IO[str]
 
     def __init__(
         self,
@@ -15,9 +15,8 @@ class MainState:
         stderr: typing.IO[str] = sys.stderr,
         stdout: typing.IO[str] = sys.stdout,
     ):
+        super().__init__(stderr=stderr, stdout=stdout)
         self._argv = argv
-        self.stderr = stderr
-        self.stdout = stdout
 
     @property
     def arguments(self) -> list[str]:

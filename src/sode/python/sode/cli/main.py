@@ -1,25 +1,20 @@
 #!/usr/bin/env python3
 
 import sys
-from argparse import ArgumentError, ArgumentParser, Namespace, _SubParsersAction
+from argparse import ArgumentError, ArgumentParser, _SubParsersAction
 from pprint import pprint
-from typing import Callable, NoReturn
+from typing import NoReturn
 
 from sode import version
 from sode.cli.state import MainState
+from sode.shared.cli import namespace
+from sode.shared.cli.namespace import ProgramNamespace, add_command_subparsers, add_global_arguments
+from sode.shared.cli.state import RunState
 
 ## program module: stuff about the top-level program
 
-type CliCommand = Callable[["ProgramNamespace", MainState], int]
 
-
-class ProgramNamespace(Namespace):
-    command: str
-    debug: bool
-    run_selected: CliCommand
-
-
-def program_parser(name: str) -> tuple[  # type: ignore[type-arg]
+def new_main_parser(name: str) -> tuple[  # type: ignore[type-arg]
     ArgumentParser,
     _SubParsersAction,
 ]:
@@ -30,29 +25,11 @@ def program_parser(name: str) -> tuple[  # type: ignore[type-arg]
         prog=name,
     )
 
-    main_parser.add_argument(
-        "--debug",
-        action="store_true",
-        help="turn on the debug logger",
+    add_global_arguments(main_parser, version.__version__)
+    return (
+        main_parser,
+        add_command_subparsers(main_parser),
     )
-    main_parser.add_argument(
-        "--version",
-        action="version",
-        version=version.__version__,
-    )
-
-    command_parsers = main_parser.add_subparsers(
-        dest="command",
-        metavar="COMMAND",
-        required=True,
-        title="commands",
-    )
-
-    return (main_parser, command_parsers)
-
-
-def program_set_command(parser: ArgumentParser, run_command: CliCommand) -> None:
-    parser.set_defaults(run_selected=run_command)
 
 
 ## fs module
@@ -83,7 +60,7 @@ def fs_find_add_parser(
         description="Find files lurking in the dark",
         help="find files",
     )
-    program_set_command(find_parser, fs_find_run)
+    namespace.set_parser_command(find_parser, fs_find_run)
 
     find_parser.add_argument(
         "--name",
@@ -98,7 +75,7 @@ def fs_find_add_parser(
     )
 
 
-def fs_find_run(args: ProgramNamespace, state: MainState) -> int:
+def fs_find_run(args: ProgramNamespace, state: RunState) -> int:
     pprint(
         {
             "fs-find": {
@@ -127,7 +104,7 @@ def greet_add_parser(
         description="Start with a greeting",
         help="greet somebody",
     )
-    program_set_command(greet_parser, greet_run)
+    namespace.set_parser_command(greet_parser, greet_run)
 
     greet_parser.add_argument(
         "who",
@@ -137,7 +114,7 @@ def greet_add_parser(
     )
 
 
-def greet_run(args: ProgramNamespace, state: MainState) -> int:
+def greet_run(args: ProgramNamespace, state: RunState) -> int:
     pprint(
         {
             "greet": {
@@ -182,7 +159,7 @@ def sc_auth_add_parser(
         description="Authorize with the SoundCloud API",
         help="authorize with SoundCloud API [start here]",
     )
-    program_set_command(sc_auth_parser, sc_auth_run)
+    namespace.set_parser_command(sc_auth_parser, sc_auth_run)
 
     sc_auth_parser.add_argument(
         "--check-token-expiration",
@@ -201,7 +178,7 @@ def sc_auth_add_parser(
     )
 
 
-def sc_auth_run(args: ProgramNamespace, state: MainState) -> int:
+def sc_auth_run(args: ProgramNamespace, state: RunState) -> int:
     pprint(
         {
             "soundcloud-auth": {
@@ -228,7 +205,7 @@ def sc_track_add_parser(
         description="Work with tracks",
         help="hack tracks",
     )
-    program_set_command(sc_track_parser, sc_track_run)
+    namespace.set_parser_command(sc_track_parser, sc_track_run)
 
     sc_track_parser.add_argument(
         "--list",
@@ -237,7 +214,7 @@ def sc_track_add_parser(
     )
 
 
-def sc_track_run(args: ProgramNamespace, state: MainState) -> int:
+def sc_track_run(args: ProgramNamespace, state: RunState) -> int:
     pprint(
         {
             "soundcloud-auth": {
@@ -264,7 +241,7 @@ def main() -> NoReturn:
 
 
 def main_fn(state: MainState) -> int:
-    (main_parser, command_parsers) = program_parser(state.program_name)
+    (main_parser, command_parsers) = new_main_parser(state.program_name)
     fs_add_parser(command_parsers)
     greet_add_parser(command_parsers)
     sc_add_parser(command_parsers)
