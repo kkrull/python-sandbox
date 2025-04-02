@@ -25,6 +25,11 @@ class OptionBase[A]:
         pass
 
     @abstractmethod
+    @property
+    def is_present(self) -> bool:
+        pass
+
+    @abstractmethod
     def map(self, fn: Callable[[A], B]) -> Option[B]:
         """Transform Value with the result of the given function, or return Empty unchanged."""
         pass
@@ -44,6 +49,10 @@ class Empty[A](OptionBase[A]):
     @override
     def get_or_else(self, fallbackValue: A) -> A:
         return fallbackValue
+
+    @property
+    def is_present(self) -> bool:
+        return False
 
     @override
     def map(self, fn: Callable[[A], B]) -> Option[B]:
@@ -69,6 +78,10 @@ class Value[A](OptionBase[A]):
     @override
     def get_or_else(self, fallbackValue: A) -> A:
         return self.value
+
+    @property
+    def is_present(self) -> bool:
+        return True
 
     @override
     def map(self, fn: Callable[[A], B]) -> Option[B]:

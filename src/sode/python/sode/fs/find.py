@@ -86,4 +86,4 @@ def _excluded(
         Empty[str](),
     )
 
-    return matching_pattern.map(lambda _: True).get_or_else(False)
+    return matching_pattern.is_present
