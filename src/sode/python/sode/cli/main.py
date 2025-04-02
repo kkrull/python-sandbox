@@ -14,13 +14,13 @@ from sode.soundcloud.cli import add_soundcloud
 
 
 def main() -> NoReturn:
-    state = MainState(sys.argv)
+    state = MainState(sys.argv, version.__version__)
     status = main_fn(state)
     sys.exit(status)
 
 
 def main_fn(state: MainState) -> int:
-    (main_parser, command_parsers) = new_main_parser(state.program_name)
+    (main_parser, command_parsers) = new_main_parser(state)
     add_fs(command_parsers)
     add_greet(command_parsers)
     add_soundcloud(command_parsers)
@@ -35,7 +35,7 @@ def main_fn(state: MainState) -> int:
     return args.run_selected(args, state)
 
 
-def new_main_parser(name: str) -> tuple[  # type: ignore[type-arg]
+def new_main_parser(state: MainState) -> tuple[  # type: ignore[type-arg]
     ArgumentParser,
     _SubParsersAction,
 ]:
@@ -43,10 +43,10 @@ def new_main_parser(name: str) -> tuple[  # type: ignore[type-arg]
         add_help=True,
         description="BRODE SODE: Hack away at deadly computing scenarios",
         exit_on_error=False,
-        prog=name,
+        prog=state.program_name,
     )
 
-    add_global_arguments(main_parser, version.__version__)
+    add_global_arguments(main_parser, state.version)
     return (
         main_parser,
         add_command_subparsers(main_parser),
