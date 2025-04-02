@@ -24,8 +24,8 @@ class OptionBase[A]:
         """Get Value's inner value, or-in the case of Empty-the given fallback value."""
         pass
 
-    @abstractmethod
     @property
+    @abstractmethod
     def is_present(self) -> bool:
         pass
 
