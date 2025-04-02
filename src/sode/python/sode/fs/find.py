@@ -18,6 +18,7 @@ def add_find(
     find_parser = subcommands.add_parser(
         "find",
         description="Find files lurking in the dark",
+        epilog="""Example: %(prog)s --glob '**/index.[j,t]s' ~/git/node-sandbox ~/git/react""",
         help="find files",
     )
     namespace.set_parser_command(find_parser, _run_find)
@@ -53,7 +54,7 @@ def _run_find(args: ProgramNamespace, state: RunState) -> int:
     for search_glob in args.glob:
         for search_root in [Path(p) for p in args.path]:
             for hit in [p for p in search_root.glob(search_glob) if not _excluded(p)]:
-                print(f"{hit}", file=state.stdout)
+                print(hit, file=state.stdout)
 
     return 0
 
