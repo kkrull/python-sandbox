@@ -29,6 +29,7 @@ def fs_find(args: CommandNamespace, state: MainState) -> int:
         },
         stream=state.stdout,
     )
+
     return 0
 
 
@@ -44,6 +45,7 @@ def greet(args: CommandNamespace, state: MainState) -> int:
         },
         stream=state.stdout,
     )
+
     return 0
 
 
@@ -62,6 +64,7 @@ def sc_auth(args: CommandNamespace, state: MainState) -> int:
         },
         stream=state.stdout,
     )
+
     return 0
 
 
@@ -78,6 +81,7 @@ def sc_track(args: CommandNamespace, state: MainState) -> int:
         },
         stream=state.stdout,
     )
+
     return 0
 
 
