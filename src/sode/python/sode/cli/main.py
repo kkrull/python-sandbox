@@ -15,7 +15,7 @@ class CommandNamespace(Namespace):
     run_selected: Callable[["CommandNamespace"], int]
 
 
-def fs_find(args: Namespace) -> int:
+def fs_find(args: CommandNamespace) -> int:
     pprint(
         {
             "fs-find": {
@@ -31,7 +31,7 @@ def fs_find(args: Namespace) -> int:
     return 0
 
 
-def greet(args: Namespace) -> int:
+def greet(args: CommandNamespace) -> int:
     pprint(
         {
             "greet": {
@@ -45,7 +45,7 @@ def greet(args: Namespace) -> int:
     return 0
 
 
-def sc_auth(args: Namespace) -> int:
+def sc_auth(args: CommandNamespace) -> int:
     pprint(
         {
             "soundcloud-auth": {
@@ -62,7 +62,7 @@ def sc_auth(args: Namespace) -> int:
     return 0
 
 
-def sc_track(args: Namespace) -> int:
+def sc_track(args: CommandNamespace) -> int:
     pprint(
         {
             "soundcloud-auth": {
