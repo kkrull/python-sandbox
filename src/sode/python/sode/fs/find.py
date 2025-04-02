@@ -1,4 +1,5 @@
-from argparse import _SubParsersAction
+import textwrap
+from argparse import RawTextHelpFormatter, _SubParsersAction
 from pathlib import Path
 from pprint import pprint
 from typing import Iterable
@@ -17,21 +18,28 @@ def add_find(
 
     find_parser = subcommands.add_parser(
         "find",
-        description="Find files lurking in the dark",
+        description="Find files matching any of the specified criteria",
         epilog="""Example: %(prog)s --glob '**/index.[j,t]s' ~/git/node-sandbox ~/git/react""",
-        help="find files",
+        formatter_class=RawTextHelpFormatter,
+        help="find files lurking in the dark",
     )
     namespace.set_parser_command(find_parser, _run_find)
 
     find_parser.add_argument(
         "--glob",
-        help="glob pattern to match filenames",
+        action="extend",
+        help="glob pattern(s) to match filenames (repeatable)",
         metavar="PATTERN",
         nargs=1,
     )
     find_parser.add_argument(
         "path",
-        help="path(s) in which to search for files",
+        help=textwrap.dedent(
+            f"""\
+            path(s) in which to search for files
+            (precede with -- to avoid ambiguity)
+        """
+        ),
         nargs="+",
     )
 
