@@ -27,10 +27,18 @@ def add_find(
     namespace.set_parser_command(find_parser, _run_find)
 
     find_parser.add_argument(
+        "--exclude",
+        action="extend",
+        default=["**/.git/**", "**/node_modules/**"],
+        help="path pattern(s) to exclude (repeatable)",
+        metavar="GLOB",
+        nargs=1,
+    )
+    find_parser.add_argument(
         "--glob",
         action="extend",
-        help="glob pattern(s) to match filenames (repeatable)",
-        metavar="PATTERN",
+        help="path pattern(s) to match (repeatable)",
+        metavar="GLOB",
         nargs=1,
     )
     find_parser.add_argument(
@@ -53,6 +61,7 @@ def _run_find(args: ProgramNamespace, state: RunState) -> int:
                 "command": args.command,
                 FS_COMMAND: getattr(args, FS_COMMAND),
                 "debug": args.debug,
+                "exclude": args.exclude,
                 "glob": args.glob,
                 "path": args.path,
             }
@@ -62,7 +71,7 @@ def _run_find(args: ProgramNamespace, state: RunState) -> int:
 
     for search_glob in args.glob:
         for search_root in [Path(p) for p in args.path]:
-            for hit in [p for p in search_root.glob(search_glob) if not _excluded(p)]:
+            for hit in [p for p in search_root.glob(search_glob) if not _excluded(p, args.exclude)]:
                 print(hit, file=state.stdout)
 
     return 0
@@ -70,7 +79,7 @@ def _run_find(args: ProgramNamespace, state: RunState) -> int:
 
 def _excluded(
     path: Path,
-    exclude_patterns: Iterable[str] = ["**/.git/**", "**/node_modules/**"],
+    exclude_patterns: Iterable[str],
 ) -> bool:
     matching_pattern = next(
         (Value(x) for x in exclude_patterns if path.full_match(x)),
