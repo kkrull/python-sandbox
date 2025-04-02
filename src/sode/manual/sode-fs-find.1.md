@@ -1,4 +1,4 @@
-% SODE(1) Version 0.0.2 | BRODE SODE
+% SODE(1) Version 0.0.1 | BRODE SODE
 % Kyle Krull
 % March 2025
 
