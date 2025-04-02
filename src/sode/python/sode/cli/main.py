@@ -100,7 +100,7 @@ def main() -> NoReturn:
         description="Find files lurking in the dark",
         help="find files",
     )
-    find_parser.set_defaults(func=fs_find)
+    find_parser.set_defaults(run_selected=fs_find)
     find_parser.add_argument(
         "--name",
         help="pattern to match filenames",
@@ -118,7 +118,7 @@ def main() -> NoReturn:
         description="Start with a greeting",
         help="greet somebody",
     )
-    greet_parser.set_defaults(func=greet)
+    greet_parser.set_defaults(run_selected=greet)
     greet_parser.add_argument(
         "who",
         default="World",
@@ -141,7 +141,7 @@ def main() -> NoReturn:
         description="Authorize with the SoundCloud API",
         help="authorize with SoundCloud API [start here]",
     )
-    sc_auth_parser.set_defaults(func=sc_auth)
+    sc_auth_parser.set_defaults(run_selected=sc_auth)
     sc_auth_parser.add_argument(
         "--check-token-expiration",
         action="store_true",
@@ -163,7 +163,7 @@ def main() -> NoReturn:
         description="Work with tracks",
         help="hack tracks",
     )
-    sc_track_parser.set_defaults(func=sc_track)
+    sc_track_parser.set_defaults(run_selected=sc_track)
     sc_track_parser.add_argument(
         "--list",
         action="store_true",
@@ -177,7 +177,7 @@ def main() -> NoReturn:
         sys.exit(1)
 
     pprint({"main": {"args": args}})
-    status = args.func(args)
+    status = args.run_selected(args)
     sys.exit(status)
 
 
