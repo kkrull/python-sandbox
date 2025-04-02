@@ -105,7 +105,51 @@ def greet_run(args: CommandNamespace, state: MainState) -> int:
     return 0
 
 
-def sc_auth(args: CommandNamespace, state: MainState) -> int:
+def sc_add_parser(
+    command_parsers: _SubParsersAction,  # type: ignore[type-arg]
+) -> None:
+    sc_parser = command_parsers.add_parser(
+        "soundcloud",
+        description="Hack SoundCloud",
+        help="hack SoundCloud",
+    )
+    sc_subcommands = sc_parser.add_subparsers(
+        dest="command.soundcloud",
+        metavar="SUBCOMMAND",
+        title="subcommands",
+    )
+
+    sc_auth_add_parser(sc_subcommands)
+    sc_track_add_parser(sc_subcommands)
+
+
+def sc_auth_add_parser(
+    sc_subcommands: _SubParsersAction,  # type: ignore[type-arg]
+) -> None:
+    sc_auth_parser = sc_subcommands.add_parser(
+        "auth",
+        description="Authorize with the SoundCloud API",
+        help="authorize with SoundCloud API [start here]",
+    )
+    sc_auth_parser.set_defaults(run_selected=sc_auth_run)
+    sc_auth_parser.add_argument(
+        "--check-token-expiration",
+        action="store_true",
+        help="check if persisted access token has expired",
+    )
+    sc_auth_parser.add_argument(
+        "--client-id",
+        help="OAuth2 client id with which to request access",
+        nargs="?",
+    )
+    sc_auth_parser.add_argument(
+        "--client-secret",
+        help="OAuth2 client secret with which to request access",
+        nargs="?",
+    )
+
+
+def sc_auth_run(args: CommandNamespace, state: MainState) -> int:
     pprint(
         {
             "soundcloud-auth": {
@@ -124,7 +168,23 @@ def sc_auth(args: CommandNamespace, state: MainState) -> int:
     return 0
 
 
-def sc_track(args: CommandNamespace, state: MainState) -> int:
+def sc_track_add_parser(
+    sc_subcommands: _SubParsersAction,  # type: ignore[type-arg]
+) -> None:
+    sc_track_parser = sc_subcommands.add_parser(
+        "track",
+        description="Work with tracks",
+        help="hack tracks",
+    )
+    sc_track_parser.set_defaults(run_selected=sc_track_run)
+    sc_track_parser.add_argument(
+        "--list",
+        action="store_true",
+        help="list tracks",
+    )
+
+
+def sc_track_run(args: CommandNamespace, state: MainState) -> int:
     pprint(
         {
             "soundcloud-auth": {
@@ -175,50 +235,7 @@ def main_fn(state: MainState) -> int:
 
     fs_add_parser(command_parsers)
     greet_add_parser(command_parsers)
-
-    soundcloud_parser = command_parsers.add_parser(
-        "soundcloud",
-        description="Hack SoundCloud",
-        help="hack SoundCloud",
-    )
-    soundcloud_subcommands = soundcloud_parser.add_subparsers(
-        dest="command.soundcloud",
-        metavar="SUBCOMMAND",
-        title="subcommands",
-    )
-    sc_auth_parser = soundcloud_subcommands.add_parser(
-        "auth",
-        description="Authorize with the SoundCloud API",
-        help="authorize with SoundCloud API [start here]",
-    )
-    sc_auth_parser.set_defaults(run_selected=sc_auth)
-    sc_auth_parser.add_argument(
-        "--check-token-expiration",
-        action="store_true",
-        help="check if persisted access token has expired",
-    )
-    sc_auth_parser.add_argument(
-        "--client-id",
-        help="OAuth2 client id with which to request access",
-        nargs="?",
-    )
-    sc_auth_parser.add_argument(
-        "--client-secret",
-        help="OAuth2 client secret with which to request access",
-        nargs="?",
-    )
-
-    sc_track_parser = soundcloud_subcommands.add_parser(
-        "track",
-        description="Work with tracks",
-        help="hack tracks",
-    )
-    sc_track_parser.set_defaults(run_selected=sc_track)
-    sc_track_parser.add_argument(
-        "--list",
-        action="store_true",
-        help="list tracks",
-    )
+    sc_add_parser(command_parsers)
 
     try:
         args = main_parser.parse_args(state.arguments, namespace=CommandNamespace())
