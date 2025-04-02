@@ -11,10 +11,10 @@ def add_greet(
 ) -> None:
     """Add a parser for the greet command"""
 
+    # Provide the command, but don't list it in the help
     greet_parser = commands.add_parser(
         "greet",
         description="Start with a greeting",
-        help="greet somebody",
     )
     namespace.set_parser_command(greet_parser, _greet_run)
 
