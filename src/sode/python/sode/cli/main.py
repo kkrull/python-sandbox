@@ -6,6 +6,7 @@ from pprint import pprint
 from typing import Callable, NoReturn
 
 from sode import version
+from sode.cli.state import MainState
 
 
 class CommandNamespace(Namespace):
@@ -77,16 +78,17 @@ def sc_track(args: Namespace) -> int:
 
 
 def main() -> NoReturn:
-    status = main_fn(sys.argv)
+    state = MainState(sys.argv)
+    status = main_fn(state)
     sys.exit(status)
 
 
-def main_fn(argv: list[str]) -> int:
+def main_fn(state: MainState) -> int:
     main_parser = ArgumentParser(
         add_help=True,
         description="BRODE SODE: Hack away at deadly computing scenarios",
         exit_on_error=False,
-        prog=argv[0],
+        prog=state.program_name,
     )
 
     main_parser.add_argument(
@@ -193,7 +195,7 @@ def main_fn(argv: list[str]) -> int:
     )
 
     try:
-        args = main_parser.parse_args(argv[1:], namespace=CommandNamespace())
+        args = main_parser.parse_args(state.arguments, namespace=CommandNamespace())
     except ArgumentError as error:
         print(str(error))
         return 1
