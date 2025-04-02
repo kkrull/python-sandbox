@@ -1,22 +1,29 @@
 #!/usr/bin/env python3
 
 import sys
+from argparse import ArgumentParser
 from typing import NoReturn
 
-from sode.cli.state import MainState
+from sode import version
 
 
 def main() -> NoReturn:
-    state = MainState(argv=sys.argv)
-    status = main_fn(state)
-    sys.exit(status)
+    main_parser = ArgumentParser(
+        add_help=True,
+        description="BRODE SODE: hack away at deadly computing scenarios",
+        exit_on_error=False,
+        prog=sys.argv[0],
+    )
 
+    main_parser.add_argument(
+        "--version",
+        action="version",
+        version=version.__version__,
+    )
 
-def main_fn(state: MainState) -> int:
-    # TODO KDK: Make ArgumentParser in main.  There's really not a good abstraction over a
-    # plugin-based architecture where commands add themselves to a namespace that figures out its
-    # own command.
-    return 0
+    args = main_parser.parse_args(sys.argv[1:])
+    print(f"args=${args}")
+    sys.exit(0)
 
 
 if __name__ == "__main__":
