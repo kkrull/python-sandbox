@@ -10,14 +10,19 @@ from sode.cli.state import MainState
 
 ## program module: stuff about the top-level program
 
+type CliCommand = Callable[["ProgramNamespace", MainState], int]
+
 
 class ProgramNamespace(Namespace):
     command: str
     debug: bool
-    run_selected: Callable[["ProgramNamespace", MainState], int]
+    run_selected: CliCommand
 
 
-def program_parser(name: str) -> ArgumentParser:
+def program_parser(name: str) -> tuple[  # type: ignore[type-arg]
+    ArgumentParser,
+    _SubParsersAction,
+]:
     main_parser = ArgumentParser(
         add_help=True,
         description="BRODE SODE: Hack away at deadly computing scenarios",
@@ -36,13 +41,17 @@ def program_parser(name: str) -> ArgumentParser:
         version=version.__version__,
     )
 
-    return main_parser
+    command_parsers = main_parser.add_subparsers(
+        dest="command",
+        metavar="COMMAND",
+        required=True,
+        title="commands",
+    )
+
+    return (main_parser, command_parsers)
 
 
-def program_set_command(
-    parser: ArgumentParser,
-    run_command: Callable[["ProgramNamespace", MainState], int],
-) -> None:
+def program_set_command(parser: ArgumentParser, run_command: CliCommand) -> None:
     parser.set_defaults(run_selected=run_command)
 
 
@@ -255,14 +264,7 @@ def main() -> NoReturn:
 
 
 def main_fn(state: MainState) -> int:
-    main_parser = program_parser(state.program_name)
-    command_parsers = main_parser.add_subparsers(
-        dest="command",
-        metavar="COMMAND",
-        required=True,
-        title="commands",
-    )
-
+    (main_parser, command_parsers) = program_parser(state.program_name)
     fs_add_parser(command_parsers)
     greet_add_parser(command_parsers)
     sc_add_parser(command_parsers)
