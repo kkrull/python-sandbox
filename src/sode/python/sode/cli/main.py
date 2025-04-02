@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import sys
-from argparse import ArgumentError, ArgumentParser, Namespace
+from argparse import ArgumentError, ArgumentParser, Namespace, _SubParsersAction
 from pprint import pprint
 from typing import Callable, NoReturn
 
@@ -33,7 +33,24 @@ def fs_find(args: CommandNamespace, state: MainState) -> int:
     return 0
 
 
-def greet(args: CommandNamespace, state: MainState) -> int:
+def greet_add_parser(
+    command_parsers: _SubParsersAction,  # type: ignore[type-arg]
+) -> None:
+    greet_parser = command_parsers.add_parser(
+        "greet",
+        description="Start with a greeting",
+        help="greet somebody",
+    )
+    greet_parser.set_defaults(run_selected=greet_run)
+    greet_parser.add_argument(
+        "who",
+        default="World",
+        help="whom to greet",
+        nargs="?",
+    )
+
+
+def greet_run(args: CommandNamespace, state: MainState) -> int:
     pprint(
         {
             "greet": {
@@ -145,18 +162,7 @@ def main_fn(state: MainState) -> int:
         nargs="+",
     )
 
-    greet_parser = command_parsers.add_parser(
-        "greet",
-        description="Start with a greeting",
-        help="greet somebody",
-    )
-    greet_parser.set_defaults(run_selected=greet)
-    greet_parser.add_argument(
-        "who",
-        default="World",
-        help="whom to greet",
-        nargs="?",
-    )
+    greet_add_parser(command_parsers)
 
     soundcloud_parser = command_parsers.add_parser(
         "soundcloud",
