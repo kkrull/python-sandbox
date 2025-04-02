@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import sys
-from argparse import ArgumentParser
+from argparse import ArgumentError, ArgumentParser
 from typing import NoReturn
 
 from sode import version
@@ -21,7 +21,12 @@ def main() -> NoReturn:
         version=version.__version__,
     )
 
-    args = main_parser.parse_args(sys.argv[1:])
+    try:
+        args = main_parser.parse_args(sys.argv[1:])
+    except ArgumentError as error:
+        print(str(error))
+        sys.exit(1)
+
     print(f"args=${args}")
     sys.exit(0)
 
