@@ -7,6 +7,11 @@ from typing import NoReturn
 from sode import version
 
 
+def fs_find(args: Namespace) -> int:
+    print(f"[fs-find] args=${args}")
+    return 0
+
+
 def greet(args: Namespace) -> int:
     print(f"[greet] args=${args}")
     return 0
@@ -27,10 +32,38 @@ def main() -> NoReturn:
     )
 
     command_parsers = main_parser.add_subparsers(
-        dest="command",
+        dest="command.sode",
         metavar="COMMAND",
         title="commands",
     )
+    fs_parser = command_parsers.add_parser(
+        "fs",
+        description="hack a local filesystem",
+        help="hack a local filesystem",
+    )
+    fs_subcommands = fs_parser.add_subparsers(
+        dest="command.fs",
+        metavar="SUBCOMMAND",
+        title="subcommands",
+    )
+    find_parser = fs_subcommands.add_parser(
+        "find",
+        description="find files lurking in the dark",
+        help="find files",
+    )
+    find_parser.set_defaults(func=fs_find)
+    find_parser.add_argument(
+        "--name",
+        help="pattern to match filenames",
+        metavar="PATTERN",
+        nargs=1,
+    )
+    find_parser.add_argument(
+        "path",
+        help="path(s) in which to search for files",
+        nargs="+",
+    )
+
     greet_parser = command_parsers.add_parser(
         "greet",
         description="start with a greeting",
