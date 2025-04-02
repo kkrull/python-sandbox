@@ -9,12 +9,30 @@ from sode import version
 
 
 def fs_find(args: Namespace) -> int:
-    pprint({"fs-find": {"args": args}})
+    pprint(
+        {
+            "fs-find": {
+                "args": args,
+                "command": args.command,
+                "command.fs": getattr(args, "command.fs"),
+                "name": args.name,
+                "path": args.path,
+            }
+        }
+    )
     return 0
 
 
 def greet(args: Namespace) -> int:
-    pprint({"greet": {"args": args}})
+    pprint(
+        {
+            "greet": {
+                "args": args,
+                "command": args.command,
+                "who": args.who,
+            }
+        }
+    )
     return 0
 
 
@@ -33,7 +51,7 @@ def main() -> NoReturn:
     )
 
     command_parsers = main_parser.add_subparsers(
-        dest="command.sode",
+        dest="command",
         metavar="COMMAND",
         title="commands",
     )
