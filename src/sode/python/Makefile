@@ -22,6 +22,7 @@ debug-paths:
 ### Programs
 
 FSWATCH ?= fswatch
+FSWATCHFLAGS ?= ''
 TAR ?= tar
 UNZIP ?= unzip
 
@@ -29,6 +30,7 @@ UNZIP ?= unzip
 debug-programs:
 	$(info Programs)
 	$(info - FSWATCH=$(FSWATCH))
+	$(info - FSWATCHFLAGS=$(FSWATCHFLAGS))
 	$(info - TAR=$(TAR))
 	$(info - UNZIP=$(UNZIP))
 	@:
@@ -168,9 +170,9 @@ isort-check: #> Check sources with isort
 isort-format: #> Format sources with isort
 	$(PIPENV) run isort-format
 
-.PHONY: mypy-watch
+.PHONY: isort-watch
 isort-watch: #> Format sources with isort (watch mode)
-	$(FSWATCH) $(sources) -0 \
+	$(FSWATCH) $(FSWATCHFLAGS) $(sources) -0 \
 		| xargs -0 -I {} $(ISORT) {}
 
 .PHONY: mypy-check
@@ -179,8 +181,8 @@ mypy-check: #> Type check sources with mypy
 
 .PHONY: mypy-watch
 mypy-watch: #> Type check sources with mypy (watch mode)
-	$(FSWATCH) $(sources_dir) -0 \
-		| xargs -0 -I {} $(MYPY) {}
+	$(FSWATCH) $(FSWATCHFLAGS) --recursive -d $(sources_dir) -0 \
+		| xargs -0 -I {} $(MYPY) $(sources_dir)
 
 #. SOURCE DISTRIBUTION TARGETS
 

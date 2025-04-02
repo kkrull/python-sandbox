@@ -26,6 +26,7 @@ words:
   - direnv
   - envrc
   - fswatch
+  - FSWATCHFLAGS
   - Haines
   - INSTALLFLAGS
   - isort
