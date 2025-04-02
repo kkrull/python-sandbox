@@ -21,6 +21,22 @@ def main() -> NoReturn:
         version=version.__version__,
     )
 
+    command_parsers = main_parser.add_subparsers(
+        dest="command",
+        metavar="COMMAND",
+        title="commands",
+    )
+    command_parsers.add_parser(
+        "greet",
+        description="start with a greeting",
+        help="greet somebody",
+    ).add_argument(
+        "who",
+        default="World",
+        help="whom to greet",
+        nargs="?",
+    )
+
     try:
         args = main_parser.parse_args(sys.argv[1:])
     except ArgumentError as error:
