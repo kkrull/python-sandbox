@@ -39,4 +39,5 @@ def _greet_run(args: ProgramNamespace, state: RunState) -> int:
         stream=state.stdout,
     )
 
+    print(f"Hello {args.who}", file=state.stdout)
     return 0
