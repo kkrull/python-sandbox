@@ -226,7 +226,7 @@ install-editable-wheel: wheel #> Link to the wheel globally with pipx
 
 .PHONY: install-wheel
 install-wheel: wheel #> Install the wheel globally with pipx
-	$(PIPX) install --force .
+	$(PIPX) install --force --python=python .
 
 .PHONY: uninstall-wheel
 uninstall-wheel:
@@ -262,7 +262,6 @@ run-cli-python: #> Run the program from venv-managed python
 	PYTHONPATH=. $(PIPENV) run python ./sode/cli/main.py --version
 
 .PHONY: run-cli-wheel
-run-cli-wheel: wheel #> Run the program from a (re-)installed wheel
+run-cli-wheel: install-wheel #> Run the program from a (re-)installed wheel
 	@echo ""
-	$(PIPX) install --force --python=python .
 	@$(cmd_name) --version
