@@ -4,19 +4,21 @@ from pprint import pprint
 from sode.shared.cli import namespace
 from sode.shared.cli.namespace import ProgramNamespace
 from sode.shared.cli.state import RunState
+from sode.soundcloud.cli import SC_COMMAND
 
 
 def add_track(
-    sc_subcommands: _SubParsersAction,  # type: ignore[type-arg]
+    subcommands: _SubParsersAction,  # type: ignore[type-arg]
 ) -> None:
-    sc_track_parser = sc_subcommands.add_parser(
+    """Add the track sub-command"""
+    track_parser = subcommands.add_parser(
         "track",
         description="Work with tracks",
         help="hack tracks",
     )
-    namespace.set_parser_command(sc_track_parser, _run_track)
+    namespace.set_parser_command(track_parser, _run_track)
 
-    sc_track_parser.add_argument(
+    track_parser.add_argument(
         "--list",
         action="store_true",
         help="list tracks",
@@ -29,7 +31,7 @@ def _run_track(args: ProgramNamespace, state: RunState) -> int:
             "soundcloud-auth": {
                 "args": args,
                 "command": args.command,
-                "command.soundcloud": getattr(args, "command.soundcloud"),
+                SC_COMMAND: getattr(args, SC_COMMAND),
                 "debug": args.debug,
                 "list": args.list,
             }

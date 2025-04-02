@@ -7,6 +7,8 @@ type CliCommand = Callable[["ProgramNamespace", RunState], int]
 
 
 class ProgramNamespace(Namespace):
+    """Groups together parsed arguments and the indicated CLI command to run with them."""
+
     command: str
     debug: bool
     run_selected: CliCommand
@@ -15,6 +17,7 @@ class ProgramNamespace(Namespace):
 def add_command_subparsers(
     main_parser: ArgumentParser,
 ) -> _SubParsersAction:  # type: ignore[type-arg]
+    """Add an argument subparser group for commands to be added to the returned object"""
     return main_parser.add_subparsers(
         dest="command",
         metavar="COMMAND",

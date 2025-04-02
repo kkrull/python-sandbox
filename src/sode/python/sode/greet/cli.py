@@ -7,11 +7,11 @@ from sode.shared.cli.state import RunState
 
 
 def add_greet(
-    command_parsers: _SubParsersAction,  # type: ignore[type-arg]
+    commands: _SubParsersAction,  # type: ignore[type-arg]
 ) -> None:
     """Add a parser for the greet command"""
 
-    greet_parser = command_parsers.add_parser(
+    greet_parser = commands.add_parser(
         "greet",
         description="Start with a greeting",
         help="greet somebody",
