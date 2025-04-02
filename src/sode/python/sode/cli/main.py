@@ -1,10 +1,15 @@
 #!/usr/bin/env python3
 
 import sys
-from argparse import ArgumentError, ArgumentParser
+from argparse import ArgumentError, ArgumentParser, Namespace
 from typing import NoReturn
 
 from sode import version
+
+
+def greet(args: Namespace) -> int:
+    print(f"[greet] args=${args}")
+    return 0
 
 
 def main() -> NoReturn:
@@ -26,16 +31,18 @@ def main() -> NoReturn:
         metavar="COMMAND",
         title="commands",
     )
-    command_parsers.add_parser(
+    greet_parser = command_parsers.add_parser(
         "greet",
         description="start with a greeting",
         help="greet somebody",
-    ).add_argument(
+    )
+    greet_parser.add_argument(
         "who",
         default="World",
         help="whom to greet",
         nargs="?",
     )
+    greet_parser.set_defaults(func=greet)
 
     try:
         args = main_parser.parse_args(sys.argv[1:])
@@ -44,7 +51,8 @@ def main() -> NoReturn:
         sys.exit(1)
 
     print(f"args=${args}")
-    sys.exit(0)
+    status = args.func(args)
+    sys.exit(status)
 
 
 if __name__ == "__main__":
