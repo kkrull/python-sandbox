@@ -219,7 +219,6 @@ def sc_track_add_parser(
         description="Work with tracks",
         help="hack tracks",
     )
-
     program_set_command(sc_track_parser, sc_track_run)
 
     sc_track_parser.add_argument(
