@@ -119,6 +119,7 @@ def greet_add_parser(
         help="greet somebody",
     )
     program_set_command(greet_parser, greet_run)
+
     greet_parser.add_argument(
         "who",
         default="World",
@@ -173,6 +174,7 @@ def sc_auth_add_parser(
         help="authorize with SoundCloud API [start here]",
     )
     program_set_command(sc_auth_parser, sc_auth_run)
+
     sc_auth_parser.add_argument(
         "--check-token-expiration",
         action="store_true",
@@ -219,6 +221,7 @@ def sc_track_add_parser(
     )
 
     program_set_command(sc_track_parser, sc_track_run)
+
     sc_track_parser.add_argument(
         "--list",
         action="store_true",
