@@ -18,6 +18,7 @@ def add_command_subparsers(
     main_parser: ArgumentParser,
 ) -> _SubParsersAction:  # type: ignore[type-arg]
     """Add an argument subparser group for commands to be added to the returned object"""
+
     return main_parser.add_subparsers(
         dest="command",
         metavar="COMMAND",

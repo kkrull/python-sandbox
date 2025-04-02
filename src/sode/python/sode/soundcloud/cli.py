@@ -11,6 +11,7 @@ def add_soundcloud(
     commands: _SubParsersAction,  # type: ignore[type-arg]
 ) -> None:
     """Add a parser for soundcloud commands"""
+
     sc_parser = commands.add_parser(
         "soundcloud",
         description="Hack SoundCloud",

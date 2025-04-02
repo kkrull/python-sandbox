@@ -11,6 +11,7 @@ def add_find(
     subcommands: _SubParsersAction,  # type: ignore[type-arg]
 ) -> None:
     """Add the find sub-command"""
+
     find_parser = subcommands.add_parser(
         "find",
         description="Find files lurking in the dark",

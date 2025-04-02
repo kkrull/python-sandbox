@@ -11,6 +11,7 @@ def add_track(
     subcommands: _SubParsersAction,  # type: ignore[type-arg]
 ) -> None:
     """Add the track sub-command"""
+
     track_parser = subcommands.add_parser(
         "track",
         description="Work with tracks",
