@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Iterable
 
 from sode.fs.shared import FS_COMMAND
-from sode.shared.cli import namespace
+from sode.shared.cli import factory
 from sode.shared.cli.format import DefaultsAndRawTextFormatter
 from sode.shared.cli.namespace import ProgramNamespace
 from sode.shared.cli.state import RunState
@@ -19,14 +19,15 @@ def add_find(
 ) -> None:
     """Add the find sub-command"""
 
-    find_parser = subcommands.add_parser(
+    find_parser = factory.add_command(
+        subcommands,
         "find",
+        command=_run_find,
         description="Find files matching any of the specified criteria",
         epilog="""Example: %(prog)s --glob '**/index.[j,t]s' ~/git/node-sandbox ~/git/react""",
         formatter_class=DefaultsAndRawTextFormatter,
         help="find files lurking in the dark",
     )
-    namespace.set_parser_command(find_parser, _run_find)
 
     find_parser.add_argument(
         "--exclude",
