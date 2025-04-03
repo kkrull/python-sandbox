@@ -2,6 +2,7 @@ from argparse import _SubParsersAction
 
 from sode.fs.find import add_find
 from sode.fs.shared import FS_COMMAND
+from sode.shared.cli.namespace import add_subcommand_parsers
 
 
 def add_fs(
@@ -14,10 +15,6 @@ def add_fs(
         description="Hack a local filesystem",
         help="hack a local filesystem",
     )
-    fs_subcommands = fs_parser.add_subparsers(
-        dest=FS_COMMAND,
-        metavar="SUBCOMMAND",
-        title="subcommands",
-    )
 
+    fs_subcommands = add_subcommand_parsers(fs_parser, FS_COMMAND)
     add_find(fs_subcommands)

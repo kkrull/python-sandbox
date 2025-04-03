@@ -1,5 +1,6 @@
 from argparse import _SubParsersAction
 
+from sode.shared.cli.namespace import add_subcommand_parsers
 from sode.soundcloud.auth import add_auth
 from sode.soundcloud.shared import SC_COMMAND
 from sode.soundcloud.track import add_track
@@ -15,11 +16,7 @@ def add_soundcloud(
         description="Hack SoundCloud",
         help="hack SoundCloud",
     )
-    sc_subcommands = sc_parser.add_subparsers(
-        dest=SC_COMMAND,
-        metavar="SUBCOMMAND",
-        title="subcommands",
-    )
 
+    sc_subcommands = add_subcommand_parsers(sc_parser, SC_COMMAND)
     add_auth(sc_subcommands)
     add_track(sc_subcommands)

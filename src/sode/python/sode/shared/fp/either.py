@@ -34,6 +34,7 @@ class EitherBase[A, B]:
         """Transform Right's inner value with the given function, or return Left unchanged."""
         pass
 
+    # TODO KDK: Revisit these https://stackoverflow.com/questions/1436703/what-is-the-difference-between-str-and-repr/1436756#1436756
     @abstractmethod
     def __repr__(self) -> str:
         pass

@@ -1,9 +1,11 @@
+import logging
 from argparse import _SubParsersAction
-from pprint import pprint
 
-from sode.shared.cli import namespace
+from sode.shared.cli import factory
 from sode.shared.cli.namespace import ProgramNamespace
 from sode.shared.cli.state import RunState
+
+logger = logging.getLogger(__name__)
 
 
 def add_greet(
@@ -11,12 +13,12 @@ def add_greet(
 ) -> None:
     """Add a parser for the greet command"""
 
-    # Provide the command, but don't list it in the help
-    greet_parser = commands.add_parser(
+    greet_parser = factory.add_unlisted_command(
+        commands,
         "greet",
+        command=_greet_run,
         description="Start with a greeting",
     )
-    namespace.set_parser_command(greet_parser, _greet_run)
 
     greet_parser.add_argument(
         "who",
@@ -27,16 +29,13 @@ def add_greet(
 
 
 def _greet_run(args: ProgramNamespace, state: RunState) -> int:
-    pprint(
+    logger.debug(
         {
             "greet": {
-                "args": args,
                 "command": args.command,
-                "debug": args.debug,
                 "who": args.who,
             }
-        },
-        stream=state.stdout,
+        }
     )
 
     print(f"Hello {args.who}", file=state.stdout)

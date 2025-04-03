@@ -1,10 +1,12 @@
+import logging
 from argparse import _SubParsersAction
-from pprint import pprint
 
-from sode.shared.cli import namespace
+from sode.shared.cli import factory
 from sode.shared.cli.namespace import ProgramNamespace
 from sode.shared.cli.state import RunState
 from sode.soundcloud.shared import SC_COMMAND
+
+logger = logging.getLogger(__name__)
 
 
 def add_auth(
@@ -12,12 +14,13 @@ def add_auth(
 ) -> None:
     """Add the auth sub-command"""
 
-    auth_parser = subcommands.add_parser(
+    auth_parser = factory.add_command(
+        subcommands,
         "auth",
+        command=_run_auth,
         description="Authorize with the SoundCloud API",
         help="authorize with SoundCloud API [start here]",
     )
-    namespace.set_parser_command(auth_parser, _run_auth)
 
     auth_parser.add_argument(
         "--check-token-expiration",
@@ -37,19 +40,16 @@ def add_auth(
 
 
 def _run_auth(args: ProgramNamespace, state: RunState) -> int:
-    pprint(
+    logger.debug(
         {
             "soundcloud-auth": {
-                "args": args,
                 "command": args.command,
                 SC_COMMAND: getattr(args, SC_COMMAND),
                 "check_token_expiration": args.check_token_expiration,
                 "client_id": args.client_id,
                 "client_secret": args.client_secret,
-                "debug": args.debug,
             }
-        },
-        stream=state.stdout,
+        }
     )
 
     return 0
