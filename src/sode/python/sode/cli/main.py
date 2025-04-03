@@ -4,6 +4,7 @@ import logging
 import logging.config
 import sys
 from argparse import ArgumentError, ArgumentParser, _SubParsersAction
+from pprint import pprint
 from typing import NoReturn
 
 from sode import version
@@ -32,6 +33,7 @@ def main_fn(state: MainState) -> int:
         print(str(error), file=state.stderr)
         return 1
 
+    pprint({"args": args})
     if args.debug:
         level = logging.DEBUG
     else:

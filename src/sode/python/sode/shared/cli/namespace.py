@@ -1,3 +1,4 @@
+import logging
 from argparse import ArgumentParser, Namespace, _SubParsersAction
 from typing import Callable
 
@@ -29,6 +30,15 @@ def add_command_subparsers(
 
 def add_global_arguments(parser: ArgumentParser, version: str) -> None:
     """Add global options that are used in this namespace."""
+
+    parser.add_argument(
+        "--log-level",
+        choices=list(logging.getLevelNamesMapping().keys()),
+        default=logging.getLevelName(logging.WARNING),
+        help="show log messages at or above { %(choices)s } (default: %(default)s)",
+        metavar="LEVEL",
+        required=False,
+    )
 
     parser.add_argument(
         "--debug",
