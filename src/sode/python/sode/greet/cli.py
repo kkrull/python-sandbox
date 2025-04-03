@@ -26,7 +26,6 @@ def _greet_run(args: ProgramNamespace, state: RunState) -> int:
     logger.debug(
         {
             "greet": {
-                "args": args,
                 "command": args.command,
                 "who": args.who,
             }

@@ -34,7 +34,7 @@ class ProgramNamespace(Namespace):
         )
 
 
-def add_command_subparsers(
+def add_command_parsers(
     main_parser: ArgumentParser,
 ) -> _SubParsersAction:  # type: ignore[type-arg]
     """Add an argument subparser group for commands to be added to the returned object"""
@@ -44,6 +44,20 @@ def add_command_subparsers(
         metavar="COMMAND",
         required=True,
         title="commands",
+    )
+
+
+def add_subcommand_parsers(
+    command_parser: ArgumentParser,
+    dest: str,
+) -> _SubParsersAction:  # type: ignore[type-arg]
+    """Add an argument subparser group for sub-commands to be added to the returned object"""
+
+    return command_parser.add_subparsers(
+        dest=dest,
+        metavar="SUBCOMMAND",
+        required=True,
+        title="subcommands",
     )
 
 

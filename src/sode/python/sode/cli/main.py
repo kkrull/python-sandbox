@@ -9,7 +9,7 @@ from sode import version
 from sode.cli.state import MainState
 from sode.fs.cli import add_fs
 from sode.greet.cli import add_greet
-from sode.shared.cli.namespace import ProgramNamespace, add_command_subparsers, add_global_arguments
+from sode.shared.cli.namespace import ProgramNamespace, add_command_parsers, add_global_arguments
 from sode.soundcloud.cli import add_soundcloud
 
 
@@ -52,7 +52,7 @@ def new_main_parser(state: MainState) -> tuple[  # type: ignore[type-arg]
     add_global_arguments(main_parser, state.version)
     return (
         main_parser,
-        add_command_subparsers(main_parser),
+        add_command_parsers(main_parser),
     )
 
 
