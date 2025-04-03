@@ -60,7 +60,6 @@ def _run_find(args: ProgramNamespace, state: RunState) -> int:
                 "args": args,
                 "command": args.command,
                 FS_COMMAND: getattr(args, FS_COMMAND),
-                "debug": args.debug,
                 "exclude": args.exclude,
                 "glob": args.glob,
                 "path": args.path,

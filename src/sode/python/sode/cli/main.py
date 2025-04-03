@@ -40,9 +40,6 @@ def main_fn(state: MainState) -> int:
     )
 
     logger = logging.getLogger(__name__)
-    logger.error("string message")
-    logger.warning("warning message")
-    logger.info("info message")
     logger.debug({"args": args})
 
     return args.run_selected(args, state)

@@ -46,7 +46,6 @@ def _run_auth(args: ProgramNamespace, state: RunState) -> int:
                 "check_token_expiration": args.check_token_expiration,
                 "client_id": args.client_id,
                 "client_secret": args.client_secret,
-                "debug": args.debug,
             }
         },
         stream=state.stdout,

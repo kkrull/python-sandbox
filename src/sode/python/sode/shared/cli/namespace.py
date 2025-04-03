@@ -22,7 +22,6 @@ class ProgramNamespace(Namespace):
     """Groups together parsed arguments and the indicated CLI command to run with them."""
 
     command: str
-    debug: bool
     log_level: LogLevel
     run_selected: CliCommand
 
@@ -52,11 +51,6 @@ def add_global_arguments(parser: ArgumentParser, version: str) -> None:
         required=False,
     )
 
-    parser.add_argument(
-        "--debug",
-        action="store_true",
-        help="turn on the debug logger",
-    )
     parser.add_argument(
         "--version",
         action="version",

@@ -33,7 +33,6 @@ def _run_track(args: ProgramNamespace, state: RunState) -> int:
                 "args": args,
                 "command": args.command,
                 SC_COMMAND: getattr(args, SC_COMMAND),
-                "debug": args.debug,
                 "list": args.list,
             }
         },

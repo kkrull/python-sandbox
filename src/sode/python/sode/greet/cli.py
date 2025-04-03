@@ -27,7 +27,6 @@ def _greet_run(args: ProgramNamespace, state: RunState) -> int:
             "greet": {
                 "args": args,
                 "command": args.command,
-                "debug": args.debug,
                 "who": args.who,
             }
         }
