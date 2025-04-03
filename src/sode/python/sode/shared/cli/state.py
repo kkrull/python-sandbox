@@ -1,4 +1,5 @@
 import typing
+from logging import Logger
 
 
 class RunState:
@@ -14,3 +15,5 @@ class RunState:
     ):
         self.stderr = stderr
         self.stdout = stdout
+
+    # def logger(self, caller: object) -> Logger:
