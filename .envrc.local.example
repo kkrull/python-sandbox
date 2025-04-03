@@ -11,3 +11,17 @@
 # WSL
 #export PIP=pip3
 #export PYTHON=python3
+
+
+## SoundCloud
+
+## TODO KDK: Try this next: https://developers.soundcloud.com/docs/api/explorer/open-api#/users/get_users__user_id__playlists
+
+# https://soundcloud.com/you/apps
+SOUNDCLOUD_CLIENT_NAME='client-name-from-envrc-local'
+SOUNDCLOUD_CLIENT_ID='client-id-from-envrc-local'
+SOUNDCLOUD_CLIENT_SECRET='client-secret-from-envrc-local'
+
+# https://<soundcloud api>/users/6646206/tracks?client_id=...
+SOUNDCLOUD_USER_ID='soundcloud-user-id-from-envrc-local'
+SOUNDCLOUD_USER_URN='soundcloud-user-urn-from-envrc-local'
