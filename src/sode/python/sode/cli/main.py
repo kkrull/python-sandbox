@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
 
 import logging
-import logging.config
 import sys
 from argparse import ArgumentError, ArgumentParser, _SubParsersAction
-from pprint import pprint
 from typing import NoReturn
 
 from sode import version
@@ -33,15 +31,8 @@ def main_fn(state: MainState) -> int:
         print(str(error), file=state.stderr)
         return 1
 
-    logging.basicConfig(
-        format="""[{name}:{levelname}] {message}""",
-        level=args.log_level,
-        style="{",
-    )
-
-    logger = logging.getLogger(__name__)
-    logger.debug({"args": args})
-
+    args.configure_logging()
+    logging.getLogger(__name__).debug({"args": args})
     return args.run_selected(args, state)
 
 

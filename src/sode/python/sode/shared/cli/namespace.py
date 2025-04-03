@@ -25,6 +25,14 @@ class ProgramNamespace(Namespace):
     log_level: LogLevel
     run_selected: CliCommand
 
+    def configure_logging(self) -> None:
+        """Run basicConfig on logging with the selected log level"""
+        logging.basicConfig(
+            format="""[{name}:{levelname}] {message}""",
+            level=self.log_level,
+            style="{",
+        )
+
 
 def add_command_subparsers(
     main_parser: ArgumentParser,
