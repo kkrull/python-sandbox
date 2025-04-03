@@ -33,7 +33,7 @@ def main_fn(state: MainState) -> int:
         return 1
 
     logging.basicConfig(
-        format="""{{ "level": {levelname!r}, "name": {name!r}, "msg": {message!r} }}""",
+        format="""[{name}:{levelname}] {message}""",
         # level=logging.DEBUG,
         style="{",
     )
