@@ -1,7 +1,7 @@
+import logging
 import textwrap
 from argparse import _SubParsersAction
 from pathlib import Path
-from pprint import pprint
 from typing import Iterable
 
 from sode.fs.shared import FS_COMMAND
@@ -54,18 +54,16 @@ def add_find(
 
 
 def _run_find(args: ProgramNamespace, state: RunState) -> int:
-    pprint(
+    logging.getLogger(__name__).debug(
         {
             "fs-find": {
-                "args": args,
                 "command": args.command,
                 FS_COMMAND: getattr(args, FS_COMMAND),
                 "exclude": args.exclude,
                 "glob": args.glob,
                 "path": args.path,
             }
-        },
-        stream=state.stdout,
+        }
     )
 
     for search_glob in args.glob:

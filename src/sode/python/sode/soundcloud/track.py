@@ -1,5 +1,5 @@
+import logging
 from argparse import _SubParsersAction
-from pprint import pprint
 
 from sode.shared.cli import namespace
 from sode.shared.cli.namespace import ProgramNamespace
@@ -27,7 +27,7 @@ def add_track(
 
 
 def _run_track(args: ProgramNamespace, state: RunState) -> int:
-    pprint(
+    logging.getLogger(__name__).debug(
         {
             "soundcloud-auth": {
                 "args": args,
@@ -35,8 +35,7 @@ def _run_track(args: ProgramNamespace, state: RunState) -> int:
                 SC_COMMAND: getattr(args, SC_COMMAND),
                 "list": args.list,
             }
-        },
-        stream=state.stdout,
+        }
     )
 
     return 0

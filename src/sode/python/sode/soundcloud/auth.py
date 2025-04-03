@@ -1,5 +1,5 @@
+import logging
 from argparse import _SubParsersAction
-from pprint import pprint
 
 from sode.shared.cli import namespace
 from sode.shared.cli.namespace import ProgramNamespace
@@ -37,18 +37,16 @@ def add_auth(
 
 
 def _run_auth(args: ProgramNamespace, state: RunState) -> int:
-    pprint(
+    logging.getLogger(__name__).debug(
         {
             "soundcloud-auth": {
-                "args": args,
                 "command": args.command,
                 SC_COMMAND: getattr(args, SC_COMMAND),
                 "check_token_expiration": args.check_token_expiration,
                 "client_id": args.client_id,
                 "client_secret": args.client_secret,
             }
-        },
-        stream=state.stdout,
+        }
     )
 
     return 0
