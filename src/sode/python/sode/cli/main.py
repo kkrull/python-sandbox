@@ -32,9 +32,13 @@ def main_fn(state: MainState) -> int:
         print(str(error), file=state.stderr)
         return 1
 
+    if args.debug:
+        level = logging.DEBUG
+    else:
+        level = logging.WARNING
     logging.basicConfig(
         format="""[{name}:{levelname}] {message}""",
-        # level=logging.DEBUG,
+        level=level,
         style="{",
     )
 
