@@ -13,6 +13,7 @@ def add_soundcloud(
 
     sc_parser = commands.add_parser(
         "soundcloud",
+        aliases=["sc"],
         description="Hack SoundCloud",
         help="hack SoundCloud",
     )
