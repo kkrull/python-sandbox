@@ -26,14 +26,14 @@ def add_track(
         "--list",
         action="store_true",
         help="list tracks",
+        required=True,
     )
 
 
 def _run_track(args: ProgramNamespace, state: RunState) -> int:
     logger.debug(
         {
-            "soundcloud-auth": {
-                "args": args,
+            "soundcloud-track": {
                 "command": args.command,
                 SC_COMMAND: getattr(args, SC_COMMAND),
                 "list": args.list,
@@ -41,4 +41,12 @@ def _run_track(args: ProgramNamespace, state: RunState) -> int:
         }
     )
 
+    if args.list:
+        return list_tracks(args, state)
+    else:
+        return 99
+
+
+def list_tracks(args: ProgramNamespace, state: RunState) -> int:
+    print(f"Listing tracks...", file=state.stdout)
     return 0
