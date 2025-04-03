@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
+import logging
 import sys
 from argparse import ArgumentError, ArgumentParser, _SubParsersAction
-from pprint import pprint
 from typing import NoReturn
 
 from sode import version
@@ -31,7 +31,8 @@ def main_fn(state: MainState) -> int:
         print(str(error), file=state.stderr)
         return 1
 
-    pprint({"main": {"args": args}}, stream=state.stdout)
+    logger = logging.getLogger(main_fn.__module__)
+    logger.info({"main": {"args": args}})
     return args.run_selected(args, state)
 
 

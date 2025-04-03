@@ -1,6 +1,5 @@
 import logging
 from argparse import _SubParsersAction
-from pprint import pprint
 
 from sode.shared.cli.factory import add_unlisted_command
 from sode.shared.cli.namespace import ProgramNamespace
@@ -22,8 +21,8 @@ def add_greet(
 
 
 def _greet_run(args: ProgramNamespace, state: RunState) -> int:
-    # logging.getLogger(__package__)
-    pprint(
+    logger = logging.getLogger(_greet_run.__module__)
+    logger.info(
         {
             "greet": {
                 "args": args,
@@ -31,8 +30,7 @@ def _greet_run(args: ProgramNamespace, state: RunState) -> int:
                 "debug": args.debug,
                 "who": args.who,
             }
-        },
-        stream=state.stdout,
+        }
     )
 
     print(f"Hello {args.who}", file=state.stdout)
