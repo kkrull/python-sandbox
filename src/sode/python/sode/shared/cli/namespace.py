@@ -1,10 +1,21 @@
 import logging
 from argparse import ArgumentParser, Namespace, _SubParsersAction
-from typing import Callable
+from typing import Callable, Literal
 
 from sode.shared.cli.state import RunState
 
 type CliCommand = Callable[["ProgramNamespace", RunState], int]
+
+type LogLevel = Literal[
+    "CRITICAL",
+    "FATAL",
+    "ERROR",
+    "WARN",
+    "WARNING",
+    "INFO",
+    "DEBUG",
+    "NOTSET",
+]
 
 
 class ProgramNamespace(Namespace):
@@ -12,6 +23,7 @@ class ProgramNamespace(Namespace):
 
     command: str
     debug: bool
+    log_level: LogLevel
     run_selected: CliCommand
 
 
