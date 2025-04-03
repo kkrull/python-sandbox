@@ -31,8 +31,10 @@ def main_fn(state: MainState) -> int:
         print(str(error), file=state.stderr)
         return 1
 
+    # Configure logging before accessing logger (getting the order wrong is a world of silent pain).
     args.configure_logging()
     logging.getLogger(__name__).debug({"args": args})
+
     return args.run_selected(args, state)
 
 

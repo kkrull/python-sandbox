@@ -11,6 +11,8 @@ from sode.shared.cli.namespace import ProgramNamespace
 from sode.shared.cli.state import RunState
 from sode.shared.fp.option import Empty, Value
 
+logger = logging.getLogger(__name__)
+
 
 def add_find(
     subcommands: _SubParsersAction,  # type: ignore[type-arg]
@@ -54,7 +56,7 @@ def add_find(
 
 
 def _run_find(args: ProgramNamespace, state: RunState) -> int:
-    logging.getLogger(__name__).debug(
+    logger.debug(
         {
             "fs-find": {
                 "command": args.command,

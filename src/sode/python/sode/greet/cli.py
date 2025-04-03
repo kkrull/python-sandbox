@@ -5,6 +5,8 @@ from sode.shared.cli.factory import add_unlisted_command
 from sode.shared.cli.namespace import ProgramNamespace
 from sode.shared.cli.state import RunState
 
+logger = logging.getLogger(__name__)
+
 
 def add_greet(
     commands: _SubParsersAction,  # type: ignore[type-arg]
@@ -21,7 +23,6 @@ def add_greet(
 
 
 def _greet_run(args: ProgramNamespace, state: RunState) -> int:
-    logger = logging.getLogger(_greet_run.__module__)
     logger.debug(
         {
             "greet": {

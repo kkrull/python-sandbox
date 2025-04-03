@@ -6,6 +6,8 @@ from sode.shared.cli.namespace import ProgramNamespace
 from sode.shared.cli.state import RunState
 from sode.soundcloud.shared import SC_COMMAND
 
+logger = logging.getLogger(__name__)
+
 
 def add_track(
     subcommands: _SubParsersAction,  # type: ignore[type-arg]
@@ -27,7 +29,7 @@ def add_track(
 
 
 def _run_track(args: ProgramNamespace, state: RunState) -> int:
-    logging.getLogger(__name__).debug(
+    logger.debug(
         {
             "soundcloud-auth": {
                 "args": args,
