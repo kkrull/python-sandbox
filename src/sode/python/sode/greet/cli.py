@@ -22,7 +22,7 @@ def add_greet(
 
 def _greet_run(args: ProgramNamespace, state: RunState) -> int:
     logger = logging.getLogger(_greet_run.__module__)
-    logger.info(
+    logger.debug(
         {
             "greet": {
                 "args": args,

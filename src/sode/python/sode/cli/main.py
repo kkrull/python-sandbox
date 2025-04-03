@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import logging
+import logging.config
 import sys
 from argparse import ArgumentError, ArgumentParser, _SubParsersAction
 from typing import NoReturn
@@ -31,8 +32,16 @@ def main_fn(state: MainState) -> int:
         print(str(error), file=state.stderr)
         return 1
 
-    logger = logging.getLogger(main_fn.__module__)
-    logger.info({"main": {"args": args}})
+    logging.basicConfig(level=logging.DEBUG)
+
+    # logger = logging.getLogger(main_fn.__module__)
+    root_logger = logging.getLogger(__name__)
+    root_logger.error("error message")
+    root_logger.warning("warning message")
+    root_logger.info("info message")
+    root_logger.debug("debug message")
+    root_logger.debug({"args": args})
+
     return args.run_selected(args, state)
 
 
