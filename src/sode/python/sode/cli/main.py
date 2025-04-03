@@ -33,20 +33,16 @@ def main_fn(state: MainState) -> int:
         print(str(error), file=state.stderr)
         return 1
 
-    pprint({"args": args})
-    if args.debug:
-        level = logging.DEBUG
-    else:
-        level = logging.WARNING
     logging.basicConfig(
         format="""[{name}:{levelname}] {message}""",
-        level=level,
+        level=args.log_level,
         style="{",
     )
 
     logger = logging.getLogger(__name__)
     logger.error("string message")
-    logger.error({"message": "object message"})
+    logger.warning("warning message")
+    logger.info("info message")
     logger.debug({"args": args})
 
     return args.run_selected(args, state)
