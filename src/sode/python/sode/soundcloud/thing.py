@@ -1,4 +1,5 @@
 import logging
+import os
 from argparse import _SubParsersAction
 
 import requests
@@ -28,6 +29,8 @@ def _run_thing(args: ProgramNamespace, state: RunState) -> int:
     logger.debug(
         {
             "soundcloud-thing": {
+                "client_id": os.environ["SOUNDCLOUD_CLIENT_ID"],
+                "client_secret": os.environ["SOUNDCLOUD_CLIENT_SECRET"],
                 "command": args.command,
                 SC_COMMAND: getattr(args, SC_COMMAND),
             }
