@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 def add_the_thing(
     subcommands: _SubParsersAction,  # type: ignore[type-arg]
 ) -> None:
-    """Add a command that "does the thing" (like literally anything) with SoundCloud"""
+    """Add a command that "does the thing" (literally anything) with SoundCloud"""
 
     thing_parser = factory.add_unlisted_command(
         subcommands,
@@ -53,14 +53,14 @@ def add_the_thing(
     )
     thing_parser.add_argument(
         "--client-id",
-        default="https://secure.soundcloud.com/oauth/token",
+        default=os.environ["SOUNDCLOUD_CLIENT_ID"],
         help="OAuth2 client_id used to request tokens (default: $SOUNDCLOUD_CLIENT_ID)",
         nargs=1,
         required=False,
     )
     thing_parser.add_argument(
         "--token-endpoint",
-        default=os.environ["SOUNDCLOUD_TOKEN_URL"],
+        default="https://secure.soundcloud.com/oauth/token",
         help="URL to SoundCloud OAuth2 token endpoint (default: %(default)s)",
         metavar="URL",
         nargs=1,
