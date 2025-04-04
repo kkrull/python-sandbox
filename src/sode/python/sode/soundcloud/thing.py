@@ -52,7 +52,7 @@ def _run_thing(args: ProgramNamespace, state: RunState) -> int:
 
             # https://developers.soundcloud.com/docs/api/explorer/open-api#/users/get_users__user_id__playlists
             response = session.get(
-                "https://api.soundcloud.com/users/6646206/playlists",
+                f"https://api.soundcloud.com/users/{os.environ["SOUNDCLOUD_USER_ID"]}/playlists",
                 params={"limit": 1},
             )
             logger.debug(
