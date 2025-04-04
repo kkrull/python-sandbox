@@ -86,7 +86,7 @@ def add_the_thing(
     )
     thing_parser.add_argument(
         "--access-token",
-        default=os.environ["SOUNDCLOUD_ACCESS_TOKEN"],
+        default=os.environ.get("SOUNDCLOUD_ACCESS_TOKEN"),
         help=argparse.SUPPRESS,  # discourage exposing secret CLI arguments to other users
         nargs=1,
         required=False,

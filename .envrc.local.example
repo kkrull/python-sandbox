@@ -16,7 +16,7 @@
 ## SoundCloud
 
 # https://soundcloud.com/you/apps
-export SOUNDCLOUD_ACCESS_TOKEN='access-token-from-envrc-local'
+# export SOUNDCLOUD_ACCESS_TOKEN='access-token-from-envrc-local'
 export SOUNDCLOUD_CLIENT_NAME='client-name-from-envrc-local'
 export SOUNDCLOUD_CLIENT_ID='client-id-from-envrc-local'
 export SOUNDCLOUD_CLIENT_SECRET='client-secret-from-envrc-local'
