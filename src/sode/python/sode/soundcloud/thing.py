@@ -64,16 +64,15 @@ def _run_thing(args: ProgramNamespace, state: RunState) -> int:
                 f"https://api.soundcloud.com/users/{os.environ["SOUNDCLOUD_USER_ID"]}/playlists",
                 params={"limit": 1},
             )
-            pprint(
+            logger.debug(
                 {
-                    "content": response.content,
                     "headers": response.headers,
                     "links": response.links,
                     "status_code": response.status_code,
                 },
-                stream=state.stdout,
             )
 
+            print(response.text, file=state.stdout)
             return 0
 
 
