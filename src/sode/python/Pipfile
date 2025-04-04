@@ -9,7 +9,6 @@ sort_pipfile = true
 [packages]
 requests = "*"
 requests-oauthlib = "*"
-types-requests = "*"
 
 [dev-packages]
 black = "*"
@@ -17,6 +16,7 @@ build = "*"
 isort = "*"
 mypy = "*"
 setuptools = "*"
+types-requests = "*"
 types-requests-oauthlib = "*"
 
 [requires]
