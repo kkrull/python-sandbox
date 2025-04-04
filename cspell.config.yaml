@@ -11,6 +11,7 @@ enableFiletypes:
   - text
   - yaml
 ignorePaths:
+  - .envrc.local
   - .gitignore
   - cspell.config.yaml
 ignoreWords: []
