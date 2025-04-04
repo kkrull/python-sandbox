@@ -15,6 +15,7 @@ import:
   - ../cspell.config.yaml
 version: "0.2"
 words:
+  - argfactory
   - autopep
   - dmypy
   - globalcmd

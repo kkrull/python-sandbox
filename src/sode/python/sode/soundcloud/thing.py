@@ -4,13 +4,13 @@ import os
 import textwrap
 import typing
 from argparse import RawTextHelpFormatter, _SubParsersAction
-from typing import Literal, TypedDict, Union
+from typing import TypedDict
 
 from oauthlib.oauth2 import BackendApplicationClient
 from requests.auth import HTTPBasicAuth
 from requests_oauthlib import OAuth2Session
 
-from sode.shared.cli import factory
+from sode.shared.cli import argfactory, factory
 from sode.shared.cli.namespace import ProgramNamespace
 from sode.shared.cli.state import RunState
 from sode.shared.fp.either import Either, Left, Right
@@ -18,51 +18,6 @@ from sode.shared.fp.option import Empty, Option, Value
 from sode.soundcloud.shared import SC_COMMAND
 
 logger = logging.getLogger(__name__)
-
-
-DefaultArg = TypedDict("DefaultArg", {"default": str})
-OptionalArg = TypedDict("OptionalArg", {"required": Literal[False]})
-RequiredArg = TypedDict("RequiredArg", {"required": Literal[True]})
-
-
-def environ_or_default(
-    name: str,
-    default: str,
-    environ: os._Environ[str] = os.environ,
-) -> DefaultArg:
-    """An argument that has an overridable default."""
-
-    match environ.get(name):
-        case str(override):
-            return {"default": override}
-        case None:
-            return {"default": default}
-
-
-def environ_or_optional(
-    name: str,
-    environ: os._Environ[str] = os.environ,
-) -> Union[DefaultArg, OptionalArg]:
-    """An optional argument that can be passed through an environment variable."""
-
-    match environ.get(name):
-        case str(secret_value):
-            return {"default": secret_value}
-        case None:
-            return {"required": False}
-
-
-def environ_or_required(
-    name: str,
-    environ: os._Environ[str] = os.environ,
-) -> Union[DefaultArg, RequiredArg]:
-    """An argument that's only required if it's not passed through an environment variable."""
-
-    match environ.get(name):
-        case str(secret_value):
-            return {"default": secret_value}
-        case None:
-            return {"required": True}
 
 
 def add_the_thing(
@@ -99,25 +54,25 @@ def add_the_thing(
     )
     thing_parser.add_argument(
         "--access-token",
-        **environ_or_optional("SOUNDCLOUD_ACCESS_TOKEN", environ),
+        **argfactory.environ_or_optional("SOUNDCLOUD_ACCESS_TOKEN", environ),
         help=argparse.SUPPRESS,  # discourage exposing secret CLI arguments to other users
         nargs=1,
     )
     thing_parser.add_argument(
         "--client-id",
-        **environ_or_required("SOUNDCLOUD_CLIENT_ID", environ),
+        **argfactory.environ_or_required("SOUNDCLOUD_CLIENT_ID", environ),
         help="OAuth2 client_id used to request tokens (default: $SOUNDCLOUD_CLIENT_ID)",
         nargs=1,
     )
     thing_parser.add_argument(
         "--client-secret",
-        **environ_or_required("SOUNDCLOUD_CLIENT_SECRET", environ),
+        **argfactory.environ_or_required("SOUNDCLOUD_CLIENT_SECRET", environ),
         help=argparse.SUPPRESS,  # discourage exposing secret CLI arguments to other users
         nargs=1,
     )
     thing_parser.add_argument(
         "--token-endpoint",
-        **environ_or_default(
+        **argfactory.environ_or_default(
             "SOUNDCLOUD_TOKEN_URL",
             "https://secure.soundcloud.com/oauth/token",
             environ,
@@ -129,7 +84,7 @@ def add_the_thing(
     thing_parser.add_argument(
         "-u",
         "--user-id",
-        **environ_or_required("SOUNDCLOUD_USER_ID", environ),
+        **argfactory.environ_or_required("SOUNDCLOUD_USER_ID", environ),
         help="SoundCloud user ID",
         nargs=1,
     )
