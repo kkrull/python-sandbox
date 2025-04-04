@@ -35,6 +35,7 @@ def add_the_thing(
         "--client-id",
         default=os.environ["SOUNDCLOUD_CLIENT_ID"],
         help="OAuth2 client_id used for auth requests (default to %(default)s)",
+        nargs="?",
     )
 
 
