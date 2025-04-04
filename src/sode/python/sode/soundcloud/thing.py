@@ -4,7 +4,7 @@ import os
 import textwrap
 import typing
 from argparse import RawTextHelpFormatter, _SubParsersAction
-from typing import TypedDict
+from typing import Literal, TypedDict, Union
 
 from oauthlib.oauth2 import BackendApplicationClient
 from requests.auth import HTTPBasicAuth
@@ -18,6 +18,25 @@ from sode.shared.fp.option import Empty, Option, Value
 from sode.soundcloud.shared import SC_COMMAND
 
 logger = logging.getLogger(__name__)
+
+
+class Required(TypedDict):
+    required: Literal[True]
+
+
+class Default(TypedDict):
+    default: str
+
+
+type DefaultOrRequired = Union[Default, Required]
+
+
+def environ_or_required(name: str) -> DefaultOrRequired:
+    match os.environ.get(name):
+        case None:
+            return {"required": True}
+        case value:
+            return {"default": value}
 
 
 def add_the_thing(
@@ -57,6 +76,7 @@ def add_the_thing(
         help="OAuth2 client_id used to request tokens (default: $SOUNDCLOUD_CLIENT_ID)",
         nargs=1,
         required=False,
+        **environ_or_required("SOUNDCLOUD_CLIENT_ID"),
     )
     thing_parser.add_argument(
         "--token-endpoint",
