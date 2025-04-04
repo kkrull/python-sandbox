@@ -19,10 +19,10 @@
 
 # https://soundcloud.com/you/apps
 # https://secure.soundcloud.com/oauth/token
-SOUNDCLOUD_CLIENT_NAME='client-name-from-envrc-local'
-SOUNDCLOUD_CLIENT_ID='client-id-from-envrc-local'
-SOUNDCLOUD_CLIENT_SECRET='client-secret-from-envrc-local'
+export SOUNDCLOUD_CLIENT_NAME='client-name-from-envrc-local'
+export SOUNDCLOUD_CLIENT_ID='client-id-from-envrc-local'
+export SOUNDCLOUD_CLIENT_SECRET='client-secret-from-envrc-local'
 
 # https://<soundcloud api>/users/6646206/tracks?client_id=...
-SOUNDCLOUD_USER_ID='soundcloud-user-id-from-envrc-local'
-SOUNDCLOUD_USER_URN='soundcloud-user-urn-from-envrc-local'
+export SOUNDCLOUD_USER_ID='soundcloud-user-id-from-envrc-local'
+export SOUNDCLOUD_USER_URN='soundcloud-user-urn-from-envrc-local'
