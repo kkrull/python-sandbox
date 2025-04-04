@@ -2,6 +2,7 @@ import logging
 import os
 import typing
 from argparse import _SubParsersAction
+from pprint import pprint
 from typing import TypedDict
 
 from oauthlib.oauth2 import BackendApplicationClient
@@ -34,7 +35,7 @@ def add_the_thing(
     thing_parser.add_argument(
         "--client-id",
         default=os.environ["SOUNDCLOUD_CLIENT_ID"],
-        help="OAuth2 client_id used for auth requests (default to %(default)s)",
+        help="OAuth2 client_id used for auth requests (optional, default: $SOUNDCLOUD_CLIENT_ID)",
         nargs="?",
     )
 
@@ -43,7 +44,7 @@ def _run_thing(args: ProgramNamespace, state: RunState) -> int:
     logger.debug(
         {
             "soundcloud-thing": {
-                "client_id": os.environ["SOUNDCLOUD_CLIENT_ID"],
+                "client_id": args.client_id,
                 "client_secret": os.environ["SOUNDCLOUD_CLIENT_SECRET"],
                 "command": args.command,
                 SC_COMMAND: getattr(args, SC_COMMAND),
@@ -51,7 +52,7 @@ def _run_thing(args: ProgramNamespace, state: RunState) -> int:
         }
     )
 
-    match authorize():
+    match authorize(args):
         case Left(error):
             print(error, file=state.stderr)
             return 1
@@ -63,13 +64,14 @@ def _run_thing(args: ProgramNamespace, state: RunState) -> int:
                 f"https://api.soundcloud.com/users/{os.environ["SOUNDCLOUD_USER_ID"]}/playlists",
                 params={"limit": 1},
             )
-            logger.debug(
+            pprint(
                 {
                     "content": response.content,
                     "headers": response.headers,
                     "links": response.links,
                     "status_code": response.status_code,
-                }
+                },
+                stream=state.stdout,
             )
 
             return 0
@@ -84,26 +86,26 @@ class TokenResponse(TypedDict):
     token_type: str  # Bearer
 
 
-def authorize() -> Either[str, str]:
-    match existing_access_token():
+def authorize(args: ProgramNamespace) -> Either[str, str]:
+    match existing_access_token(args):
         case Value(access_token):
             return Right(access_token)
         case Empty():
-            token_response = fetch_access_token()
+            token_response = fetch_access_token(args)
             return token_response.map(lambda response: response["access_token"])
 
 
-def existing_access_token() -> Option[str]:
+def existing_access_token(args: ProgramNamespace) -> Option[str]:
     access_token = os.environ.get("SOUNDCLOUD_ACCESS_TOKEN", "")
-    logger.debug({"access_token": access_token})
+    logger.debug({"existing_access_token": {"environ": access_token}})
     if len(access_token.strip()) == 0:
         return Empty[str]()
     else:
         return Value(access_token)
 
 
-def fetch_access_token() -> Either[str, TokenResponse]:
-    client_id = os.environ["SOUNDCLOUD_CLIENT_ID"]
+def fetch_access_token(args: ProgramNamespace) -> Either[str, TokenResponse]:
+    client_id = args.client_id
     client_secret = os.environ["SOUNDCLOUD_CLIENT_SECRET"]
     token_url = os.environ["SOUNDCLOUD_TOKEN_URL"]
 
@@ -112,12 +114,21 @@ def fetch_access_token() -> Either[str, TokenResponse]:
     oauth = OAuth2Session(client=client)
 
     # https://developers.soundcloud.com/docs#authentication
-    logger.debug({"client_id": client_id, "token_url": token_url})
     try:
         auth_response: TokenResponse = typing.cast(
             TokenResponse,
             oauth.fetch_token(token_url=token_url, auth=auth),
         )
+        logger.debug(
+            {
+                "fetch_access_token": {
+                    "access_token": repr(auth_response["access_token"]),
+                    "client_id": client_id,
+                    "token_url": token_url,
+                }
+            }
+        )
+
         access_token = (auth_response["access_token"] or "").strip()
         if len(access_token) == 0:
             return Left(f"missing access_token: {repr(auth_response)}")
