@@ -15,8 +15,6 @@
 
 ## SoundCloud
 
-## TODO KDK: Try this next: https://developers.soundcloud.com/docs/api/explorer/open-api#/users/get_users__user_id__playlists
-
 # https://soundcloud.com/you/apps
 # https://secure.soundcloud.com/oauth/token
 export SOUNDCLOUD_CLIENT_NAME='client-name-from-envrc-local'
