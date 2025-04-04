@@ -2,7 +2,7 @@ import logging
 import os
 import typing
 from argparse import _SubParsersAction
-from typing import Callable, TypedDict
+from typing import TypedDict
 
 from oauthlib.oauth2 import BackendApplicationClient
 from requests.auth import HTTPBasicAuth
