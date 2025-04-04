@@ -21,8 +21,8 @@ logger = logging.getLogger(__name__)
 
 
 DefaultArg = TypedDict("DefaultArg", {"default": str})
+OptionalArg = TypedDict("OptionalArg", {"required": Literal[False]})
 RequiredArg = TypedDict("RequiredArg", {"required": Literal[True]})
-type DefaultOrRequiredArg = Union[DefaultArg, RequiredArg]
 
 
 def environ_or_default(
@@ -39,10 +39,23 @@ def environ_or_default(
             return {"default": default}
 
 
+def environ_or_optional(
+    name: str,
+    environ: os._Environ[str] = os.environ,
+) -> Union[DefaultArg, OptionalArg]:
+    """An optional argument that can be passed through an environment variable."""
+
+    match environ.get(name):
+        case str(secret_value):
+            return {"default": secret_value}
+        case None:
+            return {"required": False}
+
+
 def environ_or_required(
     name: str,
     environ: os._Environ[str] = os.environ,
-) -> DefaultOrRequiredArg:
+) -> Union[DefaultArg, RequiredArg]:
     """An argument that's only required if it's not passed through an environment variable."""
 
     match environ.get(name):
@@ -86,10 +99,9 @@ def add_the_thing(
     )
     thing_parser.add_argument(
         "--access-token",
-        default=os.environ.get("SOUNDCLOUD_ACCESS_TOKEN"),
+        **environ_or_optional("SOUNDCLOUD_ACCESS_TOKEN", environ),
         help=argparse.SUPPRESS,  # discourage exposing secret CLI arguments to other users
         nargs=1,
-        required=False,
     )
     thing_parser.add_argument(
         "--client-id",
