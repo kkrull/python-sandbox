@@ -50,4 +50,5 @@ words:
   - shellcheck
   - sode
   - SOUNDCLOUD
+  - typeshed
   - virtualenv
