@@ -1,6 +1,8 @@
 import logging
 from argparse import _SubParsersAction
 
+import requests
+
 from sode.shared.cli import factory
 from sode.shared.cli.namespace import ProgramNamespace
 from sode.shared.cli.state import RunState
@@ -29,6 +31,15 @@ def _run_thing(args: ProgramNamespace, state: RunState) -> int:
                 "command": args.command,
                 SC_COMMAND: getattr(args, SC_COMMAND),
             }
+        }
+    )
+
+    response = requests.get("https://api.soundcloud.com/users/6646206/playlists")
+    logger.debug(
+        {
+            "headers": response.headers,
+            "links": response.links,
+            "status_code": response.status_code,
         }
     )
 
