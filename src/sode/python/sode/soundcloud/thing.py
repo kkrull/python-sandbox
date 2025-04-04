@@ -49,6 +49,8 @@ def _run_thing(args: ProgramNamespace, state: RunState) -> int:
             return 1
         case Right(access_token):
             session = OAuth2Session(token={"access_token": access_token, "token_type": "Bearer"})
+
+            # https://developers.soundcloud.com/docs/api/explorer/open-api#/users/get_users__user_id__playlists
             response = session.get(
                 "https://api.soundcloud.com/users/6646206/playlists",
                 params={"limit": 1},
@@ -101,6 +103,7 @@ def fetch_access_token() -> Either[str, TokenResponse]:
     client = BackendApplicationClient(client_id=client_id)
     oauth = OAuth2Session(client=client)
 
+    # https://developers.soundcloud.com/docs#authentication
     logger.debug({"client_id": client_id, "token_url": token_url})
     try:
         auth_response: TokenResponse = typing.cast(
