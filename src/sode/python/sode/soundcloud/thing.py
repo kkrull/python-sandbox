@@ -2,9 +2,8 @@ import logging
 import os
 import typing
 from argparse import _SubParsersAction
-from typing import TypedDict
+from typing import Callable, TypedDict
 
-import requests
 from oauthlib.oauth2 import BackendApplicationClient
 from requests.auth import HTTPBasicAuth
 from requests_oauthlib import OAuth2Session
@@ -86,7 +85,7 @@ def authorize() -> Either[str, str]:
 
 def existing_access_token() -> Option[str]:
     access_token = os.environ.get("SOUNDCLOUD_ACCESS_TOKEN", "")
-    logging.debug({"access_token": access_token})
+    logger.debug({"access_token": access_token})
     if len(access_token.strip()) == 0:
         return Empty[str]()
     else:
@@ -102,7 +101,7 @@ def fetch_access_token() -> Either[str, TokenResponse]:
     client = BackendApplicationClient(client_id=client_id)
     oauth = OAuth2Session(client=client)
 
-    logging.debug({"client_id": client_id, "token_url": token_url})
+    logger.debug({"client_id": client_id, "token_url": token_url})
     try:
         auth_response: TokenResponse = typing.cast(
             TokenResponse,
