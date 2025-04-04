@@ -25,9 +25,16 @@ def add_the_thing(
 
     thing_parser = factory.add_unlisted_command(
         subcommands,
-        "do-the-thing",
+        "thing",
         command=_run_thing,
         description="Do the thing (anything) with SoundCloud, to see if it works",
+        epilog="""Find your API credentials at: https://soundcloud.com/you/apps""",
+    )
+
+    thing_parser.add_argument(
+        "--client-id",
+        default=os.environ["SOUNDCLOUD_CLIENT_ID"],
+        help="OAuth2 client_id used for auth requests (default to %(default)s)",
     )
 
 
