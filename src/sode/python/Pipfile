@@ -17,6 +17,7 @@ build = "*"
 isort = "*"
 mypy = "*"
 setuptools = "*"
+types-requests-oauthlib = "*"
 
 [requires]
 python_version = "3.13"
