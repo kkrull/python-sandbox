@@ -1,3 +1,4 @@
+import argparse
 import logging
 import os
 import typing
@@ -39,13 +40,21 @@ def add_the_thing(
         nargs="?",
     )
 
+    # Hide help text to discourage passing secret in a way that others can see (prefer os.environ)
+    thing_parser.add_argument(
+        "--client-secret",
+        default=os.environ["SOUNDCLOUD_CLIENT_SECRET"],
+        help=argparse.SUPPRESS,
+        nargs="?",
+    )
+
 
 def _run_thing(args: ProgramNamespace, state: RunState) -> int:
     logger.debug(
         {
             "soundcloud-thing": {
                 "client_id": args.client_id,
-                "client_secret": os.environ["SOUNDCLOUD_CLIENT_SECRET"],
+                "client_secret": args.client_secret,
                 "command": args.command,
                 SC_COMMAND: getattr(args, SC_COMMAND),
             }
@@ -105,7 +114,7 @@ def existing_access_token(args: ProgramNamespace) -> Option[str]:
 
 def fetch_access_token(args: ProgramNamespace) -> Either[str, TokenResponse]:
     client_id = args.client_id
-    client_secret = os.environ["SOUNDCLOUD_CLIENT_SECRET"]
+    client_secret = args.client_secret
     token_url = os.environ["SOUNDCLOUD_TOKEN_URL"]
 
     auth = HTTPBasicAuth(client_id, client_secret)
