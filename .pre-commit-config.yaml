@@ -37,8 +37,9 @@ repos:
     rev: v1.15.0
     hooks:
     - id: mypy
-      # TODO KDK: Failing when running from pre-commit hook (outside the virtualenv)
-      # error: Library stubs not installed for "requests"
+      # typing-related dependencies have to be installed b/c pre-commit runs in its own virtualenv
+      additional_dependencies:
+      - "types-requests>=2.32"
       exclude: ^src/python/.*$
       name: mypy-sode
       args:
