@@ -42,7 +42,7 @@ def _run_thing(args: ProgramNamespace, state: RunState) -> int:
 
     client_id = os.environ["SOUNDCLOUD_CLIENT_ID"]
     client_secret = os.environ["SOUNDCLOUD_CLIENT_SECRET"]
-    token_url = "https://secure.soundcloud.com/oauth/token"
+    token_url = os.environ["SOUNDCLOUD_TOKEN_URL"]
 
     auth = HTTPBasicAuth(client_id, client_secret)
     client = BackendApplicationClient(client_id=client_id)
