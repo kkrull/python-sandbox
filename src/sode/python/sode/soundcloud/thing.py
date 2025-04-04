@@ -50,7 +50,10 @@ def _run_thing(args: ProgramNamespace, state: RunState) -> int:
             return 1
         case Right(access_token):
             session = OAuth2Session(token={"access_token": access_token, "token_type": "Bearer"})
-            response = session.get("https://api.soundcloud.com/users/6646206/playlists")
+            response = session.get(
+                "https://api.soundcloud.com/users/6646206/playlists",
+                params={"limit": 1},
+            )
             logger.debug(
                 {
                     "content": response.content,
