@@ -121,6 +121,8 @@ BUILD ?= $(PIPENV) run python -m build
 PIPENV ?= pipenv
 PIPX ?= pipx
 
+requirements_obj := requirements.txt
+
 .PHONY: clean-build
 clean-build: #> Remove files from running build
 	$(RM) -r build dist $(package_id).egg-info
@@ -128,6 +130,7 @@ clean-build: #> Remove files from running build
 .PHONY: clean-pipenv
 clean-pipenv: #> Uninstall packages not listed in Pipfile
 	$(PIPENV) clean
+	$(RM) $(requirements_obj)
 
 .PHONY: clean-python
 clean-python: #> Remove files from running python
@@ -139,11 +142,15 @@ debug-python:
 	$(info - BUILD=$(BUILD))
 	$(info - PIPENV=$(PIPENV))
 	$(info - PIPX=$(PIPX))
+	$(info - requirements_obj=$(requirements_obj))
 	@:
 
 .PHONY: pipenv-install
 pipenv-install: #> Install development dependencies with pipenv
 	$(PIPENV) install --dev
+
+$(requirements_obj): Pipfile.lock
+	$(PIPENV) requirements > $@
 
 #. PYTHON SUPPORT TARGETS
 
@@ -225,10 +232,9 @@ install-editable-wheel: wheel #> Link to the wheel globally with pipx
 	$(PIPX) install --editable .
 
 .PHONY: install-wheel
-install-wheel: wheel #> Install the wheel globally with pipx
-	$(PIPENV) requirements > requirements.txt
+install-wheel: $(requirements_obj) wheel #> Install the wheel and its libraries in a globally-available, pipx-managed venv
 	$(PIPX) install --force --python=python .
-	$(PIPX) runpip sode install -r requirements.txt
+	$(PIPX) runpip $(cmd_name) install -r $(requirements_obj)
 
 .PHONY: uninstall-wheel
 uninstall-wheel:
