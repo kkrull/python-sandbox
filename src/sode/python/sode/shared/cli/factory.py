@@ -33,9 +33,17 @@ def add_unlisted_command(
     name: str,
     command: CliCommand,
     description: str = "",
+    epilog: str = "",
+    formatter_class: Any = HelpFormatter,
 ) -> ArgumentParser:
     """Make an ArgumentParser which will be omitted from help text, but still runs."""
 
-    parser: ArgumentParser = commands.add_parser(name, description=description)
+    parser: ArgumentParser = commands.add_parser(
+        name,
+        description=description,
+        epilog=epilog,
+        formatter_class=formatter_class,
+    )
+
     namespace.set_parser_command(parser, command)
     return parser
