@@ -1,9 +1,9 @@
 import argparse
 import logging
 import os
+import textwrap
 import typing
-from argparse import _SubParsersAction
-from pprint import pprint
+from argparse import RawTextHelpFormatter, _SubParsersAction
 from typing import TypedDict
 
 from oauthlib.oauth2 import BackendApplicationClient
@@ -23,28 +23,45 @@ logger = logging.getLogger(__name__)
 def add_the_thing(
     subcommands: _SubParsersAction,  # type: ignore[type-arg]
 ) -> None:
-    """Add a command that does "the thing" (anything) with SoundCloud"""
+    """Add a command that "does the thing" (like literally anything) with SoundCloud"""
 
-    # TODO KDK: Add section to (long) description that outlines environment variables.
     thing_parser = factory.add_unlisted_command(
         subcommands,
         "thing",
         command=_run_thing,
-        description="Do the thing (anything) with SoundCloud, to see if it works",
-        epilog="""Find your API credentials at: https://soundcloud.com/you/apps""",
+        description=textwrap.dedent(
+            """
+        Zhu Li, Do the Thing!
+        In other words, check if anything works with SoundCloud.
+
+        environment variables:
+          To use existing authorization:
+            SOUNDCLOUD_ACCESS_TOKEN   use an existing token instead of requesting one
+
+          Safely avoid passing secrets on the command line:
+            SOUNDCLOUD_CLIENT_ID      override --client-id with a secret
+            SOUNDCLOUD_CLIENT_SECRET  override --client-secret with a secret
+
+          Override defaults or CLI arguments:
+            SOUNDCLOUD_TOKEN_URL      override --token-endpoint
+            SOUNDCLOUD_USER_ID        override --user-id
+
+        Find your API credentials at: https://soundcloud.com/you/apps
+        """,
+        ),
+        formatter_class=RawTextHelpFormatter,
     )
     thing_parser.add_argument(
         "--client-id",
-        default=os.environ["SOUNDCLOUD_CLIENT_ID"],
-        help="OAuth2 client_id used for auth requests (default: $SOUNDCLOUD_CLIENT_ID)",
+        default="https://secure.soundcloud.com/oauth/token",
+        help="OAuth2 client_id used to request tokens (default: $SOUNDCLOUD_CLIENT_ID)",
         nargs=1,
         required=False,
     )
-    # TODO KDK: Source from environ or default value SOUNDCLOUD_TOKEN_URL
     thing_parser.add_argument(
         "--token-endpoint",
         default=os.environ["SOUNDCLOUD_TOKEN_URL"],
-        help="URL to SoundCloud OAuth2 token endpoint (default: $SOUNDCLOUD_TOKEN_URL)",
+        help="URL to SoundCloud OAuth2 token endpoint (default: %(default)s)",
         metavar="URL",
         nargs=1,
         required=False,
@@ -53,7 +70,7 @@ def add_the_thing(
         "-u",
         "--user-id",
         default=os.environ["SOUNDCLOUD_USER_ID"],
-        help="SoundCloud user ID (default: $SOUNDCLOUD_USER_ID)",
+        help="SoundCloud user ID",
         nargs=1,
         required=True,
     )
