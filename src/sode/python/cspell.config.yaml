@@ -29,6 +29,7 @@ words:
   - pyproject
   - PYTHONPATH
   - requirementslib
+  - runpip
   - sdist
   - setuptools
   - soundcloud

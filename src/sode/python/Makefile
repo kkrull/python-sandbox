@@ -226,7 +226,9 @@ install-editable-wheel: wheel #> Link to the wheel globally with pipx
 
 .PHONY: install-wheel
 install-wheel: wheel #> Install the wheel globally with pipx
+	$(PIPENV) requirements > requirements.txt
 	$(PIPX) install --force --python=python .
+	$(PIPX) runpip sode install -r requirements.txt
 
 .PHONY: uninstall-wheel
 uninstall-wheel:
