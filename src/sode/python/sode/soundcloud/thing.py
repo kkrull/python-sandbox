@@ -25,6 +25,7 @@ def add_the_thing(
 ) -> None:
     """Add a command that does "the thing" (anything) with SoundCloud"""
 
+    # TODO KDK: Add section to (long) description that outlines environment variables.
     thing_parser = factory.add_unlisted_command(
         subcommands,
         "thing",
@@ -32,15 +33,33 @@ def add_the_thing(
         description="Do the thing (anything) with SoundCloud, to see if it works",
         epilog="""Find your API credentials at: https://soundcloud.com/you/apps""",
     )
-
     thing_parser.add_argument(
         "--client-id",
         default=os.environ["SOUNDCLOUD_CLIENT_ID"],
         help="OAuth2 client_id used for auth requests (optional, default: $SOUNDCLOUD_CLIENT_ID)",
         nargs="?",
     )
+    # TODO KDK: Source from environ or default value SOUNDCLOUD_TOKEN_URL
+    thing_parser.add_argument(
+        "--token-endpoint",
+        default=os.environ["SOUNDCLOUD_TOKEN_URL"],
+        help="URL to SoundCloud OAuth2 token endpoint (optional, default: $SOUNDCLOUD_TOKEN_URL)",
+        nargs="?",
+    )
+    thing_parser.add_argument(
+        "--user-id",
+        default=os.environ["SOUNDCLOUD_USER_ID"],
+        help="SoundCloud user ID (default: $SOUNDCLOUD_USER_ID)",
+        nargs=1,
+    )
 
-    # Hide help text to discourage passing secret in a way that others can see (prefer os.environ)
+    # Hide help text to discourage passing secrets in a way that others can see (prefer os.environ)
+    thing_parser.add_argument(
+        "--access-token",
+        default=os.environ["SOUNDCLOUD_ACCESS_TOKEN"],
+        help=argparse.SUPPRESS,
+        nargs="?",
+    )
     thing_parser.add_argument(
         "--client-secret",
         default=os.environ["SOUNDCLOUD_CLIENT_SECRET"],
