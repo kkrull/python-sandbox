@@ -49,4 +49,6 @@ words:
   - setuptools
   - shellcheck
   - sode
+  - SOUNDCLOUD
+  - typeshed
   - virtualenv

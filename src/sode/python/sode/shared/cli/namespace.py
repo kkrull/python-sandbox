@@ -2,6 +2,7 @@ import logging
 from argparse import ArgumentParser, Namespace, _SubParsersAction
 from typing import Callable, Literal
 
+import sode
 from sode.shared.cli.state import RunState
 
 type CliCommand = Callable[["ProgramNamespace", RunState], int]
@@ -27,11 +28,15 @@ class ProgramNamespace(Namespace):
 
     def configure_logging(self) -> None:
         """Run basicConfig on logging with the selected log level"""
+
         logging.basicConfig(
             format="""[{name}:{levelname}] {message}""",
-            level=self.log_level,
             style="{",
         )
+
+        # Set log level for this program, but not other libraries
+        program_logger_root = logging.getLogger(sode.__name__)
+        program_logger_root.setLevel(self.log_level)
 
 
 def add_command_parsers(

@@ -66,6 +66,15 @@ _Defines basic parameters for formatting source files._
 - Related tools:
   - [`pre-commit`](#pre-commit): Runs checks for this tool.
 
+## [fswatch](https://emcrisostomo.github.io/fswatch/)
+
+_A cross-platform file change monitor with multiple backends._
+
+- Documentation:
+  - Main: <https://emcrisostomo.github.io/fswatch/doc/>
+  - GitHub: <https://github.com/emcrisostomo/fswatch>
+  - Wiki: <https://github.com/emcrisostomo/fswatch/wiki>
+
 ## [GNU Make](https://www.gnu.org/software/make/)
 
 _Automates project-related tasks, such as rendering project audio._
@@ -134,6 +143,10 @@ _Mypy is an optional static type checker for Python_
 - Documentation:
   - GitHub repository: <https://github.com/python/mypy>
   - Getting started: <https://mypy.readthedocs.io/en/stable/getting_started.html>
+  - Missing library stubs:
+    <https://mypy.readthedocs.io/en/stable/running_mypy.html#missing-library-stubs-or-py-typed-marker>
+  - Using installed packages (and stub packages):
+    <https://mypy.readthedocs.io/en/stable/installed_packages.html#installed-packages>
 - Related:
   - `mypy` performs static type checking on [Python](#python-3) sources.
 
@@ -181,6 +194,7 @@ _Python is a programming language that lets you work quickly and integrate syste
   - Library reference: <https://docs.python.org/3.13/library/index.html>
   - Structural pattern matching: <https://docs.python.org/3/whatsnew/3.10.html#pep-634-structural-pattern-matching>
   - Typing: <https://docs.python.org/3/library/typing.html>
+  - typeshed: <https://github.com/python/typeshed>
 - Related:
   - Override the path to the Python executable you want with [`direnv`](#direnv)
   - Automate installation with [Pipenv](#pipenv).

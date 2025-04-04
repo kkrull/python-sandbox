@@ -5,6 +5,7 @@ import sys
 from argparse import ArgumentError, ArgumentParser, _SubParsersAction
 from typing import NoReturn
 
+import sode
 from sode import version
 from sode.cli.state import MainState
 from sode.fs.cli import add_fs
@@ -33,7 +34,7 @@ def main_fn(state: MainState) -> int:
 
     # Configure logging before accessing logger (getting the order wrong is a world of silent pain).
     args.configure_logging()
-    logging.getLogger(__name__).debug({"args": args})
+    logging.getLogger(sode.__name__).debug({"args": args})
 
     return args.run_selected(args, state)
 

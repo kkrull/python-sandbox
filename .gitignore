@@ -3,6 +3,11 @@
 # Machine-specific configuration
 .envrc.local
 
+## Secrets
+
+# Local files to avoid committing
+.local/
+
 ## VS Code
 
 *.code-workspace

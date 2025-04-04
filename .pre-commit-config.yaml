@@ -37,6 +37,10 @@ repos:
     rev: v1.15.0
     hooks:
     - id: mypy
+      # typing-related dependencies have to be installed b/c pre-commit runs in its own virtualenv
+      additional_dependencies:
+      - "types-requests>=2.32"
+      - "types-requests-oauthlib>=2.0"
       exclude: ^src/python/.*$
       name: mypy-sode
       args:
