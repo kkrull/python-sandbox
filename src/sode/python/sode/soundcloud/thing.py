@@ -36,21 +36,26 @@ def add_the_thing(
     thing_parser.add_argument(
         "--client-id",
         default=os.environ["SOUNDCLOUD_CLIENT_ID"],
-        help="OAuth2 client_id used for auth requests (optional, default: $SOUNDCLOUD_CLIENT_ID)",
-        nargs="?",
+        help="OAuth2 client_id used for auth requests (default: $SOUNDCLOUD_CLIENT_ID)",
+        nargs=1,
+        required=False,
     )
     # TODO KDK: Source from environ or default value SOUNDCLOUD_TOKEN_URL
     thing_parser.add_argument(
         "--token-endpoint",
         default=os.environ["SOUNDCLOUD_TOKEN_URL"],
-        help="URL to SoundCloud OAuth2 token endpoint (optional, default: $SOUNDCLOUD_TOKEN_URL)",
-        nargs="?",
+        help="URL to SoundCloud OAuth2 token endpoint (default: $SOUNDCLOUD_TOKEN_URL)",
+        metavar="URL",
+        nargs=1,
+        required=False,
     )
     thing_parser.add_argument(
+        "-u",
         "--user-id",
         default=os.environ["SOUNDCLOUD_USER_ID"],
         help="SoundCloud user ID (default: $SOUNDCLOUD_USER_ID)",
         nargs=1,
+        required=True,
     )
 
     # Hide help text to discourage passing secrets in a way that others can see (prefer os.environ)
@@ -58,13 +63,15 @@ def add_the_thing(
         "--access-token",
         default=os.environ["SOUNDCLOUD_ACCESS_TOKEN"],
         help=argparse.SUPPRESS,
-        nargs="?",
+        nargs=1,
+        required=False,
     )
     thing_parser.add_argument(
         "--client-secret",
         default=os.environ["SOUNDCLOUD_CLIENT_SECRET"],
         help=argparse.SUPPRESS,
-        nargs="?",
+        nargs=1,
+        required=False,
     )
 
 
@@ -72,10 +79,13 @@ def _run_thing(args: ProgramNamespace, state: RunState) -> int:
     logger.debug(
         {
             "soundcloud-thing": {
+                "access_token": args.access_token,
                 "client_id": args.client_id,
                 "client_secret": args.client_secret,
                 "command": args.command,
                 SC_COMMAND: getattr(args, SC_COMMAND),
+                "token_endpoint": args.token_endpoint,
+                "user_id": args.user_id,
             }
         }
     )
