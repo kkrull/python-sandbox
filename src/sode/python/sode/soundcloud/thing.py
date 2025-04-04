@@ -114,7 +114,7 @@ def _run_thing(args: ProgramNamespace, state: RunState) -> int:
 
             # https://developers.soundcloud.com/docs/api/explorer/open-api#/users/get_users__user_id__playlists
             response = session.get(
-                f"https://api.soundcloud.com/users/{os.environ["SOUNDCLOUD_USER_ID"]}/playlists",
+                f"https://api.soundcloud.com/users/{args.user_id}/playlists",
                 params={"limit": 1},
             )
             logger.debug(
@@ -148,9 +148,9 @@ def authorize(args: ProgramNamespace) -> Either[str, str]:
 
 
 def existing_access_token(args: ProgramNamespace) -> Option[str]:
-    access_token = os.environ.get("SOUNDCLOUD_ACCESS_TOKEN", "")
+    access_token = args.access_token
     logger.debug({"existing_access_token": {"environ": access_token}})
-    if len(access_token.strip()) == 0:
+    if access_token is None or len(access_token.strip()) == 0:
         return Empty[str]()
     else:
         return Value(access_token)
@@ -159,7 +159,7 @@ def existing_access_token(args: ProgramNamespace) -> Option[str]:
 def fetch_access_token(args: ProgramNamespace) -> Either[str, TokenResponse]:
     client_id = args.client_id
     client_secret = args.client_secret
-    token_url = os.environ["SOUNDCLOUD_TOKEN_URL"]
+    token_url = args.token_endpoint
 
     auth = HTTPBasicAuth(client_id, client_secret)
     client = BackendApplicationClient(client_id=client_id)
