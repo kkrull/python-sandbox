@@ -181,7 +181,7 @@ mypy-check: #> Type check sources with mypy
 
 .PHONY: mypy-watch
 mypy-watch: #> Type check sources with mypy (watch mode)
-	$(FSWATCH) $(FSWATCHFLAGS) --recursive -d $(sources_dir) -0 \
+	$(FSWATCH) $(FSWATCHFLAGS) --one-per-batch --recursive -d $(sources_dir) -0 \
 		| xargs -0 -I {} $(MYPY) $(sources_dir)
 
 #. SOURCE DISTRIBUTION TARGETS

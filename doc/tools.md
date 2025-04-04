@@ -66,6 +66,15 @@ _Defines basic parameters for formatting source files._
 - Related tools:
   - [`pre-commit`](#pre-commit): Runs checks for this tool.
 
+## [fswatch](https://emcrisostomo.github.io/fswatch/)
+
+_A cross-platform file change monitor with multiple backends._
+
+- Documentation:
+  - Main: <https://emcrisostomo.github.io/fswatch/doc/>
+  - GitHub: <https://github.com/emcrisostomo/fswatch>
+  - Wiki: <https://github.com/emcrisostomo/fswatch/wiki>
+
 ## [GNU Make](https://www.gnu.org/software/make/)
 
 _Automates project-related tasks, such as rendering project audio._
