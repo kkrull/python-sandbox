@@ -20,14 +20,8 @@ from sode.soundcloud.shared import SC_COMMAND
 logger = logging.getLogger(__name__)
 
 
-class Required(TypedDict):
-    required: Literal[True]
-
-
-class Default(TypedDict):
-    default: str
-
-
+Default = TypedDict("Default", {"default": str})
+Required = TypedDict("Required", {"required": Literal[True]})
 type DefaultOrRequired = Union[Default, Required]
 
 
@@ -72,11 +66,9 @@ def add_the_thing(
     )
     thing_parser.add_argument(
         "--client-id",
-        default=os.environ["SOUNDCLOUD_CLIENT_ID"],
+        **environ_or_required("SOUNDCLOUD_CLIENT_ID"),
         help="OAuth2 client_id used to request tokens (default: $SOUNDCLOUD_CLIENT_ID)",
         nargs=1,
-        required=False,
-        **environ_or_required("SOUNDCLOUD_CLIENT_ID"),
     )
     thing_parser.add_argument(
         "--token-endpoint",
