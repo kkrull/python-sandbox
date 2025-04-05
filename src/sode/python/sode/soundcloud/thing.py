@@ -2,19 +2,16 @@ import argparse
 import logging
 import os
 import textwrap
-import typing
 from argparse import RawTextHelpFormatter, _SubParsersAction
-from typing import TypedDict
 
-from oauthlib.oauth2 import BackendApplicationClient
-from requests.auth import HTTPBasicAuth
-from requests_oauthlib import OAuth2Session
-
-from sode.shared.cli import argfactory, factory
+from sode.shared.cli import argfactory, cmdfactory
 from sode.shared.cli.namespace import ProgramNamespace
 from sode.shared.cli.state import RunState
 from sode.shared.fp.either import Either, Left, Right
 from sode.shared.fp.option import Empty, Option, Value
+from sode.shared.oauth.token import AccessToken
+from sode.soundcloud import playlist
+from sode.soundcloud.auth.api import fetch_tokens
 from sode.soundcloud.shared import SC_COMMAND
 
 logger = logging.getLogger(__name__)
@@ -26,7 +23,7 @@ def add_the_thing(
 ) -> None:
     """Add a command that "does the thing" (literally anything) with SoundCloud"""
 
-    thing_parser = factory.add_unlisted_command(
+    thing_parser = cmdfactory.add_unlisted_command(
         subcommands,
         "thing",
         command=_run_thing,
@@ -105,23 +102,18 @@ def _run_thing(args: ProgramNamespace, state: RunState) -> int:
         }
     )
 
-    match authorize(args):
+    match _authorize(args):
         case Left(error):
             print(error, file=state.stderr)
             return 1
         case Right(access_token):
-            session = OAuth2Session(token={"access_token": access_token, "token_type": "Bearer"})
-
-            # https://developers.soundcloud.com/docs/api/explorer/open-api#/users/get_users__user_id__playlists
-            response = session.get(
-                f"https://api.soundcloud.com/users/{args.user_id}/playlists",
-                params={"limit": 1},
-            )
+            response = playlist.any(access_token, args.user_id)
             logger.debug(
                 {
-                    "headers": response.headers,
-                    "links": response.links,
-                    "status_code": response.status_code,
+                    "_run_thing": {
+                        "request_headers": response.request.headers,
+                        "status_code": response.status_code,
+                    }
                 },
             )
 
@@ -129,62 +121,18 @@ def _run_thing(args: ProgramNamespace, state: RunState) -> int:
             return 0
 
 
-class TokenResponse(TypedDict):
-    access_token: str
-    # expires_at: float  # 1743781923.9585016
-    # expires_in: int  # 3599
-    # refresh_token: str
-    # scope: list[str]  # ['']
-    token_type: str  # Bearer
-
-
-def authorize(args: ProgramNamespace) -> Either[str, str]:
-    match existing_access_token(args):
+def _authorize(args: ProgramNamespace) -> Either[str, AccessToken]:
+    match _existing_access_token(args):
         case Value(access_token):
             return Right(access_token)
         case Empty():
-            token_response = fetch_access_token(args)
-            return token_response.map(lambda response: response["access_token"])
+            return fetch_tokens(
+                args.token_endpoint,
+                client_id=args.client_id,
+                client_secret=args.client_secret,
+            ).flat_map(lambda response: response.access_token)
 
 
-def existing_access_token(args: ProgramNamespace) -> Option[str]:
-    access_token = args.access_token
-    logger.debug({"existing_access_token": {"environ": access_token}})
-    if access_token is None or len(access_token.strip()) == 0:
-        return Empty[str]()
-    else:
-        return Value(access_token)
-
-
-def fetch_access_token(args: ProgramNamespace) -> Either[str, TokenResponse]:
-    client_id = args.client_id
-    client_secret = args.client_secret
-    token_url = args.token_endpoint
-
-    auth = HTTPBasicAuth(client_id, client_secret)
-    client = BackendApplicationClient(client_id=client_id)
-    oauth = OAuth2Session(client=client)
-
-    # https://developers.soundcloud.com/docs#authentication
-    try:
-        auth_response: TokenResponse = typing.cast(
-            TokenResponse,
-            oauth.fetch_token(token_url=token_url, auth=auth),
-        )
-        logger.debug(
-            {
-                "fetch_access_token": {
-                    "access_token": repr(auth_response["access_token"]),
-                    "client_id": client_id,
-                    "token_url": token_url,
-                }
-            }
-        )
-
-        access_token = (auth_response["access_token"] or "").strip()
-        if len(access_token) == 0:
-            return Left(f"missing access_token: {repr(auth_response)}")
-        else:
-            return Right(auth_response)
-    except Exception as err:
-        return Left(f"{token_url}: {err}")
+def _existing_access_token(args: ProgramNamespace) -> Option[AccessToken]:
+    logger.debug({"existing_access_token": repr(args.access_token)})
+    return AccessToken.maybe(args.access_token, "Bearer")
