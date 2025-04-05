@@ -3,7 +3,8 @@ from argparse import ArgumentParser, Namespace, _SubParsersAction
 from typing import Callable, Literal
 
 import sode
-from sode.shared.cli.state import RunState
+
+from .state import RunState
 
 type CliCommand = Callable[["ProgramNamespace", RunState], int]
 
@@ -85,7 +86,7 @@ def add_global_arguments(parser: ArgumentParser, version: str) -> None:
     )
 
 
-def set_parser_command(parser: ArgumentParser, run_command: CliCommand) -> None:
+def _set_parser_command(parser: ArgumentParser, run_command: CliCommand) -> None:
     """Set the command that will run if this parser is activated."""
 
     parser.set_defaults(run_selected=run_command)

@@ -1,8 +1,7 @@
 from argparse import ArgumentParser, HelpFormatter, _SubParsersAction
 from typing import Any
 
-from sode.shared.cli import namespace
-from sode.shared.cli.namespace import CliCommand
+from .namespace import CliCommand, _set_parser_command
 
 
 def add_command(
@@ -24,7 +23,7 @@ def add_command(
         help=help,
     )
 
-    namespace.set_parser_command(parser, command)
+    _set_parser_command(parser, command)
     return parser
 
 
@@ -45,5 +44,5 @@ def add_unlisted_command(
         formatter_class=formatter_class,
     )
 
-    namespace.set_parser_command(parser, command)
+    _set_parser_command(parser, command)
     return parser

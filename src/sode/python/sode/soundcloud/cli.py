@@ -1,10 +1,11 @@
 from argparse import _SubParsersAction
 
-from sode.shared.cli.namespace import add_subcommand_parsers
-from sode.soundcloud.auth.cli import add_auth
-from sode.soundcloud.shared import SC_COMMAND
-from sode.soundcloud.thing import add_the_thing
-from sode.soundcloud.track import add_track
+from sode.shared.cli import add_subcommand_parsers
+
+from .auth.cli import add_auth
+from .shared import SC_COMMAND
+from .thing import add_the_thing
+from .track import add_track
 
 
 def add_soundcloud(

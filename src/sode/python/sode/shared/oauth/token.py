@@ -1,7 +1,6 @@
 from requests_oauthlib import OAuth2Session
 
-from sode.shared.fp.either import Either, Left, Right
-from sode.shared.fp.option import Empty, Option, Value
+from sode.shared.fp import Either, Empty, Left, Option, Right, Value
 
 
 class AccessToken:

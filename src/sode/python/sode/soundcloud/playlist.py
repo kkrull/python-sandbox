@@ -1,6 +1,6 @@
 from requests import Response
 
-from sode.shared.oauth.token import AccessToken
+from sode.shared.oauth import AccessToken
 
 
 def any(access_token: AccessToken, user_id: str) -> Response:
