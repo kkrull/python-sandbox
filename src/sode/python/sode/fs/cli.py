@@ -2,7 +2,7 @@ from argparse import _SubParsersAction
 
 from sode.fs.find import add_find
 from sode.fs.shared import FS_COMMAND
-from sode.shared.cli.namespace import add_subcommand_parsers
+from sode.shared.cli import add_subcommand_parsers
 
 
 def add_fs(

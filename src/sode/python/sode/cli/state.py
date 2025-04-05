@@ -1,7 +1,7 @@
 import sys
 import typing
 
-from sode.shared.cli.state import RunState
+from sode.shared.cli import RunState
 
 
 class MainState(RunState):

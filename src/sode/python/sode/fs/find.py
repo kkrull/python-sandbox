@@ -5,10 +5,7 @@ from pathlib import Path
 from typing import Iterable
 
 from sode.fs.shared import FS_COMMAND
-from sode.shared.cli import cmdfactory
-from sode.shared.cli.format import DefaultsAndRawTextFormatter
-from sode.shared.cli.namespace import ProgramNamespace
-from sode.shared.cli.state import RunState
+from sode.shared.cli import DefaultsAndRawTextFormatter, ProgramNamespace, RunState, cmdfactory
 from sode.shared.fp import Empty, Value
 
 logger = logging.getLogger(__name__)

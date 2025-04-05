@@ -4,9 +4,14 @@ import os
 import textwrap
 from argparse import RawTextHelpFormatter, _SubParsersAction
 
-from sode.shared.cli import argfactory, cmdfactory
-from sode.shared.cli.namespace import ProgramNamespace
-from sode.shared.cli.state import RunState
+from sode.shared.cli import (
+    ProgramNamespace,
+    RunState,
+    add_unlisted_command,
+    environ_or_default,
+    environ_or_optional,
+    environ_or_required,
+)
 from sode.shared.fp import Either, Empty, Left, Option, Right, Value
 from sode.shared.oauth.token import AccessToken
 from sode.soundcloud import playlist
@@ -22,7 +27,7 @@ def add_the_thing(
 ) -> None:
     """Add a command that "does the thing" (literally anything) with SoundCloud"""
 
-    thing_parser = cmdfactory.add_unlisted_command(
+    thing_parser = add_unlisted_command(
         subcommands,
         "thing",
         command=_run_thing,
@@ -50,25 +55,25 @@ def add_the_thing(
     )
     thing_parser.add_argument(
         "--access-token",
-        **argfactory.environ_or_optional("SOUNDCLOUD_ACCESS_TOKEN", environ),
+        **environ_or_optional("SOUNDCLOUD_ACCESS_TOKEN", environ),
         help=argparse.SUPPRESS,  # discourage exposing secret CLI arguments to other users
         nargs=1,
     )
     thing_parser.add_argument(
         "--client-id",
-        **argfactory.environ_or_required("SOUNDCLOUD_CLIENT_ID", environ),
+        **environ_or_required("SOUNDCLOUD_CLIENT_ID", environ),
         help="OAuth2 client_id used to request tokens (default: $SOUNDCLOUD_CLIENT_ID)",
         nargs=1,
     )
     thing_parser.add_argument(
         "--client-secret",
-        **argfactory.environ_or_required("SOUNDCLOUD_CLIENT_SECRET", environ),
+        **environ_or_required("SOUNDCLOUD_CLIENT_SECRET", environ),
         help=argparse.SUPPRESS,  # discourage exposing secret CLI arguments to other users
         nargs=1,
     )
     thing_parser.add_argument(
         "--token-endpoint",
-        **argfactory.environ_or_default(
+        **environ_or_default(
             "SOUNDCLOUD_TOKEN_URL",
             "https://secure.soundcloud.com/oauth/token",
             environ,
@@ -80,7 +85,7 @@ def add_the_thing(
     thing_parser.add_argument(
         "-u",
         "--user-id",
-        **argfactory.environ_or_required("SOUNDCLOUD_USER_ID", environ),
+        **environ_or_required("SOUNDCLOUD_USER_ID", environ),
         help="SoundCloud user ID",
         nargs=1,
     )

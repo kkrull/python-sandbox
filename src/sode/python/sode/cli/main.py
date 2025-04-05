@@ -10,7 +10,7 @@ from sode import version
 from sode.cli.state import MainState
 from sode.fs.cli import add_fs
 from sode.greet.cli import add_greet
-from sode.shared.cli.namespace import ProgramNamespace, add_command_parsers, add_global_arguments
+from sode.shared.cli import ProgramNamespace, add_command_parsers, add_global_arguments
 from sode.soundcloud.cli import add_soundcloud
 
 

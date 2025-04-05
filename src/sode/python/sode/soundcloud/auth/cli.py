@@ -1,9 +1,7 @@
 import logging
 from argparse import _SubParsersAction
 
-from sode.shared.cli import cmdfactory
-from sode.shared.cli.namespace import ProgramNamespace
-from sode.shared.cli.state import RunState
+from sode.shared.cli import ProgramNamespace, RunState, add_command
 from sode.soundcloud.shared import SC_COMMAND
 
 logger = logging.getLogger(__name__)
@@ -14,7 +12,7 @@ def add_auth(
 ) -> None:
     """Add the auth sub-command"""
 
-    auth_parser = cmdfactory.add_command(
+    auth_parser = add_command(
         subcommands,
         "auth",
         command=_run_auth,
