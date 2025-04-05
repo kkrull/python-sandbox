@@ -7,8 +7,7 @@ from argparse import RawTextHelpFormatter, _SubParsersAction
 from sode.shared.cli import argfactory, cmdfactory
 from sode.shared.cli.namespace import ProgramNamespace
 from sode.shared.cli.state import RunState
-from sode.shared.fp.either import Either, Left, Right
-from sode.shared.fp.option import Empty, Option, Value
+from sode.shared.fp import Either, Empty, Left, Option, Right, Value
 from sode.shared.oauth.token import AccessToken
 from sode.soundcloud import playlist
 from sode.soundcloud.auth.api import fetch_tokens

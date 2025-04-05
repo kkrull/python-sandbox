@@ -9,7 +9,7 @@ from sode.shared.cli import cmdfactory
 from sode.shared.cli.format import DefaultsAndRawTextFormatter
 from sode.shared.cli.namespace import ProgramNamespace
 from sode.shared.cli.state import RunState
-from sode.shared.fp.option import Empty, Value
+from sode.shared.fp import Empty, Value
 
 logger = logging.getLogger(__name__)
 
