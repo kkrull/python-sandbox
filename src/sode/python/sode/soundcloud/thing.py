@@ -143,7 +143,7 @@ def authorize(args: ProgramNamespace) -> Either[str, str]:
         case Value(access_token):
             return Right(access_token)
         case Empty():
-            token_response = fetch_access_token(args)
+            token_response = fetch_tokens(args)
             return token_response.map(lambda response: response["access_token"])
 
 
@@ -156,27 +156,23 @@ def existing_access_token(args: ProgramNamespace) -> Option[str]:
         return Value(access_token)
 
 
-def fetch_access_token(args: ProgramNamespace) -> Either[str, TokenResponse]:
-    client_id = args.client_id
-    client_secret = args.client_secret
-    token_url = args.token_endpoint
-
-    auth = HTTPBasicAuth(client_id, client_secret)
-    client = BackendApplicationClient(client_id=client_id)
+def fetch_tokens(args: ProgramNamespace) -> Either[str, TokenResponse]:
+    # https://developers.soundcloud.com/docs#authentication
+    auth = HTTPBasicAuth(args.client_id, args.client_secret)
+    client = BackendApplicationClient(client_id=args.client_id)
     oauth = OAuth2Session(client=client)
 
-    # https://developers.soundcloud.com/docs#authentication
     try:
         auth_response: TokenResponse = typing.cast(
             TokenResponse,
-            oauth.fetch_token(token_url=token_url, auth=auth),
+            oauth.fetch_token(token_url=args.token_endpoint, auth=auth),
         )
         logger.debug(
             {
                 "fetch_access_token": {
                     "access_token": repr(auth_response["access_token"]),
-                    "client_id": client_id,
-                    "token_url": token_url,
+                    "client_id": args.client_id,
+                    "token_url": args.token_endpoint,
                 }
             }
         )
@@ -187,4 +183,4 @@ def fetch_access_token(args: ProgramNamespace) -> Either[str, TokenResponse]:
         else:
             return Right(auth_response)
     except Exception as err:
-        return Left(f"{token_url}: {err}")
+        return Left(f"{args.token_endpoint}: {err}")
