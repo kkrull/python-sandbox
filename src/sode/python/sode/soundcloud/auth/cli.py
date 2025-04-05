@@ -38,6 +38,7 @@ def add_auth(
 
 
 def _run_auth(args: ProgramNamespace, state: RunState) -> int:
+    # TODO KDK: Now work here to persist tokens and setup the refresh workflow
     logger.debug(
         {
             "soundcloud-auth": {
