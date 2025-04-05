@@ -131,10 +131,10 @@ def _run_thing(args: ProgramNamespace, state: RunState) -> int:
 
 class TokenResponse(TypedDict):
     access_token: str
-    # expires_at: float  # 1743781923.9585016
-    # expires_in: int  # 3599
-    # refresh_token: str
-    # scope: list[str]  # ['']
+    expires_at: float  # 1743781923.9585016
+    expires_in: int  # 3599
+    refresh_token: str
+    scope: list[str]  # ['']
     token_type: str  # Bearer
 
 
