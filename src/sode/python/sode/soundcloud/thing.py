@@ -4,7 +4,7 @@ import os
 import textwrap
 import typing
 from argparse import RawTextHelpFormatter, _SubParsersAction
-from typing import TypedDict
+from typing import Any, Mapping, TypedDict
 
 from oauthlib.oauth2 import BackendApplicationClient
 from requests.auth import HTTPBasicAuth
@@ -138,6 +138,10 @@ class TokenResponse(TypedDict):
     token_type: str  # Bearer
 
 
+def new_token_response(raw_response: Mapping[str, Any]) -> TokenResponse:
+    return typing.cast(TokenResponse, raw_response)
+
+
 def authorize(args: ProgramNamespace) -> Either[str, str]:
     match existing_access_token(args):
         case Value(access_token):
@@ -163,9 +167,8 @@ def fetch_tokens(args: ProgramNamespace) -> Either[str, TokenResponse]:
     oauth = OAuth2Session(client=client)
 
     try:
-        auth_response: TokenResponse = typing.cast(
-            TokenResponse,
-            oauth.fetch_token(token_url=args.token_endpoint, auth=auth),
+        auth_response = new_token_response(
+            oauth.fetch_token(auth=auth, token_url=args.token_endpoint)
         )
         logger.debug(
             {
