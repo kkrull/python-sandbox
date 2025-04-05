@@ -6,7 +6,7 @@ from requests.auth import HTTPBasicAuth
 from requests_oauthlib import OAuth2Session
 
 from sode.shared.fp import Either, Left, Right
-from sode.shared.oauth.token import AccessToken
+from sode.shared.oauth import AccessToken
 
 logger = logging.getLogger(__name__)
 

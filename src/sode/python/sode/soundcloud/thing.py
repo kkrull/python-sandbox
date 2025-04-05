@@ -13,10 +13,11 @@ from sode.shared.cli import (
     environ_or_required,
 )
 from sode.shared.fp import Either, Empty, Left, Option, Right, Value
-from sode.shared.oauth.token import AccessToken
-from sode.soundcloud import playlist
-from sode.soundcloud.auth.api import fetch_tokens
-from sode.soundcloud.shared import SC_COMMAND
+from sode.shared.oauth import AccessToken
+
+from . import playlist
+from .auth import fetch_tokens
+from .shared import SC_COMMAND
 
 logger = logging.getLogger(__name__)
 
