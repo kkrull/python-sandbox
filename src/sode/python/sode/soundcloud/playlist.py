@@ -3,7 +3,7 @@ from requests import Response
 from sode.shared.oauth.token import AccessToken
 
 
-def any(user_id: str, access_token: AccessToken) -> Response:
+def any(access_token: AccessToken, user_id: str) -> Response:
     """Fetch any playlist for that user"""
 
     # https://developers.soundcloud.com/docs/api/explorer/open-api

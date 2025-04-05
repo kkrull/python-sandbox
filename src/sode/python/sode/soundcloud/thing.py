@@ -11,7 +11,7 @@ from sode.shared.fp.either import Either, Left, Right
 from sode.shared.fp.option import Empty, Option, Value
 from sode.shared.oauth.token import AccessToken
 from sode.soundcloud import playlist
-from sode.soundcloud.auth.api import scauth_fetch_tokens
+from sode.soundcloud.auth.api import fetch_tokens
 from sode.soundcloud.shared import SC_COMMAND
 
 logger = logging.getLogger(__name__)
@@ -102,12 +102,12 @@ def _run_thing(args: ProgramNamespace, state: RunState) -> int:
         }
     )
 
-    match scauth_authorize(args):
+    match _authorize(args):
         case Left(error):
             print(error, file=state.stderr)
             return 1
         case Right(access_token):
-            response = playlist.any(args.user_id, access_token)
+            response = playlist.any(access_token, args.user_id)
             logger.debug(
                 {
                     "_run_thing": {
@@ -121,24 +121,18 @@ def _run_thing(args: ProgramNamespace, state: RunState) -> int:
             return 0
 
 
-## OAuth 2
-
-
-def sodeenv_existing_access_token(args: ProgramNamespace) -> Option[AccessToken]:
-    logger.debug({"existing_access_token": repr(args.access_token)})
-    return AccessToken.maybe(args.access_token, "Bearer")
-
-
-## SoundCloud auth
-
-
-def scauth_authorize(args: ProgramNamespace) -> Either[str, AccessToken]:
-    match sodeenv_existing_access_token(args):
+def _authorize(args: ProgramNamespace) -> Either[str, AccessToken]:
+    match _existing_access_token(args):
         case Value(access_token):
             return Right(access_token)
         case Empty():
-            return scauth_fetch_tokens(
+            return fetch_tokens(
                 args.token_endpoint,
                 client_id=args.client_id,
                 client_secret=args.client_secret,
             ).flat_map(lambda response: response.access_token)
+
+
+def _existing_access_token(args: ProgramNamespace) -> Option[AccessToken]:
+    logger.debug({"existing_access_token": repr(args.access_token)})
+    return AccessToken.maybe(args.access_token, "Bearer")
