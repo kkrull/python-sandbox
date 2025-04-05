@@ -2,9 +2,8 @@ import argparse
 import logging
 import os
 import textwrap
-import typing
 from argparse import RawTextHelpFormatter, _SubParsersAction
-from typing import Any, Mapping, TypedDict
+from typing import Any, Mapping, NewType
 
 from oauthlib.oauth2 import BackendApplicationClient
 from requests.auth import HTTPBasicAuth
@@ -129,33 +128,53 @@ def _run_thing(args: ProgramNamespace, state: RunState) -> int:
             return 0
 
 
-class TokenResponse(TypedDict):
-    access_token: str
-    expires_at: float  # 1743781923.9585016
-    expires_in: int  # 3599
-    refresh_token: str
-    scope: list[str]  # ['']
-    token_type: str  # Bearer
+AccessToken = NewType("AccessToken", str)
 
 
-def new_token_response(raw_response: Mapping[str, Any]) -> TokenResponse:
-    return typing.cast(TokenResponse, raw_response)
+class TokenResponse:
+    _mapping: dict[str, Any]
+    # access_token: str
+    # expires_at: float  # 1743781923.9585016
+    # expires_in: int  # 3599
+    # refresh_token: str
+    # scope: list[str]  # ['']
+    # token_type: str  # Bearer
+
+    @staticmethod
+    def new_token_response(raw_response: Mapping[str, Any]) -> "TokenResponse":
+        return TokenResponse(raw_response)
+
+    def __init__(self, raw_response: Mapping[str, Any]):
+        self._mapping = dict(raw_response)
+
+    @property
+    def access_token(self) -> str | Any:
+        return self._mapping["access_token"]
+
+    def access_token_typed(self) -> Either[str, AccessToken]:
+        match self._mapping.get("access_token", ""):
+            case str(value) if len(value.strip()) > 0:
+                return Right(AccessToken(value.strip()))
+            case str(value):
+                return Left(f"no access_token: {repr(value)}")
+            case _ as value:
+                return Left(f"unknown access_token type: {repr(value)}")
 
 
-def authorize(args: ProgramNamespace) -> Either[str, str]:
+def authorize(args: ProgramNamespace) -> Either[str, AccessToken]:
     match existing_access_token(args):
         case Value(access_token):
             return Right(access_token)
         case Empty():
             token_response = fetch_tokens(args)
-            return token_response.map(lambda response: response["access_token"])
+            return token_response.map(lambda response: AccessToken(response.access_token))
 
 
-def existing_access_token(args: ProgramNamespace) -> Option[str]:
+def existing_access_token(args: ProgramNamespace) -> Option[AccessToken]:
     access_token = args.access_token
     logger.debug({"existing_access_token": {"environ": access_token}})
     if access_token is None or len(access_token.strip()) == 0:
-        return Empty[str]()
+        return Empty[AccessToken]()
     else:
         return Value(access_token)
 
@@ -167,20 +186,20 @@ def fetch_tokens(args: ProgramNamespace) -> Either[str, TokenResponse]:
     oauth = OAuth2Session(client=client)
 
     try:
-        auth_response = new_token_response(
+        auth_response: TokenResponse = TokenResponse.new_token_response(
             oauth.fetch_token(auth=auth, token_url=args.token_endpoint)
         )
         logger.debug(
             {
                 "fetch_access_token": {
-                    "access_token": repr(auth_response["access_token"]),
+                    "access_token": repr(auth_response.access_token),
                     "client_id": args.client_id,
                     "token_url": args.token_endpoint,
                 }
             }
         )
 
-        access_token = (auth_response["access_token"] or "").strip()
+        access_token = (auth_response.access_token or "").strip()
         if len(access_token) == 0:
             return Left(f"missing access_token: {repr(auth_response)}")
         else:
