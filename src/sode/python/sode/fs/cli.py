@@ -2,8 +2,8 @@ from argparse import _SubParsersAction
 
 from sode.shared.cli import add_subcommand_parsers
 
+from . import FS_COMMAND
 from .find import add_find
-from .shared import FS_COMMAND
 
 
 def add_fs(
