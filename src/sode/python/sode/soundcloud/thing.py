@@ -109,7 +109,9 @@ def _run_thing(args: ProgramNamespace, state: RunState) -> int:
             print(error, file=state.stderr)
             return 1
         case Right(access_token):
-            session = OAuth2Session(token={"access_token": access_token, "token_type": "Bearer"})
+            session = OAuth2Session(
+                token={"access_token": access_token.token, "token_type": access_token.token_type}
+            )
 
             # https://developers.soundcloud.com/docs/api/explorer/open-api#/users/get_users__user_id__playlists
             response = session.get(
@@ -118,9 +120,12 @@ def _run_thing(args: ProgramNamespace, state: RunState) -> int:
             )
             logger.debug(
                 {
-                    "headers": response.headers,
-                    "links": response.links,
-                    "status_code": response.status_code,
+                    "authorize": {
+                        "links": response.links,
+                        "request_headers": response.request.headers,
+                        "response_headers": response.headers,
+                        "status_code": response.status_code,
+                    }
                 },
             )
 
@@ -128,7 +133,35 @@ def _run_thing(args: ProgramNamespace, state: RunState) -> int:
             return 0
 
 
-AccessToken = NewType("AccessToken", str)
+class AccessToken:
+    token: str
+    token_type: str
+
+    def __init__(self, token: str, token_type: str = "Bearer"):
+        self.token = token
+        self.token_type = token_type
+
+    @staticmethod
+    def expected(value: str, token_type: str) -> Either[str, "AccessToken"]:
+        if len(token_type.strip()) == 0:
+            return Left(f"unknown token_type: {repr(token_type)}")
+
+        match value:
+            case str(value) if len(value.strip()) > 0:
+                return Right(AccessToken(value.strip()))
+            case str(value):
+                return Left(f"empty: {repr(value)}")
+            case None:
+                return Left(f"missing: {repr(value)}")
+            case _ as value:
+                return Left(f"unknown type of value: {repr(value)}")
+
+    @staticmethod
+    def maybe(value: str, token_type: str) -> Option["AccessToken"]:
+        if value is None or len(value.strip()) == 0:
+            return Empty[AccessToken]()
+        else:
+            return Value(AccessToken(value, token_type))
 
 
 class TokenResponse:
@@ -138,27 +171,22 @@ class TokenResponse:
     # expires_in: int  # 3599
     # refresh_token: str
     # scope: list[str]  # ['']
-    # token_type: str  # Bearer
+    token_type: str  # Bearer
 
     @staticmethod
-    def new_token_response(raw_response: Mapping[str, Any]) -> "TokenResponse":
+    def of(raw_response: Mapping[str, Any]) -> "TokenResponse":
         return TokenResponse(raw_response)
 
     def __init__(self, raw_response: Mapping[str, Any]):
         self._mapping = dict(raw_response)
 
     @property
-    def access_token(self) -> str | Any:
-        return self._mapping["access_token"]
+    def access_token(self) -> Either[str, AccessToken]:
+        return AccessToken.expected(self._mapping["access_token"], self._mapping["token_type"])
 
-    def access_token_typed(self) -> Either[str, AccessToken]:
-        match self._mapping.get("access_token", ""):
-            case str(value) if len(value.strip()) > 0:
-                return Right(AccessToken(value.strip()))
-            case str(value):
-                return Left(f"no access_token: {repr(value)}")
-            case _ as value:
-                return Left(f"unknown access_token type: {repr(value)}")
+    @property
+    def access_token_raw(self) -> str | Any:
+        return self._mapping["access_token"]
 
 
 def authorize(args: ProgramNamespace) -> Either[str, AccessToken]:
@@ -166,43 +194,34 @@ def authorize(args: ProgramNamespace) -> Either[str, AccessToken]:
         case Value(access_token):
             return Right(access_token)
         case Empty():
-            token_response = fetch_tokens(args)
-            return token_response.map(lambda response: AccessToken(response.access_token))
+            return fetch_tokens(args).flat_map(lambda response: response.access_token)
 
 
 def existing_access_token(args: ProgramNamespace) -> Option[AccessToken]:
-    access_token = args.access_token
-    logger.debug({"existing_access_token": {"environ": access_token}})
-    if access_token is None or len(access_token.strip()) == 0:
-        return Empty[AccessToken]()
-    else:
-        return Value(access_token)
+    logger.debug({"existing_access_token": {"environ": repr(args.access_token)}})
+    return AccessToken.maybe(args.access_token, "Bearer")
 
 
 def fetch_tokens(args: ProgramNamespace) -> Either[str, TokenResponse]:
+    """Authorize with the client_credentials workflow"""
+
     # https://developers.soundcloud.com/docs#authentication
     auth = HTTPBasicAuth(args.client_id, args.client_secret)
     client = BackendApplicationClient(client_id=args.client_id)
     oauth = OAuth2Session(client=client)
 
     try:
-        auth_response: TokenResponse = TokenResponse.new_token_response(
-            oauth.fetch_token(auth=auth, token_url=args.token_endpoint)
-        )
+        response = TokenResponse.of(oauth.fetch_token(auth=auth, token_url=args.token_endpoint))
         logger.debug(
             {
-                "fetch_access_token": {
-                    "access_token": repr(auth_response.access_token),
-                    "client_id": args.client_id,
-                    "token_url": args.token_endpoint,
+                "fetch_tokens": {
+                    "access_token": repr(response.access_token_raw),
+                    "client_id": repr(args.client_id),
+                    "token_url": repr(args.token_endpoint),
                 }
             }
         )
 
-        access_token = (auth_response.access_token or "").strip()
-        if len(access_token) == 0:
-            return Left(f"missing access_token: {repr(auth_response)}")
-        else:
-            return Right(auth_response)
+        return Right(response)
     except Exception as err:
         return Left(f"{args.token_endpoint}: {err}")
