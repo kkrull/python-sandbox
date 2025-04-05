@@ -19,66 +19,6 @@ from sode.soundcloud.shared import SC_COMMAND
 
 logger = logging.getLogger(__name__)
 
-## OAuth2
-
-
-class AccessToken:
-    value: str
-    token_type: str
-
-    def __init__(self, value: str, token_type: str):
-        self.value = value
-        self.token_type = token_type
-
-    @staticmethod
-    def expected(value: str, token_type: str) -> Either[str, "AccessToken"]:
-        if len(token_type.strip()) == 0:
-            return Left(f"unknown token_type: {repr(token_type)}")
-
-        match value:
-            case str(value) if len(value.strip()) > 0:
-                return Right(AccessToken(value.strip(), token_type.strip()))
-            case str(value):
-                return Left(f"empty value: {repr(value)}")
-            case None:
-                return Left(f"missing value: {repr(value)}")
-            case _ as value:
-                return Left(f"unknown type of value: {repr(value)}")
-
-    @staticmethod
-    def maybe(value: str, token_type: str = "Bearer") -> Option["AccessToken"]:
-        match value:
-            case None:
-                return Empty[AccessToken]()
-            case str(_) if len(value.strip()) == 0:
-                return Empty[AccessToken]()
-            case str(v):
-                return Value(AccessToken(v.strip(), token_type.strip()))
-
-    def oauth_session(self) -> OAuth2Session:
-        return OAuth2Session(token={"access_token": self.value, "token_type": self.token_type})
-
-
-class TokenResponse:
-    _mapping: dict[str, Any]
-    # access_token: str
-    # expires_at: float  # 1743781923.9585016
-    # expires_in: int  # 3599
-    # refresh_token: str
-    # scope: list[str]  # ['']
-    # token_type: str  # Bearer
-
-    def __init__(self, raw_response: Mapping[str, Any]):
-        self._mapping = dict(raw_response)
-
-    @staticmethod
-    def of(raw_response: Mapping[str, Any]) -> "TokenResponse":
-        return TokenResponse(raw_response)
-
-    @property
-    def access_token(self) -> Either[str, AccessToken]:
-        return AccessToken.expected(self._mapping["access_token"], self._mapping["token_type"])
-
 
 def add_the_thing(
     subcommands: _SubParsersAction,  # type: ignore[type-arg]
@@ -165,12 +105,12 @@ def _run_thing(args: ProgramNamespace, state: RunState) -> int:
         }
     )
 
-    match authorize(args):
+    match scauth_authorize(args):
         case Left(error):
             print(error, file=state.stderr)
             return 1
         case Right(access_token):
-            response = one_playlist(args, access_token)
+            response = scplaylist_any(args, access_token)
             logger.debug(
                 {
                     "_run_thing": {
@@ -184,29 +124,84 @@ def _run_thing(args: ProgramNamespace, state: RunState) -> int:
             return 0
 
 
-def one_playlist(args: ProgramNamespace, access_token: AccessToken) -> Response:
-    # https://developers.soundcloud.com/docs/api/explorer/open-api
-    session = access_token.oauth_session()
-    return session.get(
-        f"https://api.soundcloud.com/users/{args.user_id}/playlists",
-        params={"limit": 1},
-    )
+## OAuth 2
 
 
-def authorize(args: ProgramNamespace) -> Either[str, AccessToken]:
-    match existing_access_token(args):
-        case Value(access_token):
-            return Right(access_token)
-        case Empty():
-            return fetch_tokens(args).flat_map(lambda response: response.access_token)
+class AccessToken:
+    value: str
+    token_type: str
+
+    def __init__(self, value: str, token_type: str):
+        self.value = value
+        self.token_type = token_type
+
+    @staticmethod
+    def expected(value: str, token_type: str) -> Either[str, "AccessToken"]:
+        if len(token_type.strip()) == 0:
+            return Left(f"unknown token_type: {repr(token_type)}")
+
+        match value:
+            case str(value) if len(value.strip()) > 0:
+                return Right(AccessToken(value.strip(), token_type.strip()))
+            case str(value):
+                return Left(f"empty value: {repr(value)}")
+            case None:
+                return Left(f"missing value: {repr(value)}")
+            case _ as value:
+                return Left(f"unknown type of value: {repr(value)}")
+
+    @staticmethod
+    def maybe(value: str, token_type: str = "Bearer") -> Option["AccessToken"]:
+        match value:
+            case None:
+                return Empty[AccessToken]()
+            case str(_) if len(value.strip()) == 0:
+                return Empty[AccessToken]()
+            case str(v):
+                return Value(AccessToken(v.strip(), token_type.strip()))
+
+    def oauth_session(self) -> OAuth2Session:
+        return OAuth2Session(token={"access_token": self.value, "token_type": self.token_type})
 
 
-def existing_access_token(args: ProgramNamespace) -> Option[AccessToken]:
-    logger.debug({"existing_access_token": {"environ": repr(args.access_token)}})
+def sodeenv_existing_access_token(args: ProgramNamespace) -> Option[AccessToken]:
+    logger.debug({"existing_access_token": repr(args.access_token)})
     return AccessToken.maybe(args.access_token, "Bearer")
 
 
-def fetch_tokens(args: ProgramNamespace) -> Either[str, TokenResponse]:
+## SoundCloud auth
+
+
+class TokenResponse:
+    _mapping: dict[str, Any]
+    # access_token: str
+    # expires_at: float  # 1743781923.9585016
+    # expires_in: int  # 3599
+    # refresh_token: str
+    # scope: list[str]  # ['']
+    # token_type: str  # Bearer
+
+    def __init__(self, raw_response: Mapping[str, Any]):
+        self._mapping = dict(raw_response)
+
+    @staticmethod
+    def of(raw_response: Mapping[str, Any]) -> "TokenResponse":
+        return TokenResponse(raw_response)
+
+    @property
+    def access_token(self) -> Either[str, AccessToken]:
+        return AccessToken.expected(self._mapping["access_token"], self._mapping["token_type"])
+
+
+def scauth_authorize(args: ProgramNamespace) -> Either[str, AccessToken]:
+    match sodeenv_existing_access_token(args):
+        case Value(access_token):
+            return Right(access_token)
+        case Empty():
+            return scauth_fetch_tokens(args).flat_map(lambda response: response.access_token)
+
+
+def scauth_fetch_tokens(args: ProgramNamespace) -> Either[str, TokenResponse]:
     """Authorize with the client_credentials workflow"""
 
     logger.debug(
@@ -229,3 +224,15 @@ def fetch_tokens(args: ProgramNamespace) -> Either[str, TokenResponse]:
         )
     except Exception as err:
         return Left(f"{args.token_endpoint}: {err}")
+
+
+## SoundCloud playlist
+
+
+def scplaylist_any(args: ProgramNamespace, access_token: AccessToken) -> Response:
+    # https://developers.soundcloud.com/docs/api/explorer/open-api
+    session = access_token.oauth_session()
+    return session.get(
+        f"https://api.soundcloud.com/users/{args.user_id}/playlists",
+        params={"limit": 1},
+    )
