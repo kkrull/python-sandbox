@@ -11,7 +11,7 @@ from sode.shared.fp.either import Either, Left, Right
 from sode.shared.fp.option import Empty, Option, Value
 from sode.shared.oauth.token import AccessToken
 from sode.soundcloud import playlist
-from sode.soundcloud.authapi import scauth_fetch_tokens
+from sode.soundcloud.auth.api import scauth_fetch_tokens
 from sode.soundcloud.shared import SC_COMMAND
 
 logger = logging.getLogger(__name__)
