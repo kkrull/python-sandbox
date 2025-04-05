@@ -1,7 +1,7 @@
 import logging
 from argparse import _SubParsersAction
 
-from sode.shared.cli import factory
+from sode.shared.cli import cmdfactory
 from sode.shared.cli.namespace import ProgramNamespace
 from sode.shared.cli.state import RunState
 from sode.soundcloud.shared import SC_COMMAND
@@ -14,7 +14,7 @@ def add_track(
 ) -> None:
     """Add the track sub-command"""
 
-    track_parser = factory.add_command(
+    track_parser = cmdfactory.add_command(
         subcommands,
         "track",
         command=_run_track,

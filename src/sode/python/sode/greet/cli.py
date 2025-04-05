@@ -1,7 +1,7 @@
 import logging
 from argparse import _SubParsersAction
 
-from sode.shared.cli import factory
+from sode.shared.cli import cmdfactory
 from sode.shared.cli.namespace import ProgramNamespace
 from sode.shared.cli.state import RunState
 
@@ -13,7 +13,7 @@ def add_greet(
 ) -> None:
     """Add a parser for the greet command"""
 
-    greet_parser = factory.add_unlisted_command(
+    greet_parser = cmdfactory.add_unlisted_command(
         commands,
         "greet",
         command=_greet_run,

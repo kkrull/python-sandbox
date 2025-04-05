@@ -10,7 +10,7 @@ from oauthlib.oauth2 import BackendApplicationClient
 from requests.auth import HTTPBasicAuth
 from requests_oauthlib import OAuth2Session
 
-from sode.shared.cli import argfactory, factory
+from sode.shared.cli import argfactory, cmdfactory
 from sode.shared.cli.namespace import ProgramNamespace
 from sode.shared.cli.state import RunState
 from sode.shared.fp.either import Either, Left, Right
@@ -26,7 +26,7 @@ def add_the_thing(
 ) -> None:
     """Add a command that "does the thing" (literally anything) with SoundCloud"""
 
-    thing_parser = factory.add_unlisted_command(
+    thing_parser = cmdfactory.add_unlisted_command(
         subcommands,
         "thing",
         command=_run_thing,

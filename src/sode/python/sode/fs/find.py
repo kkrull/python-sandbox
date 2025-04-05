@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Iterable
 
 from sode.fs.shared import FS_COMMAND
-from sode.shared.cli import factory
+from sode.shared.cli import cmdfactory
 from sode.shared.cli.format import DefaultsAndRawTextFormatter
 from sode.shared.cli.namespace import ProgramNamespace
 from sode.shared.cli.state import RunState
@@ -19,7 +19,7 @@ def add_find(
 ) -> None:
     """Add the find sub-command"""
 
-    find_parser = factory.add_command(
+    find_parser = cmdfactory.add_command(
         subcommands,
         "find",
         command=_run_find,
