@@ -4,6 +4,8 @@ from argparse import _SubParsersAction
 from pathlib import Path
 from typing import Iterable
 
+import argcomplete
+
 from sode.fs import FS_COMMAND
 from sode.shared.cli import DefaultsAndRawTextFormatter, ProgramNamespace, RunState, cmdfactory
 from sode.shared.fp import Empty, Value
@@ -41,6 +43,7 @@ def add_find(
         metavar="GLOB",
         nargs=1,
     )
+
     find_parser.add_argument(
         "path",
         help=textwrap.dedent(
@@ -50,7 +53,7 @@ def add_find(
         """
         ),
         nargs="+",
-    )
+    ).completer = argcomplete.completers.DirectoriesCompleter()  # type: ignore[attr-defined, no-untyped-call]
 
 
 def _run_find(args: ProgramNamespace, state: RunState) -> int:
