@@ -29,7 +29,7 @@ def main_fn(state: MainState) -> int:
     add_greet(command_parsers)
     add_soundcloud(command_parsers)
 
-    argcomplete.autocomplete(main_parser)
+    argcomplete.autocomplete(main_parser, append_space=False)
     try:
         args = main_parser.parse_args(state.arguments, namespace=ProgramNamespace())
     except ArgumentError as error:

@@ -13,6 +13,14 @@ from sode.shared.fp import Empty, Value
 logger = logging.getLogger(__name__)
 
 
+# TODO KDK: Trying to append = to glob so choices can be []
+# def append_equals_completer(action, prefix, **kwargs) -> str:
+#     if action.dest == "glob":
+#         return prefix + "="
+#     else:
+#         return prefix
+
+
 def add_find(
     subcommands: _SubParsersAction,  # type: ignore[type-arg]
 ) -> None:
@@ -42,6 +50,8 @@ def add_find(
         help="path pattern(s) to match (repeatable)",
         metavar="GLOB",
         nargs=1,
+    ).completer = argcomplete.completers.ChoicesCompleter(  # type: ignore[attr-defined, no-untyped-call]
+        choices=[]
     )
 
     find_parser.add_argument(
