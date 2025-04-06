@@ -13,14 +13,6 @@ from sode.shared.fp import Empty, Value
 logger = logging.getLogger(__name__)
 
 
-# TODO KDK: Trying to append = to glob so choices can be []
-# def append_equals_completer(action, prefix, **kwargs) -> str:
-#     if action.dest == "glob":
-#         return prefix + "="
-#     else:
-#         return prefix
-
-
 def add_find(
     subcommands: _SubParsersAction,  # type: ignore[type-arg]
 ) -> None:
