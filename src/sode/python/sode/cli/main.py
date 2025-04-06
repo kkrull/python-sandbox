@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
+# PYTHON_ARGCOMPLETE_OK
 
 import logging
 import sys
 from argparse import ArgumentError, ArgumentParser, _SubParsersAction
 from typing import NoReturn
+
+import argcomplete
 
 import sode
 from sode import version
@@ -26,6 +29,7 @@ def main_fn(state: MainState) -> int:
     add_greet(command_parsers)
     add_soundcloud(command_parsers)
 
+    argcomplete.autocomplete(main_parser)
     try:
         args = main_parser.parse_args(state.arguments, namespace=ProgramNamespace())
     except ArgumentError as error:
