@@ -255,6 +255,11 @@ $(wheel_timestamp): $(sources)
 
 #. SODE TARGETS
 
+# TODO KDK: Try to get this to work from Makefile
+.PHONY: install-argcomplete
+install-argcomplete:
+	echo "$(register-python-argcomplete3 sode)"
+
 .PHONY: run-cli
 run-cli: run-cli-pipenv run-cli-python run-cli-wheel #> Run the CLI all possible ways
 	@:
