@@ -2,8 +2,7 @@ import logging
 from argparse import _SubParsersAction
 
 from sode.shared.cli import ProgramNamespace, RunState, cmdfactory
-
-from .shared import SC_COMMAND
+from sode.soundcloud import SC_COMMAND
 
 logger = logging.getLogger(__name__)
 
