@@ -38,7 +38,20 @@ sode
 
 ## Setup
 
-## Use `pipenv`
+### Install argcomplete
+
+I haven't thought of a good way to automate this yet, but do this to get tab completion to work:
+
+```shell
+# some directory that is *not* here; e.g. outside of the virtualenv
+pip install argcomplete
+activate-global-python-argcomplete --user
+```
+
+Then tab completion works for `sode` as an installed wheel and also for `./sode/cli/main.py` or
+`python ./sode/cli/main.py`.
+
+### Use `pipenv`
 
 Remember to use `pipenv shell` to set up the python interpreter.  This appears to happen
 automatically with the use of a local `.envrc`.
