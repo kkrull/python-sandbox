@@ -1,10 +1,11 @@
 from argparse import ArgumentParser
 
-from sode.cli.state import MainState
 from sode.fs.cli import add_fs
 from sode.greet.cli import add_greet
 from sode.shared.cli import add_command_parsers, add_global_arguments
 from sode.soundcloud.cli import add_soundcloud
+
+from .state import MainState
 
 
 def for_argv(state: MainState) -> ArgumentParser:

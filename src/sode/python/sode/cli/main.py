@@ -3,7 +3,7 @@
 
 import logging
 import sys
-from argparse import ArgumentError, _SubParsersAction
+from argparse import ArgumentError
 from typing import NoReturn
 
 import argcomplete
