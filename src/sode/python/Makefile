@@ -216,8 +216,8 @@ mypy-watch: #> Type check sources with mypy (watch mode)
 
 .PHONY: install-global-completions
 install-global-completions: #> Install a global shell completions function for argcomplete
-	type activate-global-python-argcomplete >/dev/null || $(PIPX) install argcomplete
-	activate-global-python-argcomplete
+	@type activate-global-python-argcomplete >/dev/null || $(PIPX) install argcomplete
+	@activate-global-python-argcomplete
 
 #. SOURCE DISTRIBUTION TARGETS
 
