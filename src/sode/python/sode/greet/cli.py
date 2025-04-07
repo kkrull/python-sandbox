@@ -1,7 +1,7 @@
 import logging
 from argparse import _SubParsersAction
 
-from sode.shared.cli import ProgramNamespace, RunState, cmdfactory
+from sode.shared.cli import ProgramNamespace, RunState, argfactory, cmdfactory
 
 logger = logging.getLogger(__name__)
 
@@ -18,11 +18,14 @@ def add_greet(
         description="Start with a greeting",
     )
 
-    greet_parser.add_argument(
-        "who",
-        default="World",
-        help="whom to greet",
-        nargs="?",
+    argfactory.completable_argument(
+        argfactory.completion_choices(),
+        greet_parser.add_argument(
+            "who",
+            default="World",
+            help="whom to greet",
+            nargs="?",
+        ),
     )
 
 

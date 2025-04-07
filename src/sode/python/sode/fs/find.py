@@ -5,7 +5,13 @@ from pathlib import Path
 from typing import Iterable
 
 from sode.fs import FS_COMMAND
-from sode.shared.cli import DefaultsAndRawTextFormatter, ProgramNamespace, RunState, cmdfactory
+from sode.shared.cli import (
+    DefaultsAndRawTextFormatter,
+    ProgramNamespace,
+    RunState,
+    argfactory,
+    cmdfactory,
+)
 from sode.shared.fp import Empty, Value
 
 logger = logging.getLogger(__name__)
@@ -41,15 +47,19 @@ def add_find(
         metavar="GLOB",
         nargs=1,
     )
-    find_parser.add_argument(
-        "path",
-        help=textwrap.dedent(
-            f"""\
+
+    argfactory.completable_argument(
+        argfactory.completion_choices(),
+        find_parser.add_argument(
+            "path",
+            help=textwrap.dedent(
+                f"""\
             path(s) in which to search for files
             (precede with -- to avoid ambiguity)
         """
+            ),
+            nargs="+",
         ),
-        nargs="+",
     )
 
 

@@ -18,6 +18,7 @@ ignoreWords: []
 import: []
 version: "0.2"
 words:
+  - argcomplete
   - autoupdate
   - Brode
   - checkmake

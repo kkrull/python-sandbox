@@ -1,8 +1,32 @@
 import logging
 import os
+from argparse import Action
 from typing import Literal, TypedDict, Union
 
+import argcomplete
+
 logger = logging.getLogger(__name__)
+
+## argcomplete decorators
+
+
+def completable_argument(
+    completer: argcomplete.completers.BaseCompleter,
+    action: Action,
+) -> Action:
+    """Decorates an argument-parsing action with a completer"""
+
+    action.completer = completer  # type: ignore[attr-defined]
+    return action
+
+
+def completion_choices(choices: list[str] = []) -> argcomplete.completers.ChoicesCompleter:
+    """Convenience factory to ignore unavoidable typings warning"""
+
+    return argcomplete.completers.ChoicesCompleter(choices=choices)  # type: ignore[no-untyped-call]
+
+
+## add_argument decorators
 
 DefaultArg = TypedDict("DefaultArg", {"default": str})
 OptionalArg = TypedDict("OptionalArg", {"required": Literal[False]})
