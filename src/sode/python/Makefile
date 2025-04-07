@@ -7,6 +7,9 @@ include ../../../make.d/help.mk
 include ../../../make.d/homebrew.mk
 include ../../../make.d/paths-system.mk
 
+include make.d/sdist.mk
+include make.d/wheel.mk
+
 ## Environment
 
 ### Paths
@@ -62,10 +65,8 @@ debug-sources:
 ### Artifacts
 
 .PHONY: debug-artifacts
-debug-artifacts:
+debug-artifacts: debug-sdist debug-wheel
 	$(info Artifacts:)
-	$(info - artifact_sdist=$(artifact_sdist))
-	$(info - artifact_wheel=$(artifact_wheel))
 	@:
 
 #. STANDARD TARGETS
@@ -211,65 +212,3 @@ mypy-check: #> Type check sources with mypy
 mypy-watch: #> Type check sources with mypy (watch mode)
 	$(FSWATCH) $(FSWATCHFLAGS) --one-per-batch --recursive -d $(sources_dir) -0 \
 		| xargs -0 -I {} $(MYPY) $(sources_dir)
-
-#. SOURCE DISTRIBUTION TARGETS
-
-artifact_sdist = $(wildcard dist/$(package_id)*.tar.gz)
-sdist_timestamp := .sdist-timestamp
-
-.PHONY: clean-sdist
-clean-sdist:
-	$(RM) $(sdist_timestamp)
-
-.PHONY: sdist
-sdist: $(sdist_timestamp) #> Build the source distribution
-	@:
-
-.PHONY: sdist-contents
-sdist-contents: sdist #> Show what's inside the sdist
-	$(TAR) tfz $(artifact_sdist)
-
-# Phony target timestamp, to avoid guessing target name of artifact named with source code version
-$(sdist_timestamp): $(sources)
-	$(BUILD) --sdist
-	@touch $@
-
-#. WHEEL TARGETS
-
-artifact_wheel = $(wildcard dist/$(package_id)*.whl)
-cmd_name := sode
-wheel_timestamp := .wheel-timestamp
-
-.PHONY: check-wheel
-check-wheel:
-	@type $(cmd_name) &> /dev/null || ( echo "$(cmd_name): not found"; exit 1 )
-
-.PHONY: clean-wheel
-clean-wheel:
-	$(RM) $(wheel_timestamp)
-
-.PHONY: install-editable-wheel
-install-editable-wheel: wheel #> Link to the wheel globally with pipx
-	$(PIPX) install --editable .
-
-.PHONY: install-wheel
-install-wheel: $(requirements_obj) wheel #> Install the wheel and its libraries in a globally-available, pipx-managed venv
-	$(PIPX) install --force --python=python .
-	$(PIPX) runpip $(cmd_name) install -r $(requirements_obj)
-
-.PHONY: uninstall-wheel
-uninstall-wheel:
-	$(PIPX) uninstall $(package_id)
-
-.PHONY: wheel
-wheel: $(wheel_timestamp) #> Build the wheel
-	@:
-
-.PHONY: wheel-contents
-wheel-contents: wheel #> Show what's inside the wheel
-	$(UNZIP) -l $(artifact_wheel)
-
-# Phony target timestamp, to avoid guessing target name of artifact named with source code version
-$(wheel_timestamp): $(sources)
-	$(BUILD) --wheel
-	@touch $@
