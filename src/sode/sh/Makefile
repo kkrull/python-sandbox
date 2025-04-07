@@ -5,7 +5,6 @@ default: all
 
 include ../../../make.d/help.mk
 include ../../../make.d/homebrew.mk
-include ../../../make.d/paths-system.mk
 
 ## Environment
 
@@ -14,9 +13,6 @@ include ../../../make.d/paths-system.mk
 .PHONY: debug-paths
 debug-paths:
 	$(info Paths:)
-	$(info - bindir: $(bindir))
-	$(info - datadirpkg: $(datadirpkg))
-	$(info - libexecdirpkg: $(libexecdirpkg))
 	@:
 
 ### Programs
@@ -38,7 +34,7 @@ debug-project:
 
 ### Sources
 
-sources := ''
+sources := $(shell find . -type f -iname '*.sh' | sort)
 
 .PHONY: debug-sources
 debug-sources:
@@ -121,7 +117,7 @@ install-global-completions: install-argcomplete #> Install a global shell comple
 install-hint: #> Tell the user how to install completions
 	$(info Completions work by adding this to your shell's local dotfiles:)
 	$(info )
-	$(info eval "$$(register-python-argcomplete sode)")
+	$(info eval "$$(register-python-argcomplete $(package_id))")
 	$(info )
 	$(info This requires a few things to be true:)
 	$(info 1. argcomplete installed as a python package–e.g. pipx install argcomplete.)
