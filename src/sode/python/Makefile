@@ -115,6 +115,27 @@ format: black-format isort-format
 install-tools: homebrew-bundle-install #> Install development tools
 	@:
 
+#. PROGRAM TARGETS
+
+.PHONY: run-cli
+run-cli: run-cli-pipenv run-cli-python run-cli-wheel #> Run the CLI all possible ways
+	@:
+
+.PHONY: run-cli-pipenv
+run-cli-pipenv: #> Run the program from a pipenv script
+	@echo ""
+	$(PIPENV) run sode-cli --version
+
+.PHONY: run-cli-python
+run-cli-python: #> Run the program from venv-managed python
+	@echo ""
+	PYTHONPATH=. $(PIPENV) run python ./sode/cli/main.py --version
+
+.PHONY: run-cli-wheel
+run-cli-wheel: install-wheel #> Run the program from a (re-)installed wheel
+	@echo ""
+	@$(cmd_name) --version
+
 #. PYTHON TARGETS
 
 BUILD ?= $(PIPENV) run python -m build
@@ -252,24 +273,3 @@ wheel-contents: wheel #> Show what's inside the wheel
 $(wheel_timestamp): $(sources)
 	$(BUILD) --wheel
 	@touch $@
-
-#. SODE TARGETS
-
-.PHONY: run-cli
-run-cli: run-cli-pipenv run-cli-python run-cli-wheel #> Run the CLI all possible ways
-	@:
-
-.PHONY: run-cli-pipenv
-run-cli-pipenv: #> Run the program from a pipenv script
-	@echo ""
-	$(PIPENV) run sode-cli --version
-
-.PHONY: run-cli-python
-run-cli-python: #> Run the program from venv-managed python
-	@echo ""
-	PYTHONPATH=. $(PIPENV) run python ./sode/cli/main.py --version
-
-.PHONY: run-cli-wheel
-run-cli-wheel: install-wheel #> Run the program from a (re-)installed wheel
-	@echo ""
-	@$(cmd_name) --version
