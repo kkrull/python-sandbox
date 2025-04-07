@@ -7,6 +7,9 @@ include ../../../make.d/help.mk
 include ../../../make.d/homebrew.mk
 include ../../../make.d/paths-system.mk
 
+include make.d/black.mk
+include make.d/isort.mk
+include make.d/mypy.mk
 include make.d/sdist.mk
 include make.d/wheel.mk
 
@@ -173,42 +176,3 @@ pipenv-install: #> Install development dependencies with pipenv
 
 $(requirements_obj): Pipfile.lock
 	$(PIPENV) requirements > $@
-
-#. PYTHON SUPPORT TARGETS
-
-ISORT ?= $(PIPENV) run isort-format
-MYPY ?= $(PIPENV) run mypy-check
-
-.PHONY: black-check
-black-check: #> Check sources with black
-	$(PIPENV) run black-check
-
-.PHONY: black-format
-black-format: #> Format sources with black
-	$(PIPENV) run black-format
-
-.PHONY: clean-mypy
-clean-mypy:
-	$(RM) -r .mypy_cache
-
-.PHONY: isort-check
-isort-check: #> Check sources with isort
-	$(PIPENV) run isort-check
-
-.PHONY: isort-format
-isort-format: #> Format sources with isort
-	$(PIPENV) run isort-format
-
-.PHONY: isort-watch
-isort-watch: #> Format sources with isort (watch mode)
-	$(FSWATCH) $(FSWATCHFLAGS) $(sources) -0 \
-		| xargs -0 -I {} $(ISORT) {}
-
-.PHONY: mypy-check
-mypy-check: #> Type check sources with mypy
-	$(PIPENV) run mypy-check
-
-.PHONY: mypy-watch
-mypy-watch: #> Type check sources with mypy (watch mode)
-	$(FSWATCH) $(FSWATCHFLAGS) --one-per-batch --recursive -d $(sources_dir) -0 \
-		| xargs -0 -I {} $(MYPY) $(sources_dir)
