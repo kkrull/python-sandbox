@@ -212,6 +212,13 @@ mypy-watch: #> Type check sources with mypy (watch mode)
 	$(FSWATCH) $(FSWATCHFLAGS) --one-per-batch --recursive -d $(sources_dir) -0 \
 		| xargs -0 -I {} $(MYPY) $(sources_dir)
 
+#. SHELL COMPLETION TARGETS
+
+.PHONY: install-global-completions
+install-global-completions: #> Install a global shell completions function for argcomplete
+	type activate-global-python-argcomplete >/dev/null || $(PIPX) install argcomplete
+	activate-global-python-argcomplete
+
 #. SOURCE DISTRIBUTION TARGETS
 
 artifact_sdist = $(wildcard dist/$(package_id)*.tar.gz)
