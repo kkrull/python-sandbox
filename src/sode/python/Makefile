@@ -5,7 +5,6 @@ default: all
 
 include ../../../make.d/help.mk
 include ../../../make.d/homebrew.mk
-include ../../../make.d/paths-system.mk
 
 include make.d/black.mk
 include make.d/isort.mk
@@ -20,23 +19,26 @@ include make.d/wheel.mk
 .PHONY: debug-paths
 debug-paths:
 	$(info Paths:)
-	$(info - bindir: $(bindir))
-	$(info - datadirpkg: $(datadirpkg))
-	$(info - libexecdirpkg: $(libexecdirpkg))
 	@:
 
 ### Programs
 
+BUILD ?= $(PIPENV) run python -m build
 FSWATCH ?= fswatch
 FSWATCHFLAGS ?= ''
+PIPENV ?= pipenv
+PIPX ?= pipx
 TAR ?= tar
 UNZIP ?= unzip
 
 .PHONY: debug-programs
 debug-programs:
-	$(info Programs)
+	$(info Programs:)
+	$(info - BUILD=$(BUILD))
 	$(info - FSWATCH=$(FSWATCH))
 	$(info - FSWATCHFLAGS=$(FSWATCHFLAGS))
+	$(info - PIPENV=$(PIPENV))
+	$(info - PIPX=$(PIPX))
 	$(info - TAR=$(TAR))
 	$(info - UNZIP=$(UNZIP))
 	@:
@@ -47,7 +49,7 @@ package_id := sode
 
 .PHONY: debug-project
 debug-project:
-	$(info Project)
+	$(info Project:)
 	$(info - package_id=$(package_id))
 	@:
 
@@ -69,7 +71,6 @@ debug-sources:
 
 .PHONY: debug-artifacts
 debug-artifacts: debug-sdist debug-wheel
-	$(info Artifacts:)
 	@:
 
 #. STANDARD TARGETS
@@ -142,10 +143,6 @@ run-cli-wheel: install-wheel #> Run the program from a (re-)installed wheel
 
 #. PYTHON TARGETS
 
-BUILD ?= $(PIPENV) run python -m build
-PIPENV ?= pipenv
-PIPX ?= pipx
-
 requirements_obj := requirements.txt
 
 .PHONY: clean-build
@@ -163,10 +160,7 @@ clean-python: #> Remove files from running python
 
 .PHONY: debug-python
 debug-python:
-	$(info Python)
-	$(info - BUILD=$(BUILD))
-	$(info - PIPENV=$(PIPENV))
-	$(info - PIPX=$(PIPX))
+	$(info Python:)
 	$(info - requirements_obj=$(requirements_obj))
 	@:
 

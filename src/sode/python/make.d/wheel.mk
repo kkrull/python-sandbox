@@ -14,6 +14,7 @@ clean-wheel:
 
 .PHONY: debug-wheel
 debug-wheel:
+	$(info Artifacts [wheel]:)
 	$(info - artifact_wheel=$(artifact_wheel))
 	@:
 

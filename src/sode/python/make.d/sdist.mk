@@ -9,6 +9,7 @@ clean-sdist:
 
 .PHONY: debug-sdist
 debug-sdist:
+	$(info Artifacts [sdist]:)
 	$(info - artifact_sdist=$(artifact_sdist))
 	@:
 
