@@ -102,7 +102,7 @@ check: check-wheel #> Check if artifacts were installed correctly
 
 .PHONY: debug
 .NOTPARALLEL: debug
-debug: _debug-prefix debug-artifacts debug-paths debug-programs debug-project debug-python debug-sources #> Show debugging information
+debug: _debug-prefix debug-artifacts debug-paths debug-programs debug-project debug-sources #> Show debugging information
 	@:
 
 .PHONY: _debug-prefix
@@ -134,8 +134,6 @@ run-python: #> Run the program from venv-managed python
 
 #. PYTHON TARGETS
 
-requirements_obj := requirements.txt
-
 .PHONY: clean-build
 clean-build: #> Remove files from running build
 	$(RM) -r build dist $(package_id).egg-info
@@ -144,12 +142,6 @@ clean-build: #> Remove files from running build
 clean-python: # Remove files from running python
 	$(RM) -r **/__pycache__
 
-.PHONY: debug-python
-debug-python:
-	$(info Python:)
-	$(info - requirements_obj=$(requirements_obj))
-	@:
-
 .PHONY: format
 format: black-format isort-format #> Format sources
 	@:
@@ -157,11 +149,7 @@ format: black-format isort-format #> Format sources
 .PHONY: pipenv-clean
 pipenv-clean: #> Uninstall packages not listed in Pipfile
 	$(PIPENV) clean
-	$(RM) $(requirements_obj)
 
 .PHONY: pipenv-install
 pipenv-install: #> Install development dependencies with pipenv
 	$(PIPENV) install --dev
-
-$(requirements_obj): Pipfile.lock
-	$(PIPENV) requirements > $@

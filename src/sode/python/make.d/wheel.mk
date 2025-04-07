@@ -19,10 +19,18 @@ $(wheel_timestamp): $(sources)
 	$(BUILD) --wheel
 	@touch $@
 
+## Objects
+
+requirements_obj := requirements.txt
+
+$(requirements_obj): Pipfile.lock
+	$(PIPENV) requirements > $@
+
 ## Standard sub-targets
 
 .PHONY: clean-wheel
 clean-wheel:
+	$(RM) $(requirements_obj)
 	$(RM) $(wheel_timestamp)
 
 .PHONY: install-editable-wheel
@@ -46,8 +54,9 @@ check-wheel:
 
 .PHONY: debug-wheel
 debug-wheel:
-	$(info Artifacts [wheel]:)
+	$(info Wheel:)
 	$(info - artifact_wheel=$(artifact_wheel))
+	$(info - requirements_obj=$(requirements_obj))
 	@:
 
 ## Program sub-targets
