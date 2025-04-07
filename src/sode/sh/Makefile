@@ -56,29 +56,29 @@ debug-artifacts:
 #. STANDARD TARGETS
 
 .PHONY: all
-all: #> Build all artifacts
+all:
 	@:
 
 .PHONY: clean
-clean: #> Remove files built from these sources
+clean:
 	@:
 
 .PHONY: install
-install: #> Install artifacts
+install: install-hint #> Install artifacts
 	@:
 
 .PHONY: test
-test: #> Run checks
+test:
 	@:
 
 .PHONY: uninstall
-uninstall: #> Uninstall artifacts
+uninstall:
 	@:
 
 #. SUPPORT TARGETS
 
 .PHONY: check
-check: #> Check if artifacts were installed correctly
+check:
 	@:
 
 .PHONY: debug
@@ -116,3 +116,15 @@ install-global-completions: install-argcomplete #> Install a global shell comple
 	activate-global-python-argcomplete
 
 #. SHELL COMPLETION TARGETS
+
+.PHONY: install-hint
+install-hint: #> Tell the user how to install completions
+	$(info Completions work by adding this to your shell's local dotfiles:)
+	$(info )
+	$(info eval "$$(register-python-argcomplete sode)")
+	$(info )
+	$(info This requires a few things to be true:)
+	$(info 1. argcomplete installed as a python package–e.g. pipx install argcomplete.)
+	$(info 2. The eval line is called after tab completions–e.g. compinit for zsh–have been initialized.)
+	$(info 3. The eval line contains the quotes, as given in the example.)
+	@:
