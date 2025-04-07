@@ -5,6 +5,7 @@ default: all
 
 include ../../../make.d/help.mk
 include ../../../make.d/homebrew.mk
+include ../../../make.d/pre-commit.mk
 
 include make.d/black.mk
 include make.d/isort.mk
@@ -88,7 +89,7 @@ install: install-wheel #> Install artifacts
 	@:
 
 .PHONY: test
-test: black-check isort-check mypy-check #> Run checks
+test: black-check isort-check mypy-check pre-commit-run #> Run checks
 
 .PHONY: uninstall
 uninstall: uninstall-wheel #> Uninstall artifacts
