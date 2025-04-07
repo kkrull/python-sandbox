@@ -1,17 +1,9 @@
 #. SOURCE DISTRIBUTION TARGETS
 
+## Artifacts
+
 artifact_sdist = $(wildcard dist/$(package_id)*.tar.gz)
 sdist_timestamp := .sdist-timestamp
-
-.PHONY: clean-sdist
-clean-sdist:
-	$(RM) $(sdist_timestamp)
-
-.PHONY: debug-sdist
-debug-sdist:
-	$(info Artifacts [sdist]:)
-	$(info - artifact_sdist=$(artifact_sdist))
-	@:
 
 .PHONY: sdist
 sdist: $(sdist_timestamp) #> Build the source distribution
@@ -25,3 +17,15 @@ sdist-contents: sdist #> Show what's inside the sdist
 $(sdist_timestamp): $(sources)
 	$(BUILD) --sdist
 	@touch $@
+
+## Support sub-targets
+
+.PHONY: clean-sdist
+clean-sdist:
+	$(RM) $(sdist_timestamp)
+
+.PHONY: debug-sdist
+debug-sdist:
+	$(info Artifacts [sdist]:)
+	$(info - artifact_sdist=$(artifact_sdist))
+	@:

@@ -80,7 +80,7 @@ all: sdist wheel #> Build all artifacts
 	@:
 
 .PHONY: clean
-clean: clean-build clean-mypy clean-pipenv clean-python clean-sdist clean-wheel #> Remove files built from these sources
+clean: clean-build clean-mypy clean-python clean-sdist clean-wheel #> Remove files built from these sources
 	@:
 
 .PHONY: install
@@ -110,10 +110,6 @@ _debug-prefix:
 	$(info ==sode python==)
 	@:
 
-.PHONY: format
-format: black-format isort-format
-	@:
-
 #. DEVELOPMENT ENVIRONMENT TARGETS
 
 .PHONY: install-tools
@@ -136,11 +132,6 @@ run-cli-python: #> Run the program from venv-managed python
 	@echo ""
 	PYTHONPATH=. $(PIPENV) run python ./sode/cli/main.py --version
 
-.PHONY: run-cli-wheel
-run-cli-wheel: install-wheel #> Run the program from a (re-)installed wheel
-	@echo ""
-	@$(cmd_name) --version
-
 #. PYTHON TARGETS
 
 requirements_obj := requirements.txt
@@ -149,13 +140,8 @@ requirements_obj := requirements.txt
 clean-build: #> Remove files from running build
 	$(RM) -r build dist $(package_id).egg-info
 
-.PHONY: clean-pipenv
-clean-pipenv: #> Uninstall packages not listed in Pipfile
-	$(PIPENV) clean
-	$(RM) $(requirements_obj)
-
 .PHONY: clean-python
-clean-python: #> Remove files from running python
+clean-python: # Remove files from running python
 	$(RM) -r **/__pycache__
 
 .PHONY: debug-python
@@ -163,6 +149,15 @@ debug-python:
 	$(info Python:)
 	$(info - requirements_obj=$(requirements_obj))
 	@:
+
+.PHONY: format
+format: black-format isort-format #> Format sources
+	@:
+
+.PHONY: pipenv-clean
+pipenv-clean: #> Uninstall packages not listed in Pipfile
+	$(PIPENV) clean
+	$(RM) $(requirements_obj)
 
 .PHONY: pipenv-install
 pipenv-install: #> Install development dependencies with pipenv
