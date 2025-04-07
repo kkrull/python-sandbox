@@ -1,4 +1,4 @@
-# `sode`
+# `sode` Code
 
 That's 'sode', as in [BRODESODE](https://youtu.be/Cx8sl2uC46A?si=6hLK3-kPXTf-7owI).  If you know,
 you know.
