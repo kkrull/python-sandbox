@@ -4,10 +4,13 @@ import os
 import textwrap
 from argparse import RawTextHelpFormatter, _SubParsersAction
 
+import argcomplete
+
 from sode.shared.cli import (
     ProgramNamespace,
     RunState,
     add_unlisted_command,
+    argfactory,
     environ_or_default,
     environ_or_optional,
     environ_or_required,
@@ -54,41 +57,61 @@ def add_the_thing(
         ),
         formatter_class=RawTextHelpFormatter,
     )
-    thing_parser.add_argument(
-        "--access-token",
-        **environ_or_optional("SOUNDCLOUD_ACCESS_TOKEN", environ),
-        help=argparse.SUPPRESS,  # discourage exposing secret CLI arguments to other users
-        nargs=1,
-    )
-    thing_parser.add_argument(
-        "--client-id",
-        **environ_or_required("SOUNDCLOUD_CLIENT_ID", environ),
-        help="OAuth2 client_id used to request tokens (default: $SOUNDCLOUD_CLIENT_ID)",
-        nargs=1,
-    )
-    thing_parser.add_argument(
-        "--client-secret",
-        **environ_or_required("SOUNDCLOUD_CLIENT_SECRET", environ),
-        help=argparse.SUPPRESS,  # discourage exposing secret CLI arguments to other users
-        nargs=1,
-    )
-    thing_parser.add_argument(
-        "--token-endpoint",
-        **environ_or_default(
-            "SOUNDCLOUD_TOKEN_URL",
-            "https://secure.soundcloud.com/oauth/token",
-            environ,
+
+    argfactory.completable_argument(
+        argcomplete.completers.ChoicesCompleter(choices=[]),  # type: ignore[no-untyped-call]
+        thing_parser.add_argument(
+            "--access-token",
+            **environ_or_optional("SOUNDCLOUD_ACCESS_TOKEN", environ),
+            help=argparse.SUPPRESS,  # discourage exposing secret CLI arguments to other users
+            nargs=1,
         ),
-        help="URL to SoundCloud OAuth2 token endpoint (default: %(default)s)",
-        metavar="URL",
-        nargs=1,
     )
-    thing_parser.add_argument(
-        "-u",
-        "--user-id",
-        **environ_or_required("SOUNDCLOUD_USER_ID", environ),
-        help="SoundCloud user ID",
-        nargs=1,
+
+    argfactory.completable_argument(
+        argcomplete.completers.ChoicesCompleter(choices=[]),  # type: ignore[no-untyped-call]
+        thing_parser.add_argument(
+            "--client-id",
+            **environ_or_required("SOUNDCLOUD_CLIENT_ID", environ),
+            help="OAuth2 client_id used to request tokens (default: $SOUNDCLOUD_CLIENT_ID)",
+            nargs=1,
+        ),
+    )
+
+    argfactory.completable_argument(
+        argcomplete.completers.ChoicesCompleter(choices=[]),  # type: ignore[no-untyped-call]
+        thing_parser.add_argument(
+            "--client-secret",
+            **environ_or_required("SOUNDCLOUD_CLIENT_SECRET", environ),
+            help=argparse.SUPPRESS,  # discourage exposing secret CLI arguments to other users
+            nargs=1,
+        ),
+    )
+
+    argfactory.completable_argument(
+        argcomplete.completers.ChoicesCompleter(choices=[]),  # type: ignore[no-untyped-call]
+        thing_parser.add_argument(
+            "--token-endpoint",
+            **environ_or_default(
+                "SOUNDCLOUD_TOKEN_URL",
+                "https://secure.soundcloud.com/oauth/token",
+                environ,
+            ),
+            help="URL to SoundCloud OAuth2 token endpoint (default: %(default)s)",
+            metavar="URL",
+            nargs=1,
+        ),
+    )
+
+    argfactory.completable_argument(
+        argcomplete.completers.ChoicesCompleter(choices=[]),  # type: ignore[no-untyped-call]
+        thing_parser.add_argument(
+            "-u",
+            "--user-id",
+            **environ_or_required("SOUNDCLOUD_USER_ID", environ),
+            help="SoundCloud user ID",
+            nargs=1,
+        ),
     )
 
 
