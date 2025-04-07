@@ -69,6 +69,7 @@ install: #> Install artifacts
 
 .PHONY: test
 test: #> Run checks
+	@:
 
 .PHONY: uninstall
 uninstall: #> Uninstall artifacts
@@ -106,9 +107,12 @@ debug-python:
 	$(info - PIPX=$(PIPX))
 	@:
 
-#. SHELL COMPLETION TARGETS
+.PHONY: install-argcomplete
+install-argcomplete: #> Install argcomplete in its own virtualenv
+	@type activate-global-python-argcomplete >/dev/null || $(PIPX) install argcomplete
 
 .PHONY: install-global-completions
-install-global-completions: #> Install a global shell completions function for argcomplete
-	@type activate-global-python-argcomplete >/dev/null || $(PIPX) install argcomplete
+install-global-completions: install-argcomplete #> Install a global shell completions function for argcomplete
 	activate-global-python-argcomplete
+
+#. SHELL COMPLETION TARGETS
