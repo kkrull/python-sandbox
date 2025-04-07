@@ -64,7 +64,7 @@ clean:
 	@:
 
 .PHONY: install
-install: install-hint #> Install artifacts
+install: install-argcomplete install-hint #> Install artifacts
 	@:
 
 .PHONY: test
