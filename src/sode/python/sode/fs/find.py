@@ -1,6 +1,6 @@
 import logging
 import textwrap
-from argparse import _SubParsersAction
+from argparse import Action, ArgumentParser, _SubParsersAction
 from pathlib import Path
 from typing import Iterable
 
@@ -42,20 +42,31 @@ def add_find(
         help="path pattern(s) to match (repeatable)",
         metavar="GLOB",
         nargs=1,
-    ).completer = argcomplete.completers.ChoicesCompleter(  # type: ignore[attr-defined, no-untyped-call]
-        choices=[]
     )
 
-    find_parser.add_argument(
-        "path",
-        help=textwrap.dedent(
-            f"""\
+    completable_argument(
+        argcomplete.completers.DirectoriesCompleter(),  # type: ignore[no-untyped-call]
+        find_parser.add_argument(
+            "path",
+            help=textwrap.dedent(
+                f"""\
             path(s) in which to search for files
             (precede with -- to avoid ambiguity)
         """
+            ),
+            nargs="+",
         ),
-        nargs="+",
-    ).completer = argcomplete.completers.DirectoriesCompleter()  # type: ignore[attr-defined, no-untyped-call]
+    )
+
+
+def completable_argument(
+    completer: argcomplete.completers.BaseCompleter,
+    action: Action,
+) -> Action:
+    """Decorates an argument-parsing action with a completer"""
+
+    action.completer = completer  # type: ignore[attr-defined]
+    return action
 
 
 def _run_find(args: ProgramNamespace, state: RunState) -> int:
