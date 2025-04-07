@@ -1,13 +1,19 @@
 import logging
 import textwrap
-from argparse import Action, ArgumentParser, _SubParsersAction
+from argparse import ArgumentParser, _SubParsersAction
 from pathlib import Path
 from typing import Iterable
 
 import argcomplete
 
 from sode.fs import FS_COMMAND
-from sode.shared.cli import DefaultsAndRawTextFormatter, ProgramNamespace, RunState, cmdfactory
+from sode.shared.cli import (
+    DefaultsAndRawTextFormatter,
+    ProgramNamespace,
+    RunState,
+    argfactory,
+    cmdfactory,
+)
 from sode.shared.fp import Empty, Value
 
 logger = logging.getLogger(__name__)
@@ -44,7 +50,7 @@ def add_find(
         nargs=1,
     )
 
-    completable_argument(
+    argfactory.completable_argument(
         argcomplete.completers.DirectoriesCompleter(),  # type: ignore[no-untyped-call]
         find_parser.add_argument(
             "path",
@@ -57,16 +63,6 @@ def add_find(
             nargs="+",
         ),
     )
-
-
-def completable_argument(
-    completer: argcomplete.completers.BaseCompleter,
-    action: Action,
-) -> Action:
-    """Decorates an argument-parsing action with a completer"""
-
-    action.completer = completer  # type: ignore[attr-defined]
-    return action
 
 
 def _run_find(args: ProgramNamespace, state: RunState) -> int:

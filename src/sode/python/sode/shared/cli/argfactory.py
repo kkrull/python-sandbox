@@ -1,12 +1,31 @@
 import logging
 import os
+from argparse import Action
 from typing import Literal, TypedDict, Union
 
+import argcomplete
+
 logger = logging.getLogger(__name__)
+
+## argcomplete decorators
+
+
+def completable_argument(
+    completer: argcomplete.completers.BaseCompleter,
+    action: Action,
+) -> Action:
+    """Decorates an argument-parsing action with a completer"""
+
+    action.completer = completer  # type: ignore[attr-defined]
+    return action
+
 
 DefaultArg = TypedDict("DefaultArg", {"default": str})
 OptionalArg = TypedDict("OptionalArg", {"required": Literal[False]})
 RequiredArg = TypedDict("RequiredArg", {"required": Literal[True]})
+
+
+## add_argument decorators
 
 
 def environ_or_default(
