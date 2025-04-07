@@ -118,17 +118,17 @@ install-tools: homebrew-bundle-install #> Install development tools
 
 #. PROGRAM TARGETS
 
-.PHONY: run-cli
-run-cli: run-cli-pipenv run-cli-python run-cli-wheel #> Run the CLI all possible ways
+.PHONY: run
+run: run-pipenv run-python run-wheel #> Run the program all possible ways
 	@:
 
-.PHONY: run-cli-pipenv
-run-cli-pipenv: #> Run the program from a pipenv script
+.PHONY: run-pipenv
+run-pipenv: #> Run the program from a pipenv script
 	@echo ""
 	$(PIPENV) run sode-cli --version
 
-.PHONY: run-cli-python
-run-cli-python: #> Run the program from venv-managed python
+.PHONY: run-python
+run-python: #> Run the program from venv-managed python
 	@echo ""
 	PYTHONPATH=. $(PIPENV) run python ./sode/cli/main.py --version
 

@@ -52,7 +52,7 @@ debug-wheel:
 
 ## Program sub-targets
 
-.PHONY: run-cli-wheel
-run-cli-wheel: install-wheel #> Run the program from a (re-)installed wheel
+.PHONY: run-wheel
+run-wheel: install-wheel #> Run the program from a (re-)installed wheel
 	@echo ""
 	@$(cmd_name) --version
