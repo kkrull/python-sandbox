@@ -10,7 +10,7 @@ include ../../make.d/pre-commit.mk
 ## Project
 
 # https://stackoverflow.com/a/17845120/112682
-SUBDIRS := manual python
+SUBDIRS := manual python sh
 
 .PHONY: $(SUBDIRS)
 $(SUBDIRS):
