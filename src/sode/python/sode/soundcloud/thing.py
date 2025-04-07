@@ -59,7 +59,7 @@ def add_the_thing(
     )
 
     argfactory.completable_argument(
-        argcomplete.completers.ChoicesCompleter(choices=[]),  # type: ignore[no-untyped-call]
+        argfactory.completion_choices(),
         thing_parser.add_argument(
             "--access-token",
             **environ_or_optional("SOUNDCLOUD_ACCESS_TOKEN", environ),
@@ -69,7 +69,7 @@ def add_the_thing(
     )
 
     argfactory.completable_argument(
-        argcomplete.completers.ChoicesCompleter(choices=[]),  # type: ignore[no-untyped-call]
+        argfactory.completion_choices(),
         thing_parser.add_argument(
             "--client-id",
             **environ_or_required("SOUNDCLOUD_CLIENT_ID", environ),
@@ -79,7 +79,7 @@ def add_the_thing(
     )
 
     argfactory.completable_argument(
-        argcomplete.completers.ChoicesCompleter(choices=[]),  # type: ignore[no-untyped-call]
+        argfactory.completion_choices(),
         thing_parser.add_argument(
             "--client-secret",
             **environ_or_required("SOUNDCLOUD_CLIENT_SECRET", environ),
@@ -89,7 +89,7 @@ def add_the_thing(
     )
 
     argfactory.completable_argument(
-        argcomplete.completers.ChoicesCompleter(choices=[]),  # type: ignore[no-untyped-call]
+        argfactory.completion_choices(),
         thing_parser.add_argument(
             "--token-endpoint",
             **environ_or_default(
@@ -104,7 +104,7 @@ def add_the_thing(
     )
 
     argfactory.completable_argument(
-        argcomplete.completers.ChoicesCompleter(choices=[]),  # type: ignore[no-untyped-call]
+        argfactory.completion_choices(),
         thing_parser.add_argument(
             "-u",
             "--user-id",

@@ -11,7 +11,6 @@ from .state import MainState
 def for_argv(state: MainState) -> ArgumentParser:
     """Create an argument parser-containing sub-parsers for each command-to parse the entire argv"""
 
-    # TODO KDK: Fine-tune argcomplete choices for (sub-)commands
     main_parser = _new_main_parser(state)
     command_parsers = add_command_parsers(main_parser)
     add_fs(command_parsers)

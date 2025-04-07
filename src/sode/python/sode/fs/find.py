@@ -1,10 +1,8 @@
 import logging
 import textwrap
-from argparse import ArgumentParser, _SubParsersAction
+from argparse import _SubParsersAction
 from pathlib import Path
 from typing import Iterable
-
-import argcomplete
 
 from sode.fs import FS_COMMAND
 from sode.shared.cli import (
@@ -51,7 +49,7 @@ def add_find(
     )
 
     argfactory.completable_argument(
-        argcomplete.completers.DirectoriesCompleter(),  # type: ignore[no-untyped-call]
+        argfactory.completion_choices(),
         find_parser.add_argument(
             "path",
             help=textwrap.dedent(

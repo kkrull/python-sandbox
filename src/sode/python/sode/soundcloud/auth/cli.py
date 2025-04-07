@@ -29,7 +29,7 @@ def add_auth(
     )
 
     argfactory.completable_argument(
-        argcomplete.completers.ChoicesCompleter(choices=[]),  # type: ignore[no-untyped-call]
+        argfactory.completion_choices(),
         auth_parser.add_argument(
             "--client-id",
             help="OAuth2 client id with which to request access",

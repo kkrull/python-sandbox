@@ -1,8 +1,6 @@
 import logging
 from argparse import _SubParsersAction
 
-import argcomplete
-
 from sode.shared.cli import ProgramNamespace, RunState, argfactory, cmdfactory
 
 logger = logging.getLogger(__name__)
@@ -21,7 +19,7 @@ def add_greet(
     )
 
     argfactory.completable_argument(
-        argcomplete.completers.ChoicesCompleter(choices=[]),  # type: ignore[no-untyped-call]
+        argfactory.completion_choices(),
         greet_parser.add_argument(
             "who",
             default="World",

@@ -20,12 +20,17 @@ def completable_argument(
     return action
 
 
-DefaultArg = TypedDict("DefaultArg", {"default": str})
-OptionalArg = TypedDict("OptionalArg", {"required": Literal[False]})
-RequiredArg = TypedDict("RequiredArg", {"required": Literal[True]})
+def completion_choices(choices: list[str] = []) -> argcomplete.completers.ChoicesCompleter:
+    """Convenience factory to ignore unavoidable typings warning"""
+
+    return argcomplete.completers.ChoicesCompleter(choices=choices)  # type: ignore[no-untyped-call]
 
 
 ## add_argument decorators
+
+DefaultArg = TypedDict("DefaultArg", {"default": str})
+OptionalArg = TypedDict("OptionalArg", {"required": Literal[False]})
+RequiredArg = TypedDict("RequiredArg", {"required": Literal[True]})
 
 
 def environ_or_default(
