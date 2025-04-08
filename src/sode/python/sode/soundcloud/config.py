@@ -1,6 +1,11 @@
 import json
 from dataclasses import asdict, dataclass
-from typing import Any, Mapping
+from typing import Any, Mapping, Protocol
+
+
+class SupportsWrite(Protocol):
+    def write(self, data: str) -> None:
+        pass
 
 
 @dataclass(frozen=True)
@@ -29,6 +34,21 @@ class TokenResponse:
             sort_keys=sort_keys,
         )
 
+    def write_json(
+        self,
+        fp: SupportsWrite,
+        indent: int | str | None = None,
+        separators: tuple[str, str] | None = None,
+        sort_keys: bool = False,
+    ) -> None:
+        return json.dump(
+            asdict(self),
+            fp,
+            indent=indent,
+            separators=separators,
+            sort_keys=sort_keys,
+        )
+
 
 known_response = TokenResponse(
     access_token="abcdef",
@@ -39,7 +59,7 @@ known_response = TokenResponse(
     token_type="Bearer",
 )
 
-api_response = TokenResponse.from_oauth2_fetch_token(
+fetch_response = TokenResponse.from_oauth2_fetch_token(
     {
         "access_token": "abcdef",
         "expires_at": 1743781923.9585016,
@@ -50,5 +70,5 @@ api_response = TokenResponse.from_oauth2_fetch_token(
     }
 )
 
-
-print(f"{api_response.to_json(indent=2, sort_keys=True)}")
+print(f"{fetch_response.to_json(indent=2, sort_keys=True)}")
+fetch_response.write_json("auth-token.json", indent=2, sort_keys=True)
