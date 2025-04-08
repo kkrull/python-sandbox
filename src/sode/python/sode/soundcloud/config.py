@@ -1,15 +1,12 @@
 import json
 from dataclasses import asdict, dataclass
-from typing import Any, Mapping, Protocol
-
-
-class SupportsWrite(Protocol):
-    def write(self, data: str) -> None:
-        pass
+from typing import Any, Mapping, TextIO
 
 
 @dataclass(frozen=True)
 class TokenResponse:
+    """How the SoundCloud OAuth2 token endpoint responds"""
+
     access_token: str
     expires_at: float  # 1743781923.9585016
     expires_in: int  # 3599
@@ -19,6 +16,8 @@ class TokenResponse:
 
     @staticmethod
     def from_oauth2_fetch_token(raw_response: Mapping[str, Any]) -> "TokenResponse":
+        """Parse from a token response dict that you get from requests_oauthlib"""
+
         return TokenResponse(**raw_response)
 
     def to_json(
@@ -27,6 +26,8 @@ class TokenResponse:
         separators: tuple[str, str] | None = None,
         sort_keys: bool = False,
     ) -> str:
+        """Serialize to a JSON str"""
+
         return json.dumps(
             asdict(self),
             indent=indent,
@@ -36,11 +37,13 @@ class TokenResponse:
 
     def write_json(
         self,
-        fp: SupportsWrite,
+        fp: TextIO,
         indent: int | str | None = None,
         separators: tuple[str, str] | None = None,
         sort_keys: bool = False,
     ) -> None:
+        """Serialize to JSON and write to the given TextIO"""
+
         return json.dump(
             asdict(self),
             fp,
@@ -71,4 +74,5 @@ fetch_response = TokenResponse.from_oauth2_fetch_token(
 )
 
 print(f"{fetch_response.to_json(indent=2, sort_keys=True)}")
-fetch_response.write_json("auth-token.json", indent=2, sort_keys=True)
+with open("auth-token.json", mode="wt") as file:
+    fetch_response.write_json(file, indent=2, sort_keys=True)
