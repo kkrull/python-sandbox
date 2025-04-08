@@ -1,11 +1,8 @@
 import json
 from dataclasses import asdict, dataclass
 
-dictionary = {"access_token": "abcdef"}
-print(json.dumps(dictionary, indent=2, sort_keys=True))
 
-
-@dataclass
+@dataclass(frozen=True)
 class Response:
     access_token: str
     refresh_token: str
