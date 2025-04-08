@@ -3,7 +3,7 @@ from dataclasses import asdict, dataclass
 
 
 @dataclass(frozen=True)
-class Response:
+class TokenResponse:
     access_token: str
     expires_at: float  # 1743781923.9585016
     expires_in: int  # 3599
@@ -25,7 +25,7 @@ class Response:
         )
 
 
-response = Response(
+response = TokenResponse(
     access_token="abcdef",
     expires_at=1743781923.9585016,
     expires_in=3599,
