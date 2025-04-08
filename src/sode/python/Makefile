@@ -141,7 +141,8 @@ clean-build: #> Remove files from running build
 
 .PHONY: clean-python
 clean-python: # Remove files from running python
-	$(RM) -r **/__pycache__
+	$(shell find . -type d -name '__pycache__' -exec $(RM) -R {} +)
+	@:
 
 .PHONY: format
 format: black-format isort-format #> Format sources
