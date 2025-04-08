@@ -4,8 +4,6 @@ import os
 import textwrap
 from argparse import RawTextHelpFormatter, _SubParsersAction
 
-import argcomplete
-
 from sode.shared.cli import (
     ProgramNamespace,
     RunState,

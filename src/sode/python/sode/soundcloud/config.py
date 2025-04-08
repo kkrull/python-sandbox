@@ -5,8 +5,11 @@ from dataclasses import asdict, dataclass
 @dataclass(frozen=True)
 class Response:
     access_token: str
-    expires_in: int
+    expires_at: float  # 1743781923.9585016
+    expires_in: int  # 3599
     refresh_token: str
+    scope: list[str]  # ['']
+    token_type: str  # Bearer
 
     def to_json(
         self,
@@ -22,5 +25,13 @@ class Response:
         )
 
 
-response = Response(access_token="abcdef", expires_in=3599, refresh_token="ABCDEF")
+response = Response(
+    access_token="abcdef",
+    expires_at=1743781923.9585016,
+    expires_in=3599,
+    refresh_token="ABCDEF",
+    scope=[""],
+    token_type="Bearer",
+)
+
 print(f"{response.to_json(indent=2, sort_keys=True)}")
