@@ -26,7 +26,7 @@ debug-paths:
 
 BUILD ?= $(PIPENV) run python -m build
 FSWATCH ?= fswatch
-FSWATCHFLAGS ?= ''
+FSWATCHFLAGS ?=
 PIPENV ?= pipenv
 PIPX ?= pipx
 TAR ?= tar
