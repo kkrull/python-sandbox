@@ -1,4 +1,5 @@
 import json
+import typing
 from dataclasses import asdict, dataclass
 from typing import Any, Mapping, TextIO
 
@@ -19,6 +20,13 @@ class TokenResponse:
         """Parse from a token response dict that you get from requests_oauthlib"""
 
         return TokenResponse(**raw_response)
+
+    @staticmethod
+    def read_json(fp: TextIO) -> "TokenResponse":
+        return typing.cast(
+            TokenResponse,
+            json.load(fp, object_hook=TokenResponse.from_oauth2_fetch_token),
+        )
 
     def to_json(
         self,
@@ -73,6 +81,11 @@ fetch_response = TokenResponse.from_oauth2_fetch_token(
     }
 )
 
-print(f"{fetch_response.to_json(indent=2, sort_keys=True)}")
+print(f"fetch_response={fetch_response.to_json(indent=2, sort_keys=True)}")
 with open("auth-token.json", mode="wt") as file:
     fetch_response.write_json(file, indent=2, sort_keys=True)
+
+with open("auth-token.json", mode="rt") as file:
+    config_response = TokenResponse.read_json(file)
+
+print(f"config_response={config_response.to_json(indent=2, sort_keys=True)}")
