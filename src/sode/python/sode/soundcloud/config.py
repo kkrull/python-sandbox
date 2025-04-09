@@ -17,7 +17,7 @@ class TokenResponse:
 
     @staticmethod
     def parse(data: Mapping[str, Any]) -> "TokenResponse":
-        """Parse from a token response dict that you get from requests_oauthlib"""
+        """Parse data from JSON data like you get when fetching tokens with requests_oauthlib"""
 
         return TokenResponse(**data)
 
@@ -60,6 +60,40 @@ class TokenResponse:
         )
 
 
+@dataclass(frozen=True)
+class SodeState:
+    """Top-level saved state for sode"""
+
+    soundcloud_auth: TokenResponse
+
+    @staticmethod
+    def parse(data: Mapping[str, Any]) -> "SodeState":
+        """Parse from raw data like you get when parsing JSON"""
+
+        return SodeState(**data)
+
+    @staticmethod
+    def read_json(readable: TextIO) -> "SodeState":
+        """Read from a given TextIO and parse as JSON"""
+
+        return SodeState.parse(json.load(readable))
+
+    def to_json(
+        self,
+        indent: int | str | None = None,
+        separators: tuple[str, str] | None = None,
+        sort_keys: bool = False,
+    ) -> str:
+        """Serialize to a JSON str"""
+
+        return json.dumps(
+            asdict(self),
+            indent=indent,
+            separators=separators,
+            sort_keys=sort_keys,
+        )
+
+
 known_response = TokenResponse(
     access_token="abcdef",
     expires_at=1743781923.9585016,
@@ -80,6 +114,7 @@ fetch_response = TokenResponse.parse(
     }
 )
 
+
 print(f"fetch_response={fetch_response.to_json(indent=2, sort_keys=True)}")
 with open("auth-token.json", mode="wt") as file:
     fetch_response.write_json(file, indent=2, sort_keys=True)
@@ -89,5 +124,10 @@ with open("auth-token.json", mode="rt") as file:
     print(f"file_response={file_response.to_json(indent=2, sort_keys=True)}")
 
 with open("sode-state.json", mode="rt") as file:
-    config_raw = json.load(file)
-    print(f"config_raw={json.dumps(config_raw, indent=2, sort_keys=True)}")
+    state_raw = json.load(file)
+    print(f"state_raw={json.dumps(state_raw, indent=2, sort_keys=True)}")
+
+with open("sode-state.json", mode="rt") as file:
+    state = SodeState.read_json(file)
+    print(f"state={state.to_json(indent=2, sort_keys=True)}")
+    print(f"state={state!r}")
