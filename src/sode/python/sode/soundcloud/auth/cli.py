@@ -1,6 +1,7 @@
 import logging
 import os
-from argparse import _SubParsersAction
+import textwrap
+from argparse import RawTextHelpFormatter, _SubParsersAction
 
 from sode.shared.cli import ProgramNamespace, RunState, argfactory, cmdfactory
 from sode.soundcloud import SC_COMMAND
@@ -18,8 +19,24 @@ def add_auth(
         subcommands,
         "auth",
         command=_run_auth,
-        description="Authorize with the SoundCloud API",
-        help="authorize with SoundCloud API [start here]",
+        description=textwrap.dedent(
+            """
+        (Re-)authorize with the SoundCloud API.  Save tokens for later use with other commands.
+
+        environment variables:
+          Safely avoid passing secrets on the command line:
+            SOUNDCLOUD_CLIENT_ID      override --client-id with a secret
+            SOUNDCLOUD_CLIENT_SECRET  override --client-secret with a secret
+
+          Override defaults or CLI arguments:
+            SOUNDCLOUD_TOKEN_URL      override --token-endpoint
+            SOUNDCLOUD_USER_ID        override --user-id
+
+        Find your API credentials at: https://soundcloud.com/you/apps
+        """,
+        ),
+        formatter_class=RawTextHelpFormatter,
+        help="(re-)authorize with SoundCloud API [start here]",
     )
 
     argfactory.completable_argument(
