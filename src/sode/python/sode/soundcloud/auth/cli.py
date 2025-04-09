@@ -100,6 +100,7 @@ def _sode_default_state_dir() -> Path:
 class AuthNamespace(ProgramNamespace):
     """Argument namespace for the auth command"""
 
+    # TODO KDK: Can these be typed?
     client_id: str
     client_secret: str
     state_dir: str
@@ -114,7 +115,7 @@ class AuthNamespace(ProgramNamespace):
         return AuthNamespace(**useful_args)
 
 
-# TODO KDK: Work here to save the tokens
+# TODO KDK: Work here first to check for persisted, unexpired tokens or fetch and save them
 def _run_auth(all_args: ProgramNamespace, state: RunState) -> int:
     cmd_args = AuthNamespace.upgrayedd(all_args)
     logger.debug({"soundcloud-auth": asdict(cmd_args)})
