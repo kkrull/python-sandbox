@@ -2,7 +2,7 @@ import logging
 import os
 import textwrap
 from argparse import RawTextHelpFormatter, _SubParsersAction
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from pathlib import Path
 
 from sode.shared.cli import ProgramNamespace, RunState, argfactory, cmdfactory
@@ -117,16 +117,6 @@ class AuthNamespace(ProgramNamespace):
 # TODO KDK: Work here to save the tokens
 def _run_auth(all_args: ProgramNamespace, state: RunState) -> int:
     cmd_args = AuthNamespace.upgrayedd(all_args)
-    logger.debug(
-        {
-            "soundcloud-auth": {
-                "command": cmd_args.command,
-                "client_id": cmd_args.client_id,
-                "client_secret": cmd_args.client_secret,
-                "state_dir": cmd_args.state_dir,
-                "token_endpoint": cmd_args.token_endpoint,
-            }
-        }
-    )
+    logger.debug({"soundcloud-auth": asdict(cmd_args)})
 
     return 0
