@@ -23,6 +23,8 @@ class TokenResponse:
 
     @staticmethod
     def read_json(fp: TextIO) -> "TokenResponse":
+        """Read from a given TextIO and parse as JSON"""
+
         return typing.cast(
             TokenResponse,
             json.load(fp, object_hook=TokenResponse.from_oauth2_fetch_token),
