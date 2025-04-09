@@ -2,6 +2,7 @@ import logging
 import os
 import textwrap
 from argparse import RawTextHelpFormatter, _SubParsersAction
+from pathlib import Path
 
 from sode.shared.cli import ProgramNamespace, RunState, argfactory, cmdfactory
 from sode.soundcloud import SC_COMMAND
@@ -55,6 +56,21 @@ def add_auth(
             "--client-secret",
             **argfactory.carrier_of_secrets(),
             **argfactory.environ_or_required("SOUNDCLOUD_CLIENT_SECRET", environ),
+            nargs=1,
+        ),
+    )
+
+    argfactory.completable_argument(
+        argfactory.completion_choices(),
+        auth_parser.add_argument(
+            "--state-dir",
+            **argfactory.environ_or_default(
+                "SODE_STATE",
+                str(Path.home().joinpath(".local", "state", "sode").absolute()),
+                environ,
+            ),
+            help="Directory where sode stores its state data (default: %(default)s)",
+            metavar="DIR",
             nargs=1,
         ),
     )
