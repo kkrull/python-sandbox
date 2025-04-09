@@ -3,6 +3,8 @@ import os
 import textwrap
 from argparse import RawTextHelpFormatter, _SubParsersAction
 
+from requests import Response
+
 from sode.shared.cli import ProgramNamespace, RunState, argfactory, cmdfactory
 from sode.shared.fp import Either, Empty, Left, Option, Right, Value
 from sode.shared.oauth import AccessToken
@@ -119,23 +121,26 @@ def _run_thing(args: ProgramNamespace, state: RunState) -> int:
         }
     )
 
-    match _authorize(args):
+    match _authorize(args).map(lambda token: playlist.any(token, args.user_id)):
         case Left(error):
             print(error, file=state.stderr)
             return 1
-        case Right(access_token):
-            response = playlist.any(access_token, args.user_id)
-            logger.debug(
-                {
-                    "_run_thing": {
-                        "request_headers": response.request.headers,
-                        "status_code": response.status_code,
-                    }
-                },
-            )
-
-            print(response.text, file=state.stdout)
+        case Right(response):
+            _run_thing_r(response, state)
             return 0
+
+
+def _run_thing_r(response: Response, state: RunState) -> None:
+    logger.debug(
+        {
+            "_run_thing": {
+                "request_headers": response.request.headers,
+                "status_code": response.status_code,
+            }
+        },
+    )
+
+    print(response.text, file=state.stdout)
 
 
 def _authorize(args: ProgramNamespace) -> Either[str, AccessToken]:
