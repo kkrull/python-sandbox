@@ -25,7 +25,7 @@ def main_fn(state: MainState) -> int:
     argv_parser = parser.for_argv(state)
     argcomplete.autocomplete(argv_parser, append_space=False)
     try:
-        args = argv_parser.parse_args(state.arguments, namespace=ProgramNamespace())
+        args = argv_parser.parse_args(state.arguments, namespace=ProgramNamespace.empty())
     except ArgumentError as error:
         print(str(error), file=state.stderr)
         return 1

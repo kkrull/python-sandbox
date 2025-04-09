@@ -2,6 +2,7 @@ import logging
 import os
 import textwrap
 from argparse import RawTextHelpFormatter, _SubParsersAction
+from dataclasses import dataclass
 from pathlib import Path
 
 from sode.shared.cli import ProgramNamespace, RunState, argfactory, cmdfactory
@@ -95,13 +96,29 @@ def _sode_default_state_dir() -> Path:
     return Path.home().joinpath(".local", "state", "sode")
 
 
+@dataclass(
+    # frozen=True,
+)
+class AuthNamespace(ProgramNamespace):
+    client_id: str
+    client_secret: str
+    state_dir: str
+    token_endpoint: str
+
+    @staticmethod
+    def coerce(args: ProgramNamespace) -> "AuthNamespace":
+        all_args = dict(args._get_kwargs())
+        useful_args = {arg: value for arg, value in all_args.items() if arg not in [SC_COMMAND]}
+        return AuthNamespace(**useful_args)
+
+
 # TODO KDK: Work here to save the tokens
 def _run_auth(args: ProgramNamespace, state: RunState) -> int:
+    AuthNamespace.coerce(args)
     logger.debug(
         {
             "soundcloud-auth": {
                 "command": args.command,
-                SC_COMMAND: getattr(args, SC_COMMAND),
                 "client_id": args.client_id,
                 "client_secret": args.client_secret,
                 "state_dir": args.state_dir,

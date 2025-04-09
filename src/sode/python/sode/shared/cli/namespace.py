@@ -1,5 +1,6 @@
 import logging
 from argparse import ArgumentParser, Namespace, _SubParsersAction
+from dataclasses import dataclass
 from typing import Callable, Literal
 
 import sode
@@ -7,6 +8,11 @@ import sode
 from .state import RunState
 
 type CliCommand = Callable[["ProgramNamespace", RunState], int]
+
+
+def _nullCliCommand() -> CliCommand:
+    return lambda _ns, _state: 0
+
 
 type LogLevel = Literal[
     "CRITICAL",
@@ -20,12 +26,21 @@ type LogLevel = Literal[
 ]
 
 
+@dataclass(frozen=False)
 class ProgramNamespace(Namespace):
     """Groups together parsed arguments and the indicated CLI command to run with them."""
 
     command: str
     log_level: LogLevel
     run_selected: CliCommand
+
+    @staticmethod
+    def empty() -> "ProgramNamespace":
+        return ProgramNamespace(
+            command="",
+            log_level="WARNING",
+            run_selected=_nullCliCommand(),
+        )
 
     def configure_logging(self) -> None:
         """Run basicConfig on logging with the selected log level"""
