@@ -96,33 +96,35 @@ def _sode_default_state_dir() -> Path:
     return Path.home().joinpath(".local", "state", "sode")
 
 
-@dataclass(
-    # frozen=True,
-)
+@dataclass
 class AuthNamespace(ProgramNamespace):
+    """Argument namespace for the auth command"""
+
     client_id: str
     client_secret: str
     state_dir: str
     token_endpoint: str
 
     @staticmethod
-    def coerce(args: ProgramNamespace) -> "AuthNamespace":
+    def upgrayedd(args: ProgramNamespace) -> "AuthNamespace":
+        """Upgrade argument namespace for a double-dose of parsing power"""
+
         all_args = dict(args._get_kwargs())
         useful_args = {arg: value for arg, value in all_args.items() if arg not in [SC_COMMAND]}
         return AuthNamespace(**useful_args)
 
 
 # TODO KDK: Work here to save the tokens
-def _run_auth(args: ProgramNamespace, state: RunState) -> int:
-    AuthNamespace.coerce(args)
+def _run_auth(all_args: ProgramNamespace, state: RunState) -> int:
+    cmd_args = AuthNamespace.upgrayedd(all_args)
     logger.debug(
         {
             "soundcloud-auth": {
-                "command": args.command,
-                "client_id": args.client_id,
-                "client_secret": args.client_secret,
-                "state_dir": args.state_dir,
-                "token_endpoint": args.token_endpoint,
+                "command": cmd_args.command,
+                "client_id": cmd_args.client_id,
+                "client_secret": cmd_args.client_secret,
+                "state_dir": cmd_args.state_dir,
+                "token_endpoint": cmd_args.token_endpoint,
             }
         }
     )
