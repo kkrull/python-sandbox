@@ -66,7 +66,7 @@ def add_auth(
             "--state-dir",
             **argfactory.environ_or_default(
                 "SODE_STATE",
-                str(Path.home().joinpath(".local", "state", "sode").absolute()),
+                str(_sode_default_state_dir().absolute()),
                 environ,
             ),
             help="Directory where sode stores its state data (default: %(default)s)",
@@ -91,6 +91,10 @@ def add_auth(
     )
 
 
+def _sode_default_state_dir() -> Path:
+    return Path.home().joinpath(".local", "state", "sode")
+
+
 # TODO KDK: Work here to save the tokens
 def _run_auth(args: ProgramNamespace, state: RunState) -> int:
     logger.debug(
@@ -98,9 +102,10 @@ def _run_auth(args: ProgramNamespace, state: RunState) -> int:
             "soundcloud-auth": {
                 "command": args.command,
                 SC_COMMAND: getattr(args, SC_COMMAND),
-                "check_token_expiration": args.check_token_expiration,
                 "client_id": args.client_id,
                 "client_secret": args.client_secret,
+                "state_dir": args.state_dir,
+                "token_endpoint": args.token_endpoint,
             }
         }
     )
