@@ -16,19 +16,16 @@ class TokenResponse:
     token_type: str  # Bearer
 
     @staticmethod
-    def from_oauth2_fetch_token(raw_response: Mapping[str, Any]) -> "TokenResponse":
+    def parse(data: Mapping[str, Any]) -> "TokenResponse":
         """Parse from a token response dict that you get from requests_oauthlib"""
 
-        return TokenResponse(**raw_response)
+        return TokenResponse(**data)
 
     @staticmethod
-    def read_json(fp: TextIO) -> "TokenResponse":
+    def read_json(readable: TextIO) -> "TokenResponse":
         """Read from a given TextIO and parse as JSON"""
 
-        return typing.cast(
-            TokenResponse,
-            json.load(fp, object_hook=TokenResponse.from_oauth2_fetch_token),
-        )
+        return TokenResponse.parse(json.load(readable))
 
     def to_json(
         self,
@@ -47,7 +44,7 @@ class TokenResponse:
 
     def write_json(
         self,
-        fp: TextIO,
+        writable: TextIO,
         indent: int | str | None = None,
         separators: tuple[str, str] | None = None,
         sort_keys: bool = False,
@@ -56,7 +53,7 @@ class TokenResponse:
 
         return json.dump(
             asdict(self),
-            fp,
+            writable,
             indent=indent,
             separators=separators,
             sort_keys=sort_keys,
@@ -72,7 +69,7 @@ known_response = TokenResponse(
     token_type="Bearer",
 )
 
-fetch_response = TokenResponse.from_oauth2_fetch_token(
+fetch_response = TokenResponse.parse(
     {
         "access_token": "abcdef",
         "expires_at": 1743781923.9585016,
@@ -88,6 +85,9 @@ with open("auth-token.json", mode="wt") as file:
     fetch_response.write_json(file, indent=2, sort_keys=True)
 
 with open("auth-token.json", mode="rt") as file:
-    config_response = TokenResponse.read_json(file)
+    file_response = TokenResponse.read_json(file)
+    print(f"file_response={file_response.to_json(indent=2, sort_keys=True)}")
 
-print(f"config_response={config_response.to_json(indent=2, sort_keys=True)}")
+with open("sode-state.json", mode="rt") as file:
+    config_raw = json.load(file)
+    print(f"config_raw={json.dumps(config_raw, indent=2, sort_keys=True)}")
