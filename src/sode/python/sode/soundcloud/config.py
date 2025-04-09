@@ -1,5 +1,4 @@
 import json
-import typing
 from dataclasses import asdict, dataclass
 from typing import Any, Mapping, TextIO
 
@@ -9,8 +8,8 @@ class TokenResponse:
     """How the SoundCloud OAuth2 token endpoint responds"""
 
     access_token: str
-    expires_at: float  # 1743781923.9585016
-    expires_in: int  # 3599
+    expires_at: float  # 1743781923.9585016 // datetime.fromtimestamp
+    expires_in: int  # 3599 // timedelta(seconds=)
     refresh_token: str
     scope: list[str]  # ['']
     token_type: str  # Bearer
