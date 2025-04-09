@@ -70,7 +70,9 @@ class SodeState:
     def parse(data: Mapping[str, Any]) -> "SodeState":
         """Parse from raw data like you get when parsing JSON"""
 
-        return SodeState(**data)
+        return SodeState(
+            soundcloud_auth=TokenResponse.parse(data["soundcloud_auth"]),
+        )
 
     @staticmethod
     def read_json(readable: TextIO) -> "SodeState":
