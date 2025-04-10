@@ -58,4 +58,4 @@ def _run_auth_cmd(args: AuthNamespace, state: RunState) -> Either[str, int]:
         case (Right(token_endpoint), Right(client_id), Right(client_secret)):
             return fetch_tokens(token_endpoint, client_id, client_secret).map(lambda _tokens: 0)
         case lefts:
-            return Left(next((l.value for l in lefts if l.is_left)))
+            return Left(next((l.left_value for l in lefts if l.is_left)))

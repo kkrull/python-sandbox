@@ -32,11 +32,19 @@ class EitherBase[A, B]:
     @property
     @abstractmethod
     def is_left(self) -> bool:
+        """True if this is Left; False if Right"""
         pass
 
     @property
     @abstractmethod
     def is_right(self) -> bool:
+        """True if this is Right; False if Left"""
+        pass
+
+    @property
+    @abstractmethod
+    def left_value(self) -> A:
+        """Return the wrapped Left value or throw if Right"""
         pass
 
     @abstractmethod
@@ -78,6 +86,11 @@ class Left[A, B](EitherBase[A, B]):
     def is_right(self) -> bool:
         return False
 
+    @property
+    @override
+    def left_value(self) -> A:
+        return self.value
+
     @override
     def map(self, _fn: Callable[[B], C]) -> Either[A, C]:
         return Left[A, C](self.value)
@@ -114,6 +127,11 @@ class Right[A, B](EitherBase[A, B]):
     @override
     def is_right(self) -> bool:
         return True
+
+    @property
+    @override
+    def left_value(self) -> A:
+        raise ValueError("Right has no left_value")
 
     @override
     def map(self, fn: Callable[[B], C]) -> Either[A, C]:
