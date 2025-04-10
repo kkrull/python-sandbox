@@ -37,6 +37,9 @@ def _run_auth(all_args: ProgramNamespace, state: RunState) -> int:
             return 0
 
 
+## auth module
+
+
 @dataclass(frozen=True)
 class TokenResponse:
     """How the SoundCloud OAuth2 token endpoint responds"""
@@ -49,16 +52,7 @@ class TokenResponse:
     token_type: str  # Bearer
 
 
-# TODO KDK: Work here first to check for persisted, unexpired tokens or fetch and save them
-def _run_auth_cmd(args: AuthNamespace, state: RunState) -> Either[str, TokenResponse]:
-    match (args.token_endpoint_v, args.client_id_v, args.client_secret_v):
-        case (Right(token_endpoint), Right(client_id), Right(client_secret)):
-            return fetch_tokens(token_endpoint, client_id, client_secret)
-        case lefts:
-            return Left(next((l.left_value for l in lefts if l.is_left)))
-
-
-def fetch_tokens(
+def _auth_fetch_tokens(
     token_endpoint: TokenUrl, client_id: ClientId, client_secret: ClientSecret
 ) -> Either[str, TokenResponse]:
     """Request tokens from the specified OAuth2 endpoint using the client_credentials workflow.
@@ -85,3 +79,19 @@ def fetch_tokens(
         )
     except Exception as err:
         return Left(f"{token_endpoint}: {err}")
+
+
+## This module
+
+
+# TODO KDK: Work here first to check for persisted, unexpired tokens or fetch and save them
+def _run_auth_cmd(args: AuthNamespace, state: RunState) -> Either[str, TokenResponse]:
+    return _fetch_tokens_ns(args)
+
+
+def _fetch_tokens_ns(args: AuthNamespace) -> Either[str, TokenResponse]:
+    match (args.token_endpoint_v, args.client_id_v, args.client_secret_v):
+        case (Right(token_endpoint), Right(client_id), Right(client_secret)):
+            return _auth_fetch_tokens(token_endpoint, client_id, client_secret)
+        case lefts:
+            return Left(next((l.left_value for l in lefts if l.is_left)))
