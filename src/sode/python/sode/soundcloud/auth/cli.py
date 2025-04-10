@@ -1,7 +1,7 @@
 import logging
 import os
 from argparse import _SubParsersAction
-from typing import Any, NewType
+from typing import Any
 
 from sode.shared.cli import ProgramNamespace, RunState
 from sode.shared.fp import Either, Left, Right
