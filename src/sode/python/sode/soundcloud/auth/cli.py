@@ -38,7 +38,7 @@ def fetch_tokens(
         }
     )
 
-    return Left("bang!")
+    return Right("fetched tokens...")
 
 
 def _run_auth(all_args: ProgramNamespace, state: RunState) -> int:
@@ -54,16 +54,13 @@ def _run_auth(all_args: ProgramNamespace, state: RunState) -> int:
 
 # TODO KDK: Work here first to check for persisted, unexpired tokens or fetch and save them
 def _run_auth_cmd(args: AuthNamespace, state: RunState) -> Either[str, int]:
-    match args.token_endpoint_v:
-        case Left(error):
-            return Left(error)
-        case Right(token_endpoint):
-            match fetch_tokens(
-                token_endpoint,
-                ClientId(args.client_id),
-                ClientSecret(args.client_secret),
-            ):
-                case Left(error):
-                    return Left(error)
+    required = (args.token_endpoint_v, args.client_id_v, args.client_secret_v)
+    match required:
+        case (Right(token_endpoint), Right(client_id), Right(client_secret)):
+            match fetch_tokens(token_endpoint, client_id, client_secret):
+                case Left(err):
+                    return Left(err)
                 case Right(_):
                     return Right(0)
+        case _:
+            return Left(next((l.value for l in required if l.is_left)))

@@ -34,6 +34,11 @@ class EitherBase[A, B]:
     def is_left(self) -> bool:
         pass
 
+    @property
+    @abstractmethod
+    def is_right(self) -> bool:
+        pass
+
     @abstractmethod
     def map(self, fn: Callable[[B], C]) -> Either[A, C]:
         """Transform Right's inner value with the given function, or return Left unchanged."""
@@ -68,6 +73,11 @@ class Left[A, B](EitherBase[A, B]):
     def is_left(self) -> bool:
         return True
 
+    @property
+    @override
+    def is_right(self) -> bool:
+        return False
+
     @override
     def map(self, _fn: Callable[[B], C]) -> Either[A, C]:
         return Left[A, C](self.value)
@@ -99,6 +109,11 @@ class Right[A, B](EitherBase[A, B]):
     @override
     def is_left(self) -> bool:
         return False
+
+    @property
+    @override
+    def is_right(self) -> bool:
+        return True
 
     @override
     def map(self, fn: Callable[[B], C]) -> Either[A, C]:
