@@ -3,10 +3,15 @@ import textwrap
 from argparse import RawTextHelpFormatter, _SubParsersAction
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Any
+from typing import Any, NewType
 
 from sode.shared.cli import CliCommand, ProgramNamespace, argfactory, cmdfactory
+from sode.shared.fp import Empty, Option, Value
 from sode.soundcloud import SC_COMMAND
+
+ClientId = NewType("ClientId", str)
+ClientSecret = NewType("ClientSecret", str)
+TokenUrl = NewType("TokenUrl", str)
 
 
 @dataclass
@@ -115,6 +120,13 @@ class AuthNamespace(ProgramNamespace):
         all_args = dict(args._get_kwargs())
         useful_args = {arg: value for arg, value in all_args.items() if arg not in [SC_COMMAND]}
         return AuthNamespace(**useful_args)
+
+    @property
+    def token_endpoint_v(self) -> Option[TokenUrl]:
+        if self.token_endpoint and len(self.token_endpoint.strip()) > 0:
+            return Value(self.token_endpoint.strip()).map(lambda x: TokenUrl(x))
+        else:
+            return Empty()
 
     def to_dict(self) -> dict[str, Any]:
         """each argument's name and value, as a dictionary"""

@@ -6,7 +6,7 @@ from typing import Any, NewType
 from sode.shared.cli import ProgramNamespace, RunState
 from sode.shared.fp import Either, Left, Right
 
-from .namespace import AuthNamespace
+from .namespace import AuthNamespace, ClientId, ClientSecret, TokenUrl
 
 logger = logging.getLogger(__name__)
 
@@ -18,11 +18,6 @@ def add_auth(
     """Add the auth sub-command"""
 
     AuthNamespace.add_command_subparser(subcommands, "auth", _run_auth, environ)
-
-
-ClientId = NewType("ClientId", str)
-ClientSecret = NewType("ClientSecret", str)
-TokenUrl = NewType("TokenUrl", str)
 
 
 def fetch_tokens(
