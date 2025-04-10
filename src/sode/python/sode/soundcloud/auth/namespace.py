@@ -5,8 +5,7 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
 
-from sode.shared.cli import ProgramNamespace, argfactory, cmdfactory
-from sode.shared.cli.namespace import CliCommand
+from sode.shared.cli import CliCommand, ProgramNamespace, argfactory, cmdfactory
 from sode.soundcloud import SC_COMMAND
 
 
