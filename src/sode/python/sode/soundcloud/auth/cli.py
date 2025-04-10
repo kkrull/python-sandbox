@@ -45,19 +45,25 @@ def fetch_tokens(
 def _run_auth(all_args: ProgramNamespace, state: RunState) -> int:
     cmd_args = AuthNamespace.upgrayedd(all_args)
     logger.debug({"soundcloud-auth": cmd_args.to_dict()})
-
-    match cmd_args.token_endpoint_v:
+    match _run_auth_cmd(cmd_args, state):
         case Left(error):
             print(error, file=state.stderr)
             return 1
+        case Right(status):
+            return status
+
+
+def _run_auth_cmd(args: AuthNamespace, state: RunState) -> Either[str, int]:
+    match args.token_endpoint_v:
+        case Left(error):
+            return Left(error)
         case Right(token_endpoint):
             match fetch_tokens(
                 token_endpoint,
-                ClientId(cmd_args.client_id),
-                ClientSecret(cmd_args.client_secret),
+                ClientId(args.client_id),
+                ClientSecret(args.client_secret),
             ):
                 case Left(error):
-                    print(error, file=state.stderr)
-                    return 1
+                    return Left(error)
                 case Right(_):
-                    return 0
+                    return Right(0)
