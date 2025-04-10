@@ -1,7 +1,7 @@
 import logging
 import os
 from argparse import _SubParsersAction
-from typing import Any
+from typing import Any, NewType
 
 from sode.shared.cli import ProgramNamespace, RunState
 from sode.shared.fp import Either, Left, Right
@@ -20,7 +20,16 @@ def add_auth(
     AuthNamespace.add_command_subparser(subcommands, "auth", _run_auth, environ)
 
 
-def fetch_tokens() -> Either[str, Any]:
+ClientId = NewType("ClientId", str)
+ClientSecret = NewType("ClientSecret", str)
+TokenUrl = NewType("TokenUrl", str)
+
+
+def fetch_tokens(
+    token_endpoint: TokenUrl,
+    client_id: ClientId,
+    client_secret: ClientSecret,
+) -> Either[str, Any]:
     return Left("bang!")
 
 
@@ -29,7 +38,11 @@ def _run_auth(all_args: ProgramNamespace, state: RunState) -> int:
     cmd_args = AuthNamespace.upgrayedd(all_args)
     logger.debug({"soundcloud-auth": cmd_args.to_dict()})
 
-    match fetch_tokens():
+    match fetch_tokens(
+        TokenUrl(cmd_args.token_endpoint),
+        ClientId(cmd_args.client_id),
+        ClientSecret(cmd_args.client_secret),
+    ):
         case Left(error):
             print(error, file=state.stderr)
             return 1
