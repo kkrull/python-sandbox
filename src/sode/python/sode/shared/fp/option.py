@@ -51,6 +51,7 @@ class Empty[A](OptionBase[A]):
         return fallbackValue
 
     @property
+    @override
     def is_present(self) -> bool:
         return False
 
@@ -80,6 +81,7 @@ class Value[A](OptionBase[A]):
         return self.value
 
     @property
+    @override
     def is_present(self) -> bool:
         return True
 

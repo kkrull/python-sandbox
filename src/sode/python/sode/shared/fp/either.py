@@ -29,6 +29,11 @@ class EitherBase[A, B]:
         """Get Right's inner value, or-in the case of Left-the given fallback value."""
         pass
 
+    @property
+    @abstractmethod
+    def is_left(self) -> bool:
+        pass
+
     @abstractmethod
     def map(self, fn: Callable[[B], C]) -> Either[A, C]:
         """Transform Right's inner value with the given function, or return Left unchanged."""
@@ -58,6 +63,11 @@ class Left[A, B](EitherBase[A, B]):
     def get_or_else(self, fallbackValue: B) -> B:
         return fallbackValue
 
+    @property
+    @override
+    def is_left(self) -> bool:
+        return True
+
     @override
     def map(self, _fn: Callable[[B], C]) -> Either[A, C]:
         return Left[A, C](self.value)
@@ -84,6 +94,11 @@ class Right[A, B](EitherBase[A, B]):
     @override
     def get_or_else(self, _fallbackValue: B) -> B:
         return self.value
+
+    @property
+    @override
+    def is_left(self) -> bool:
+        return False
 
     @override
     def map(self, fn: Callable[[B], C]) -> Either[A, C]:
