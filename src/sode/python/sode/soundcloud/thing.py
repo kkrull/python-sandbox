@@ -11,7 +11,7 @@ from sode.shared.oauth import AccessToken
 from sode.soundcloud import SC_COMMAND
 
 from . import playlist
-from .auth import fetch_tokens
+from .auth import fetch_tokens1
 
 logger = logging.getLogger(__name__)
 
@@ -148,7 +148,7 @@ def _authorize(args: ProgramNamespace) -> Either[str, AccessToken]:
         case Value(access_token):
             return Right(access_token)
         case Empty():
-            return fetch_tokens(
+            return fetch_tokens1(
                 args.token_endpoint,
                 client_id=args.client_id,
                 client_secret=args.client_secret,

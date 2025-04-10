@@ -11,7 +11,7 @@ from sode.shared.oauth import AccessToken
 logger = logging.getLogger(__name__)
 
 
-class TokenResponse:
+class TokenResponse1:
     """How the SoundCloud OAuth2 token endpoint responds"""
 
     _mapping: dict[str, Any]
@@ -26,17 +26,17 @@ class TokenResponse:
         self._mapping = dict(raw_response)
 
     @staticmethod
-    def of(raw_response: Mapping[str, Any]) -> "TokenResponse":
-        return TokenResponse(raw_response)
+    def of(raw_response: Mapping[str, Any]) -> "TokenResponse1":
+        return TokenResponse1(raw_response)
 
     @property
     def access_token(self) -> Either[str, AccessToken]:
         return AccessToken.expected(self._mapping["access_token"], self._mapping["token_type"])
 
 
-def fetch_tokens(
+def fetch_tokens1(
     token_endpoint: str, client_id: str, client_secret: str
-) -> Either[str, TokenResponse]:
+) -> Either[str, TokenResponse1]:
     """Authorize with the client_credentials workflow"""
 
     logger.debug(
@@ -55,7 +55,7 @@ def fetch_tokens(
 
     try:
         return Right(oauth.fetch_token(auth=auth, token_url=token_endpoint)).map(
-            lambda x: TokenResponse.of(x)
+            lambda x: TokenResponse1.of(x)
         )
     except Exception as err:
         return Left(f"{token_endpoint}: {err}")
