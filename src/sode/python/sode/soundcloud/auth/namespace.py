@@ -1,8 +1,9 @@
 import os
 import textwrap
 from argparse import RawTextHelpFormatter, _SubParsersAction
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from pathlib import Path
+from typing import Any
 
 from sode.shared.cli import ProgramNamespace, argfactory, cmdfactory
 from sode.shared.cli.namespace import CliCommand
@@ -115,6 +116,11 @@ class AuthNamespace(ProgramNamespace):
         all_args = dict(args._get_kwargs())
         useful_args = {arg: value for arg, value in all_args.items() if arg not in [SC_COMMAND]}
         return AuthNamespace(**useful_args)
+
+    def to_dict(self) -> dict[str, Any]:
+        """each argument's name and value, as a dictionary"""
+
+        return asdict(self)
 
 
 ## sode configuration/state module

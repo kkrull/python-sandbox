@@ -1,7 +1,6 @@
 import logging
 import os
 from argparse import _SubParsersAction
-from dataclasses import asdict
 
 from sode.shared.cli import ProgramNamespace, RunState
 
@@ -22,6 +21,6 @@ def add_auth(
 # TODO KDK: Work here first to check for persisted, unexpired tokens or fetch and save them
 def _run_auth(all_args: ProgramNamespace, state: RunState) -> int:
     cmd_args = AuthNamespace.upgrayedd(all_args)
-    logger.debug({"soundcloud-auth": asdict(cmd_args)})
+    logger.debug({"soundcloud-auth": cmd_args.to_dict()})
 
     return 0
