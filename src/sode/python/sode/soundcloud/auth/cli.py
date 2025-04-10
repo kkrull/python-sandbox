@@ -49,6 +49,7 @@ def _run_auth(all_args: ProgramNamespace, state: RunState) -> int:
             print(error, file=state.stderr)
             return 1
         case Right(status):
+            print(f"Done. status={status}", file=state.stderr)
             return status
 
 
