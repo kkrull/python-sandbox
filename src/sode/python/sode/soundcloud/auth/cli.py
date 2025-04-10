@@ -9,7 +9,7 @@ from requests.auth import HTTPBasicAuth
 from requests_oauthlib import OAuth2Session
 
 from sode.shared.cli import ProgramNamespace, RunState
-from sode.shared.fp import Either, Left, Right
+from sode.shared.fp import Either, Left, Right, either
 
 from .namespace import AuthNamespace, ClientId, ClientSecret, TokenUrl
 
@@ -90,8 +90,10 @@ def _run_auth_cmd(args: AuthNamespace, _state: RunState) -> Either[str, TokenRes
 
 
 def _fetch_tokens_ns(args: AuthNamespace) -> Either[str, TokenResponse]:
-    match (args.token_endpoint_v, args.client_id_v, args.client_secret_v):
-        case (Right(token_endpoint), Right(client_id), Right(client_secret)):
+    match either.all_or_first_left(args.token_endpoint_v, args.client_id_v, args.client_secret_v):
+        case Right((token_endpoint, client_id, client_secret)):
             return _auth_fetch_tokens(token_endpoint, client_id, client_secret)
-        case lefts:
-            return Left(next((l.left_value for l in lefts if l.is_left)))
+        case Left(first_error):
+            return Left(first_error)
+        case Right(_):
+            return Left("unrecognized right")

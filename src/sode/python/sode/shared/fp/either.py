@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from typing import Callable, TypeVar, Union, override
+from typing import Callable, Tuple, TypeVar, Union, override
 
 A = TypeVar("A")
 B = TypeVar("B")
@@ -7,6 +7,22 @@ C = TypeVar("C")
 
 
 type Either[A, B] = Union[Left[A, B], Right[A, B]]
+
+X = TypeVar("X")
+Y = TypeVar("Y")
+Z = TypeVar("Z")
+
+
+def all_or_first_left(
+    x: Either[A, X], y: Either[A, Y], z: Either[A, Z]
+) -> Either[A, Tuple[X, Y, Z]]:
+    left_values = (e.left_value for e in (x, y, z) if e.is_left)
+    match next(left_values, None):
+        case None:
+            right_values = (x.right_value, y.right_value, z.right_value)
+            return Right(right_values)
+        case first_left_value:
+            return Left(first_left_value)
 
 
 class EitherBase[A, B]:
