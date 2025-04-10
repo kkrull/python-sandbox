@@ -7,7 +7,7 @@ from requests import Response
 
 from sode.shared.cli import ProgramNamespace, RunState, argfactory, cmdfactory
 from sode.shared.fp import Either, Empty, Left, Option, Right, Value
-from sode.shared.oauth import AccessToken
+from sode.shared.oauth import AccessToken1
 from sode.soundcloud import SC_COMMAND
 
 from . import playlist
@@ -143,7 +143,7 @@ def _run_thing_r(response: Response, state: RunState) -> None:
     print(response.text, file=state.stdout)
 
 
-def _authorize(args: ProgramNamespace) -> Either[str, AccessToken]:
+def _authorize(args: ProgramNamespace) -> Either[str, AccessToken1]:
     match _existing_access_token(args):
         case Value(access_token):
             return Right(access_token)
@@ -155,6 +155,6 @@ def _authorize(args: ProgramNamespace) -> Either[str, AccessToken]:
             ).flat_map(lambda response: response.access_token)
 
 
-def _existing_access_token(args: ProgramNamespace) -> Option[AccessToken]:
+def _existing_access_token(args: ProgramNamespace) -> Option[AccessToken1]:
     logger.debug({"existing_access_token": repr(args.access_token)})
-    return AccessToken.maybe(args.access_token, "Bearer")
+    return AccessToken1.maybe(args.access_token, "Bearer")

@@ -6,7 +6,7 @@ from requests.auth import HTTPBasicAuth
 from requests_oauthlib import OAuth2Session
 
 from sode.shared.fp import Either, Left, Right
-from sode.shared.oauth import AccessToken
+from sode.shared.oauth import AccessToken1
 
 logger = logging.getLogger(__name__)
 
@@ -30,8 +30,8 @@ class TokenResponse1:
         return TokenResponse1(raw_response)
 
     @property
-    def access_token(self) -> Either[str, AccessToken]:
-        return AccessToken.expected(self._mapping["access_token"], self._mapping["token_type"])
+    def access_token(self) -> Either[str, AccessToken1]:
+        return AccessToken1.expected(self._mapping["access_token"], self._mapping["token_type"])
 
 
 def fetch_tokens1(

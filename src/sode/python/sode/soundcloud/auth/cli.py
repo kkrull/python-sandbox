@@ -1,6 +1,7 @@
 import logging
 import os
 from argparse import _SubParsersAction
+from dataclasses import dataclass
 from typing import Any
 
 from sode.shared.cli import ProgramNamespace, RunState
@@ -39,6 +40,18 @@ def _run_auth_cmd(args: AuthNamespace, state: RunState) -> Either[str, int]:
             return fetch_tokens(token_endpoint, client_id, client_secret).map(lambda _tokens: 0)
         case lefts:
             return Left(next((l.left_value for l in lefts if l.is_left)))
+
+
+@dataclass(frozen=True)
+class TokenResponse:
+    """How the SoundCloud OAuth2 token endpoint responds"""
+
+    access_token: str
+    expires_at: float  # 1743781923.9585016 // datetime.fromtimestamp
+    expires_in: int  # 3599 // timedelta(seconds=)
+    refresh_token: str
+    scope: list[str]  # ['']
+    token_type: str  # Bearer
 
 
 def fetch_tokens(

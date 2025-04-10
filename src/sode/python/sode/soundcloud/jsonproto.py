@@ -82,24 +82,24 @@ class TokenResponse2:
 
 
 @dataclass(frozen=True)
-class SodeState:
+class SodeState1:
     """Top-level saved state for sode"""
 
     soundcloud_auth: TokenResponse2
 
     @staticmethod
-    def parse(data: Mapping[str, Any]) -> "SodeState":
+    def parse(data: Mapping[str, Any]) -> "SodeState1":
         """Parse from raw data like you get when parsing JSON"""
 
-        return SodeState(
+        return SodeState1(
             soundcloud_auth=TokenResponse2.parse(data["soundcloud_auth"]),
         )
 
     @staticmethod
-    def read_json(readable: TextIO) -> "SodeState":
+    def read_json(readable: TextIO) -> "SodeState1":
         """Read from a given TextIO and parse as JSON"""
 
-        return SodeState.parse(json.load(readable))
+        return SodeState1.parse(json.load(readable))
 
     def to_json(
         self,
@@ -151,6 +151,6 @@ with open("sode-state.json", mode="rt") as file:
     print(f"state_raw={json.dumps(state_raw, indent=2, sort_keys=True)}")
 
 with open("sode-state.json", mode="rt") as file:
-    state = SodeState.read_json(file)
+    state = SodeState1.read_json(file)
     print(f"state={state.to_json(indent=2, sort_keys=True)}")
     print(f"state={state!r}")
