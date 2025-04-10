@@ -20,27 +20,6 @@ def add_auth(
     AuthNamespace.add_command_subparser(subcommands, "auth", _run_auth, environ)
 
 
-def fetch_tokens(
-    token_endpoint: TokenUrl,
-    client_id: ClientId,
-    client_secret: ClientSecret,
-) -> Either[str, Any]:
-    """Request tokens from the specified OAuth2 endpoint using the client_credentials workflow.
-    Return either tokens from a successful 2xx response or an error indicating a failed request."""
-
-    logger.debug(
-        {
-            "fetch_tokens": {
-                "client_id": client_id,
-                "client_secret": client_secret,
-                "token_endpoint": token_endpoint,
-            }
-        }
-    )
-
-    return Right("fetched tokens...")
-
-
 def _run_auth(all_args: ProgramNamespace, state: RunState) -> int:
     cmd_args = AuthNamespace.upgrayedd(all_args)
     logger.debug({"soundcloud-auth": cmd_args.to_dict()})
@@ -60,3 +39,24 @@ def _run_auth_cmd(args: AuthNamespace, state: RunState) -> Either[str, int]:
             return fetch_tokens(token_endpoint, client_id, client_secret).map(lambda _tokens: 0)
         case lefts:
             return Left(next((l.left_value for l in lefts if l.is_left)))
+
+
+def fetch_tokens(
+    token_endpoint: TokenUrl,
+    client_id: ClientId,
+    client_secret: ClientSecret,
+) -> Either[str, Any]:
+    """Request tokens from the specified OAuth2 endpoint using the client_credentials workflow.
+    Return either tokens from a successful 2xx response or an error indicating a failed request."""
+
+    logger.debug(
+        {
+            "fetch_tokens": {
+                "client_id": client_id,
+                "client_secret": client_secret,
+                "token_endpoint": token_endpoint,
+            }
+        }
+    )
+
+    return Right("fetched tokens...")

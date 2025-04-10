@@ -60,6 +60,12 @@ class EitherBase[A, B]:
         """Transform Right's inner value with the given function, or return Left unchanged."""
         pass
 
+    @property
+    @abstractmethod
+    def right_value(self) -> B:
+        """Return the wrapped Right value or throw if Left"""
+        pass
+
 
 class Left[A, B](EitherBase[A, B]):
     __match_args__ = ("_value",)
@@ -102,6 +108,11 @@ class Left[A, B](EitherBase[A, B]):
     def map(self, _fn: Callable[[B], C]) -> Either[A, C]:
         return Left[A, C](self._value)
 
+    @property
+    @override
+    def right_value(self) -> B:
+        raise ValueError(f"{self!r} has no right hand value")
+
 
 class Right[A, B](EitherBase[A, B]):
     __match_args__ = ("_value",)
@@ -143,3 +154,8 @@ class Right[A, B](EitherBase[A, B]):
     @override
     def map(self, fn: Callable[[B], C]) -> Either[A, C]:
         return Right(fn(self._value))
+
+    @property
+    @override
+    def right_value(self) -> B:
+        return self._value
