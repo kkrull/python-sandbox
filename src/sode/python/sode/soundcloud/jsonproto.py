@@ -5,7 +5,7 @@ from typing import Any, Mapping, TextIO, Tuple
 
 
 @dataclass(frozen=True)
-class TokenResponse:
+class TokenResponse2:
     """How the SoundCloud OAuth2 token endpoint responds"""
 
     access_token: str
@@ -16,16 +16,16 @@ class TokenResponse:
     token_type: str  # Bearer
 
     @staticmethod
-    def parse(data: Mapping[str, Any]) -> "TokenResponse":
+    def parse(data: Mapping[str, Any]) -> "TokenResponse2":
         """Parse data from JSON data like you get when fetching tokens with requests_oauthlib"""
 
-        return TokenResponse(**data)
+        return TokenResponse2(**data)
 
     @staticmethod
-    def read_json(readable: TextIO) -> "TokenResponse":
+    def read_json(readable: TextIO) -> "TokenResponse2":
         """Read from a given TextIO and parse as JSON"""
 
-        return TokenResponse.parse(json.load(readable))
+        return TokenResponse2.parse(json.load(readable))
 
     @property
     def expiration(self) -> datetime:
@@ -85,14 +85,14 @@ class TokenResponse:
 class SodeState:
     """Top-level saved state for sode"""
 
-    soundcloud_auth: TokenResponse
+    soundcloud_auth: TokenResponse2
 
     @staticmethod
     def parse(data: Mapping[str, Any]) -> "SodeState":
         """Parse from raw data like you get when parsing JSON"""
 
         return SodeState(
-            soundcloud_auth=TokenResponse.parse(data["soundcloud_auth"]),
+            soundcloud_auth=TokenResponse2.parse(data["soundcloud_auth"]),
         )
 
     @staticmethod
@@ -117,7 +117,7 @@ class SodeState:
         )
 
 
-known_response = TokenResponse(
+known_response = TokenResponse2(
     access_token="abcdef",
     expires_at=1743781923.9585016,
     expires_in=3599,
@@ -126,7 +126,7 @@ known_response = TokenResponse(
     token_type="Bearer",
 )
 
-fetch_response = TokenResponse.parse(
+fetch_response = TokenResponse2.parse(
     {
         "access_token": "abcdef",
         "expires_at": 1743781923.9585016,
@@ -143,7 +143,7 @@ with open("auth-token.json", mode="wt") as file:
     fetch_response.write_json(file, indent=2, sort_keys=True)
 
 with open("auth-token.json", mode="rt") as file:
-    file_response = TokenResponse.read_json(file)
+    file_response = TokenResponse2.read_json(file)
     print(f"file_response={file_response.to_json(indent=2, sort_keys=True)}")
 
 with open("sode-state.json", mode="rt") as file:
