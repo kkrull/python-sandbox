@@ -23,7 +23,7 @@ class AuthNamespace(ProgramNamespace):
     def add_command_subparser(
         subcommands: _SubParsersAction,  # type: ignore[type-arg]
         name: str,
-        cmd: CliCommand,
+        command: CliCommand,
         environ: os._Environ[str],
     ) -> None:
         """
@@ -37,7 +37,7 @@ class AuthNamespace(ProgramNamespace):
         auth_parser = cmdfactory.add_command(
             subcommands,
             name,
-            command=cmd,
+            command=command,
             description=textwrap.dedent(
                 """
             (Re-)authorize with the SoundCloud API.  Save tokens for later use with other commands.
@@ -115,6 +115,9 @@ class AuthNamespace(ProgramNamespace):
         all_args = dict(args._get_kwargs())
         useful_args = {arg: value for arg, value in all_args.items() if arg not in [SC_COMMAND]}
         return AuthNamespace(**useful_args)
+
+
+## sode configuration/state module
 
 
 def _sode_default_state_dir() -> Path:
