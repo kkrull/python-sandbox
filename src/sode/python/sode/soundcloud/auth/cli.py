@@ -1,8 +1,9 @@
+import json
 import logging
 import os
 from argparse import _SubParsersAction
-from dataclasses import dataclass
-from typing import Any, Tuple
+from dataclasses import asdict, dataclass
+from typing import Any, TextIO, Tuple
 
 from oauthlib.oauth2 import BackendApplicationClient
 from requests.auth import HTTPBasicAuth
@@ -51,6 +52,23 @@ class TokenResponse:
     scope: list[str]  # ['']
     token_type: str  # Bearer
 
+    def write_json(
+        self,
+        writable: TextIO,
+        indent: int | str | None = None,
+        separators: Tuple[str, str] | None = None,
+        sort_keys: bool = False,
+    ) -> None:
+        """Serialize to JSON and write to the given TextIO"""
+
+        return json.dump(
+            asdict(self),
+            writable,
+            indent=indent,
+            separators=separators,
+            sort_keys=sort_keys,
+        )
+
 
 def _auth_fetch_tokens(
     token_endpoint: TokenUrl, client_id: ClientId, client_secret: ClientSecret
@@ -84,9 +102,15 @@ def _auth_fetch_tokens(
 ## This module
 
 
-# TODO KDK: Work here first to check for persisted, unexpired tokens or fetch and save them
-def _run_auth_cmd(args: AuthNamespace, _state: RunState) -> Either[str, TokenResponse]:
-    return _fetch_tokens_ns(args)
+def _run_auth_cmd(args: AuthNamespace, _state: RunState) -> Either[str, int]:
+    # TODO KDK: Work here first to check for persisted, unexpired tokens or fetch and save them
+    match _fetch_tokens_ns(args):
+        case Left(error):
+            return Left(error)
+        case Right(tokens):
+            with open("auth-token.json", mode="wt") as file:
+                tokens.write_json(file, indent=2, sort_keys=True)
+                return Right(0)
 
 
 def _fetch_tokens_ns(maybe_args: AuthNamespace) -> Either[str, TokenResponse]:
