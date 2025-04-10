@@ -1,7 +1,7 @@
 import json
 from dataclasses import asdict, dataclass
 from datetime import datetime, timedelta
-from typing import Any, Mapping, TextIO
+from typing import Any, Mapping, TextIO, Tuple
 
 
 @dataclass(frozen=True)
@@ -51,7 +51,7 @@ class TokenResponse:
     def to_json(
         self,
         indent: int | str | None = None,
-        separators: tuple[str, str] | None = None,
+        separators: Tuple[str, str] | None = None,
         sort_keys: bool = False,
     ) -> str:
         """Serialize to a JSON str"""
@@ -67,7 +67,7 @@ class TokenResponse:
         self,
         writable: TextIO,
         indent: int | str | None = None,
-        separators: tuple[str, str] | None = None,
+        separators: Tuple[str, str] | None = None,
         sort_keys: bool = False,
     ) -> None:
         """Serialize to JSON and write to the given TextIO"""
@@ -104,7 +104,7 @@ class SodeState:
     def to_json(
         self,
         indent: int | str | None = None,
-        separators: tuple[str, str] | None = None,
+        separators: Tuple[str, str] | None = None,
         sort_keys: bool = False,
     ) -> str:
         """Serialize to a JSON str"""
