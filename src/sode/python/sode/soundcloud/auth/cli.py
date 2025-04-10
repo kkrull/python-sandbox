@@ -90,7 +90,7 @@ def _run_auth_cmd(args: AuthNamespace, _state: RunState) -> Either[str, TokenRes
 
 
 def _fetch_tokens_ns(args: AuthNamespace) -> Either[str, TokenResponse]:
-    match either.all_or_first_left(args.token_endpoint_v, args.client_id_v, args.client_secret_v):
+    match either.flatten_3_or_left(args.token_endpoint_v, args.client_id_v, args.client_secret_v):
         case Right((token_endpoint, client_id, client_secret)):
             return _auth_fetch_tokens(token_endpoint, client_id, client_secret)
         case Left(first_error):

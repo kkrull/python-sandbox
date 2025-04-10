@@ -13,9 +13,13 @@ Y = TypeVar("Y")
 Z = TypeVar("Z")
 
 
-def all_or_first_left(
-    x: Either[A, X], y: Either[A, Y], z: Either[A, Z]
+def flatten_3_or_left(
+    x: Either[A, X],
+    y: Either[A, Y],
+    z: Either[A, Z],
 ) -> Either[A, Tuple[X, Y, Z]]:
+    """Flatten to oen Right of the given sequence of right-hand values, or the first Left"""
+
     left_values = (e.left_value for e in (x, y, z) if e.is_left)
     match next(left_values, None):
         case None:
