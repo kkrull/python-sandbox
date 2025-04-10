@@ -41,7 +41,6 @@ def fetch_tokens(
     return Left("bang!")
 
 
-# TODO KDK: Work here first to check for persisted, unexpired tokens or fetch and save them
 def _run_auth(all_args: ProgramNamespace, state: RunState) -> int:
     cmd_args = AuthNamespace.upgrayedd(all_args)
     logger.debug({"soundcloud-auth": cmd_args.to_dict()})
@@ -53,6 +52,7 @@ def _run_auth(all_args: ProgramNamespace, state: RunState) -> int:
             return status
 
 
+# TODO KDK: Work here first to check for persisted, unexpired tokens or fetch and save them
 def _run_auth_cmd(args: AuthNamespace, state: RunState) -> Either[str, int]:
     match args.token_endpoint_v:
         case Left(error):

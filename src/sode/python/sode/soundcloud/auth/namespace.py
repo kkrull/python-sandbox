@@ -121,8 +121,32 @@ class AuthNamespace(ProgramNamespace):
         return AuthNamespace(**useful_args)
 
     @property
+    def client_id_v(self) -> Either[str, ClientId]:
+        """either the typed, non-empty client ID, or an error"""
+
+        return (
+            new_option(self.client_id)
+            .map(lambda x: x.strip())
+            .filter(lambda x: len(x) > 0)
+            .map(lambda x: ClientId(x))
+            .to_right("client_id: missing or empty")
+        )
+
+    @property
+    def client_secret_v(self) -> Either[str, ClientSecret]:
+        """either the typed, non-empty client secret, or an error"""
+
+        return (
+            new_option(self.client_secret)
+            .map(lambda x: x.strip())
+            .filter(lambda x: len(x) > 0)
+            .map(lambda x: ClientSecret(x))
+            .to_right("client_secret: missing or empty")
+        )
+
+    @property
     def token_endpoint_v(self) -> Either[str, TokenUrl]:
-        """either the typed, non-empty token_endpoint, or an error"""
+        """either the typed, non-empty token endpoint, or an error"""
 
         return (
             new_option(self.token_endpoint)
