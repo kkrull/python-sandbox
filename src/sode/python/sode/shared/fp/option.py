@@ -20,9 +20,16 @@ def new_option(maybe_value: A) -> Option[A]:
 class OptionBase[A]:
     """
     An immutable container that is either a Value of type A, or is Empty (e.g. a lack of value).
-
     Mapping functions apply to Value, but not to Empty.
     """
+
+    @abstractmethod
+    def __repr__(self) -> str:
+        pass
+
+    @abstractmethod
+    def __str__(self) -> str:
+        pass
 
     @abstractmethod
     def filter(self, predicate: Callable[[A], bool]) -> Option[A]:
@@ -60,6 +67,10 @@ class Empty[A](OptionBase[A]):
 
     @override
     def __repr__(self) -> str:
+        return f"Empty()"
+
+    @override
+    def __str__(self) -> str:
         return f"Empty"
 
     @override
@@ -98,6 +109,10 @@ class Value[A](OptionBase[A]):
 
     @override
     def __repr__(self) -> str:
+        return f"Value({self.value!r})"
+
+    @override
+    def __str__(self) -> str:
         return f"Value({self.value})"
 
     @override

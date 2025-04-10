@@ -20,6 +20,14 @@ class EitherBase[A, B]:
     """
 
     @abstractmethod
+    def __repr__(self) -> str:
+        pass
+
+    @abstractmethod
+    def __str__(self) -> str:
+        pass
+
+    @abstractmethod
     def flat_map(self, fn: Callable[[B], Either[A, C]]) -> Either[A, C]:
         """Replace Right with the result of calling the given function, or return Left unchanged."""
         pass
@@ -52,21 +60,20 @@ class EitherBase[A, B]:
         """Transform Right's inner value with the given function, or return Left unchanged."""
         pass
 
-    # TODO KDK: Revisit these https://stackoverflow.com/questions/1436703/what-is-the-difference-between-str-and-repr/1436756#1436756
-    @abstractmethod
-    def __repr__(self) -> str:
-        pass
-
-    @abstractmethod
-    def __str__(self) -> str:
-        pass
-
 
 class Left[A, B](EitherBase[A, B]):
     __match_args__ = ("_value",)
 
     def __init__(self, value: A):
         self._value = value
+
+    @override
+    def __repr__(self) -> str:
+        return f"Left({self._value!r})"
+
+    @override
+    def __str__(self) -> str:
+        return f"Left({self._value})"
 
     @override
     def flat_map(self, _fn: Callable[[B], Either[A, C]]) -> Either[A, C]:
@@ -95,20 +102,20 @@ class Left[A, B](EitherBase[A, B]):
     def map(self, _fn: Callable[[B], C]) -> Either[A, C]:
         return Left[A, C](self._value)
 
-    @override
-    def __repr__(self) -> str:
-        return f"Left({self._value})"
-
-    @override
-    def __str__(self) -> str:
-        return f"Left({self._value})"
-
 
 class Right[A, B](EitherBase[A, B]):
     __match_args__ = ("_value",)
 
     def __init__(self, value: B):
         self._value = value
+
+    @override
+    def __repr__(self) -> str:
+        return f"Right({self._value!r})"
+
+    @override
+    def __str__(self) -> str:
+        return f"Right({self._value})"
 
     @override
     def flat_map(self, fn: Callable[[B], Either[A, C]]) -> Either[A, C]:
@@ -136,11 +143,3 @@ class Right[A, B](EitherBase[A, B]):
     @override
     def map(self, fn: Callable[[B], C]) -> Either[A, C]:
         return Right(fn(self._value))
-
-    @override
-    def __repr__(self) -> str:
-        return f"Right({self._value})"
-
-    @override
-    def __str__(self) -> str:
-        return f"Right({self._value})"
