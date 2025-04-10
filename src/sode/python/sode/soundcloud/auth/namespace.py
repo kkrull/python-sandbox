@@ -18,7 +18,6 @@ TokenUrl = NewType("TokenUrl", str)
 class AuthNamespace(ProgramNamespace):
     """Argument namespace for the auth command"""
 
-    # TODO KDK: Can these be typed?
     client_id: str
     client_secret: str
     state_dir: str
