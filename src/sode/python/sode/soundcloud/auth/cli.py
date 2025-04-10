@@ -2,7 +2,7 @@ import logging
 import os
 from argparse import _SubParsersAction
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, Tuple
 
 from oauthlib.oauth2 import BackendApplicationClient
 from requests.auth import HTTPBasicAuth
@@ -89,11 +89,7 @@ def _run_auth_cmd(args: AuthNamespace, _state: RunState) -> Either[str, TokenRes
     return _fetch_tokens_ns(args)
 
 
-def _fetch_tokens_ns(args: AuthNamespace) -> Either[str, TokenResponse]:
-    match either.flatten_3_or_left(args.token_endpoint_v, args.client_id_v, args.client_secret_v):
-        case Right((token_endpoint, client_id, client_secret)):
-            return _auth_fetch_tokens(token_endpoint, client_id, client_secret)
-        case Left(first_error):
-            return Left(first_error)
-        case Right(_):
-            return Left("unrecognized right")
+def _fetch_tokens_ns(maybe_args: AuthNamespace) -> Either[str, TokenResponse]:
+    return either.flatten_3_or_left(
+        maybe_args.token_endpoint_v, maybe_args.client_id_v, maybe_args.client_secret_v
+    ).flat_map(lambda arg: _auth_fetch_tokens(arg[0], arg[1], arg[2]))
