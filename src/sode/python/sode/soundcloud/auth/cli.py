@@ -85,7 +85,7 @@ def _auth_fetch_tokens(
 
 
 # TODO KDK: Work here first to check for persisted, unexpired tokens or fetch and save them
-def _run_auth_cmd(args: AuthNamespace, state: RunState) -> Either[str, TokenResponse]:
+def _run_auth_cmd(args: AuthNamespace, _state: RunState) -> Either[str, TokenResponse]:
     return _fetch_tokens_ns(args)
 
 
