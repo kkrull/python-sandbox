@@ -4,6 +4,10 @@ from argparse import _SubParsersAction
 from dataclasses import dataclass
 from typing import Any
 
+from oauthlib.oauth2 import BackendApplicationClient
+from requests.auth import HTTPBasicAuth
+from requests_oauthlib import OAuth2Session
+
 from sode.shared.cli import ProgramNamespace, RunState
 from sode.shared.fp import Either, Left, Right
 
@@ -28,18 +32,9 @@ def _run_auth(all_args: ProgramNamespace, state: RunState) -> int:
         case Left(error):
             print(error, file=state.stderr)
             return 1
-        case Right(status):
-            print(f"Done. status={status}", file=state.stderr)
-            return status
-
-
-# TODO KDK: Work here first to check for persisted, unexpired tokens or fetch and save them
-def _run_auth_cmd(args: AuthNamespace, state: RunState) -> Either[str, int]:
-    match (args.token_endpoint_v, args.client_id_v, args.client_secret_v):
-        case (Right(token_endpoint), Right(client_id), Right(client_secret)):
-            return fetch_tokens(token_endpoint, client_id, client_secret).map(lambda _tokens: 0)
-        case lefts:
-            return Left(next((l.left_value for l in lefts if l.is_left)))
+        case Right(result):
+            print(f"Done. result={result}", file=state.stderr)
+            return 0
 
 
 @dataclass(frozen=True)
@@ -54,11 +49,18 @@ class TokenResponse:
     token_type: str  # Bearer
 
 
+# TODO KDK: Work here first to check for persisted, unexpired tokens or fetch and save them
+def _run_auth_cmd(args: AuthNamespace, state: RunState) -> Either[str, TokenResponse]:
+    match (args.token_endpoint_v, args.client_id_v, args.client_secret_v):
+        case (Right(token_endpoint), Right(client_id), Right(client_secret)):
+            return fetch_tokens(token_endpoint, client_id, client_secret)
+        case lefts:
+            return Left(next((l.left_value for l in lefts if l.is_left)))
+
+
 def fetch_tokens(
-    token_endpoint: TokenUrl,
-    client_id: ClientId,
-    client_secret: ClientSecret,
-) -> Either[str, Any]:
+    token_endpoint: TokenUrl, client_id: ClientId, client_secret: ClientSecret
+) -> Either[str, TokenResponse]:
     """Request tokens from the specified OAuth2 endpoint using the client_credentials workflow.
     Return either tokens from a successful 2xx response or an error indicating a failed request."""
 
@@ -72,4 +74,14 @@ def fetch_tokens(
         }
     )
 
-    return Right("fetched tokens...")
+    # https://developers.soundcloud.com/docs#authentication
+    auth = HTTPBasicAuth(client_id, client_secret)
+    client = BackendApplicationClient(client_id=client_id)
+    oauth = OAuth2Session(client=client)
+
+    try:
+        return Right(oauth.fetch_token(auth=auth, token_url=token_endpoint)).map(
+            lambda json_response: TokenResponse(**json_response)
+        )
+    except Exception as err:
+        return Left(f"{token_endpoint}: {err}")
