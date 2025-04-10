@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Any, NewType
 
 from sode.shared.cli import CliCommand, ProgramNamespace, argfactory, cmdfactory
-from sode.shared.fp import Empty, Option, Value
+from sode.shared.fp import Either, Empty, Left, Option, Right, Value
 from sode.soundcloud import SC_COMMAND
 
 ClientId = NewType("ClientId", str)
@@ -122,11 +122,11 @@ class AuthNamespace(ProgramNamespace):
         return AuthNamespace(**useful_args)
 
     @property
-    def token_endpoint_v(self) -> Option[TokenUrl]:
+    def token_endpoint_v(self) -> Either[str, TokenUrl]:
         if self.token_endpoint and len(self.token_endpoint.strip()) > 0:
-            return Value(self.token_endpoint.strip()).map(lambda x: TokenUrl(x))
+            return Right(self.token_endpoint.strip()).map(lambda x: TokenUrl(x))
         else:
-            return Empty()
+            return Left("token_endpoint: missing or empty")
 
     def to_dict(self) -> dict[str, Any]:
         """each argument's name and value, as a dictionary"""
