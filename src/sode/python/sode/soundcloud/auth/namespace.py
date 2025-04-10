@@ -125,9 +125,9 @@ class AuthNamespace(ProgramNamespace):
         """either the typed, non-empty token_endpoint, or an error"""
 
         return (
-            new_option(self.token_endpoint)  # None -> Empty; _ -> Value
-            .map(lambda x: x.strip())  # Value -> Value
-            .filter(lambda x: len(x) > 0)  # True -> Value; False -> Empty
+            new_option(self.token_endpoint)
+            .map(lambda x: x.strip())
+            .filter(lambda x: len(x) > 0)
             .map(lambda x: TokenUrl(x))
             .to_right("token_endpoint: missing or empty")
         )
