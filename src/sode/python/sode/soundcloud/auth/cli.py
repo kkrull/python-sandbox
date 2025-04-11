@@ -62,8 +62,6 @@ def _run_auth_cmd(args: AuthNamespace, _state: RunState) -> Either[str, int]:
     match token_response:
         case Left(fetch_error):
             return Left(fetch_error)
-
-    match token_response:
         case Right(tokens):
             with open(auth_state_path.right_value, mode="wt") as state_file:
                 tokens.write_json(state_file, indent=2, sort_keys=True)
