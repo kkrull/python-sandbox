@@ -5,6 +5,7 @@ default: all
 
 include ../../../make.d/help.mk
 include ../../../make.d/homebrew.mk
+include ../../../make.d/pre-commit.mk
 
 include make.d/black.mk
 include make.d/isort.mk
@@ -25,7 +26,7 @@ debug-paths:
 
 BUILD ?= $(PIPENV) run python -m build
 FSWATCH ?= fswatch
-FSWATCHFLAGS ?= ''
+FSWATCHFLAGS ?=
 PIPENV ?= pipenv
 PIPX ?= pipx
 TAR ?= tar
@@ -140,7 +141,8 @@ clean-build: #> Remove files from running build
 
 .PHONY: clean-python
 clean-python: # Remove files from running python
-	$(RM) -r **/__pycache__
+	$(shell find . -type d -name '__pycache__' -exec $(RM) -R {} +)
+	@:
 
 .PHONY: format
 format: black-format isort-format #> Format sources

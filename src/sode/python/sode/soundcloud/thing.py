@@ -1,23 +1,15 @@
-import argparse
 import logging
 import os
 import textwrap
 from argparse import RawTextHelpFormatter, _SubParsersAction
 
-import argcomplete
+from requests import Response
 
-from sode.shared.cli import (
-    ProgramNamespace,
-    RunState,
-    add_unlisted_command,
-    argfactory,
-    environ_or_default,
-    environ_or_optional,
-    environ_or_required,
-)
+from sode.shared.cli import ProgramNamespace, RunState, argfactory, cmdfactory
 from sode.shared.fp import Either, Empty, Left, Option, Right, Value
 from sode.shared.oauth import AccessToken
 from sode.soundcloud import SC_COMMAND
+from sode.soundcloud.auth.namespace import ClientId, ClientSecret, TokenUrl
 
 from . import playlist
 from .auth import fetch_tokens
@@ -31,7 +23,7 @@ def add_the_thing(
 ) -> None:
     """Add a command that "does the thing" (literally anything) with SoundCloud"""
 
-    thing_parser = add_unlisted_command(
+    thing_parser = cmdfactory.add_unlisted_command(
         subcommands,
         "thing",
         command=_run_thing,
@@ -62,8 +54,8 @@ def add_the_thing(
         argfactory.completion_choices(),
         thing_parser.add_argument(
             "--access-token",
-            **environ_or_optional("SOUNDCLOUD_ACCESS_TOKEN", environ),
-            help=argparse.SUPPRESS,  # discourage exposing secret CLI arguments to other users
+            **argfactory.carrier_of_secrets(),
+            **argfactory.environ_or_optional("SOUNDCLOUD_ACCESS_TOKEN", environ),
             nargs=1,
         ),
     )
@@ -72,7 +64,7 @@ def add_the_thing(
         argfactory.completion_choices(),
         thing_parser.add_argument(
             "--client-id",
-            **environ_or_required("SOUNDCLOUD_CLIENT_ID", environ),
+            **argfactory.environ_or_required("SOUNDCLOUD_CLIENT_ID", environ),
             help="OAuth2 client_id used to request tokens (default: $SOUNDCLOUD_CLIENT_ID)",
             nargs=1,
         ),
@@ -82,8 +74,8 @@ def add_the_thing(
         argfactory.completion_choices(),
         thing_parser.add_argument(
             "--client-secret",
-            **environ_or_required("SOUNDCLOUD_CLIENT_SECRET", environ),
-            help=argparse.SUPPRESS,  # discourage exposing secret CLI arguments to other users
+            **argfactory.carrier_of_secrets(),
+            **argfactory.environ_or_required("SOUNDCLOUD_CLIENT_SECRET", environ),
             nargs=1,
         ),
     )
@@ -92,7 +84,7 @@ def add_the_thing(
         argfactory.completion_choices(),
         thing_parser.add_argument(
             "--token-endpoint",
-            **environ_or_default(
+            **argfactory.environ_or_default(
                 "SOUNDCLOUD_TOKEN_URL",
                 "https://secure.soundcloud.com/oauth/token",
                 environ,
@@ -108,7 +100,7 @@ def add_the_thing(
         thing_parser.add_argument(
             "-u",
             "--user-id",
-            **environ_or_required("SOUNDCLOUD_USER_ID", environ),
+            **argfactory.environ_or_required("SOUNDCLOUD_USER_ID", environ),
             help="SoundCloud user ID",
             nargs=1,
         ),
@@ -130,23 +122,26 @@ def _run_thing(args: ProgramNamespace, state: RunState) -> int:
         }
     )
 
-    match _authorize(args):
+    match _authorize(args).map(lambda token: playlist.any(token, args.user_id)):
         case Left(error):
             print(error, file=state.stderr)
             return 1
-        case Right(access_token):
-            response = playlist.any(access_token, args.user_id)
-            logger.debug(
-                {
-                    "_run_thing": {
-                        "request_headers": response.request.headers,
-                        "status_code": response.status_code,
-                    }
-                },
-            )
-
-            print(response.text, file=state.stdout)
+        case Right(response):
+            _run_thing_r(response, state)
             return 0
+
+
+def _run_thing_r(response: Response, state: RunState) -> None:
+    logger.debug(
+        {
+            "_run_thing": {
+                "request_headers": response.request.headers,
+                "status_code": response.status_code,
+            }
+        },
+    )
+
+    print(response.text, file=state.stdout)
 
 
 def _authorize(args: ProgramNamespace) -> Either[str, AccessToken]:
@@ -155,12 +150,12 @@ def _authorize(args: ProgramNamespace) -> Either[str, AccessToken]:
             return Right(access_token)
         case Empty():
             return fetch_tokens(
-                args.token_endpoint,
-                client_id=args.client_id,
-                client_secret=args.client_secret,
-            ).flat_map(lambda response: response.access_token)
+                TokenUrl(args.token_endpoint),
+                ClientId(args.client_id),
+                ClientSecret(args.client_secret),
+            ).flat_map(lambda response: response.access_token_v)
 
 
 def _existing_access_token(args: ProgramNamespace) -> Option[AccessToken]:
     logger.debug({"existing_access_token": repr(args.access_token)})
-    return AccessToken.maybe(args.access_token, "Bearer")
+    return AccessToken.maybe(args.access_token, token_type="Bearer")

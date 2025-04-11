@@ -35,5 +35,6 @@ words:
   - sdist
   - setuptools
   - soundcloud
+  - upgrayedd
   - venv
   - vistir
