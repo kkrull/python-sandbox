@@ -1,3 +1,3 @@
-from .api import TokenResponse1, fetch_tokens1
+from .api import TokenResponse, fetch_tokens
 
-__all__ = ["fetch_tokens1", "TokenResponse1"]
+__all__ = ["fetch_tokens", "TokenResponse"]

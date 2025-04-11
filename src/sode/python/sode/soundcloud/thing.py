@@ -7,11 +7,12 @@ from requests import Response
 
 from sode.shared.cli import ProgramNamespace, RunState, argfactory, cmdfactory
 from sode.shared.fp import Either, Empty, Left, Option, Right, Value
-from sode.shared.oauth import AccessToken1
+from sode.shared.oauth import AccessToken
 from sode.soundcloud import SC_COMMAND
+from sode.soundcloud.auth.namespace import ClientId, ClientSecret, TokenUrl
 
 from . import playlist
-from .auth import fetch_tokens1
+from .auth import fetch_tokens
 
 logger = logging.getLogger(__name__)
 
@@ -143,18 +144,18 @@ def _run_thing_r(response: Response, state: RunState) -> None:
     print(response.text, file=state.stdout)
 
 
-def _authorize(args: ProgramNamespace) -> Either[str, AccessToken1]:
+def _authorize(args: ProgramNamespace) -> Either[str, AccessToken]:
     match _existing_access_token(args):
         case Value(access_token):
             return Right(access_token)
         case Empty():
-            return fetch_tokens1(
-                args.token_endpoint,
-                client_id=args.client_id,
-                client_secret=args.client_secret,
-            ).flat_map(lambda response: response.access_token)
+            return fetch_tokens(
+                TokenUrl(args.token_endpoint),
+                ClientId(args.client_id),
+                ClientSecret(args.client_secret),
+            ).flat_map(lambda response: response.access_token_v)
 
 
-def _existing_access_token(args: ProgramNamespace) -> Option[AccessToken1]:
+def _existing_access_token(args: ProgramNamespace) -> Option[AccessToken]:
     logger.debug({"existing_access_token": repr(args.access_token)})
-    return AccessToken1.maybe(args.access_token, token_type="Bearer")
+    return AccessToken.maybe(args.access_token, token_type="Bearer")

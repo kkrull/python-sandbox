@@ -1,3 +1,3 @@
-from .token import AccessToken1
+from .token import AccessToken
 
-__all__ = ["AccessToken1"]
+__all__ = ["AccessToken"]

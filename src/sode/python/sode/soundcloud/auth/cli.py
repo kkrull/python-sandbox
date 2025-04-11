@@ -1,18 +1,12 @@
-import json
 import logging
 import os
 from argparse import _SubParsersAction
-from dataclasses import asdict, dataclass
-from typing import Any, TextIO, Tuple
-
-from oauthlib.oauth2 import BackendApplicationClient
-from requests.auth import HTTPBasicAuth
-from requests_oauthlib import OAuth2Session
 
 from sode.shared.cli import ProgramNamespace, RunState
 from sode.shared.fp import Either, Left, Right, either
+from sode.soundcloud.auth.api import TokenResponse, fetch_tokens
 
-from .namespace import AuthNamespace, ClientId, ClientSecret, TokenUrl
+from .namespace import AuthNamespace
 
 logger = logging.getLogger(__name__)
 
@@ -38,67 +32,6 @@ def _run_auth(all_args: ProgramNamespace, state: RunState) -> int:
             return 0
 
 
-## auth module
-
-
-@dataclass(frozen=True)
-class TokenResponse:
-    """How the SoundCloud OAuth2 token endpoint responds"""
-
-    access_token: str
-    expires_at: float  # 1743781923.9585016 // datetime.fromtimestamp
-    expires_in: int  # 3599 // timedelta(seconds=)
-    refresh_token: str
-    scope: list[str]  # ['']
-    token_type: str  # Bearer
-
-    def write_json(
-        self,
-        writable: TextIO,
-        indent: int | str | None = None,
-        separators: Tuple[str, str] | None = None,
-        sort_keys: bool = False,
-    ) -> None:
-        """Serialize to JSON and write to the given TextIO"""
-
-        return json.dump(
-            asdict(self),
-            writable,
-            indent=indent,
-            separators=separators,
-            sort_keys=sort_keys,
-        )
-
-
-def _auth_fetch_tokens(
-    token_endpoint: TokenUrl, client_id: ClientId, client_secret: ClientSecret
-) -> Either[str, TokenResponse]:
-    """Request tokens from the specified OAuth2 endpoint using the client_credentials workflow.
-    Return either tokens from a successful 2xx response or an error indicating a failed request."""
-
-    logger.debug(
-        {
-            "fetch_tokens": {
-                "client_id": client_id,
-                "client_secret": client_secret,
-                "token_endpoint": token_endpoint,
-            }
-        }
-    )
-
-    # https://developers.soundcloud.com/docs#authentication
-    auth = HTTPBasicAuth(client_id, client_secret)
-    client = BackendApplicationClient(client_id=client_id)
-    oauth = OAuth2Session(client=client)
-
-    try:
-        return Right(oauth.fetch_token(auth=auth, token_url=token_endpoint)).map(
-            lambda json_response: TokenResponse(**json_response)
-        )
-    except Exception as err:
-        return Left(f"{token_endpoint}: {err}")
-
-
 ## This module
 
 
@@ -116,4 +49,4 @@ def _run_auth_cmd(args: AuthNamespace, _state: RunState) -> Either[str, int]:
 def _fetch_tokens_ns(maybe_args: AuthNamespace) -> Either[str, TokenResponse]:
     return either.flatten_3_or_left(
         maybe_args.token_endpoint_v, maybe_args.client_id_v, maybe_args.client_secret_v
-    ).flat_map(lambda arg: _auth_fetch_tokens(arg[0], arg[1], arg[2]))
+    ).flat_map(lambda arg: fetch_tokens(arg[0], arg[1], arg[2]))
