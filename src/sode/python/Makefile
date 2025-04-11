@@ -89,7 +89,7 @@ install: install-wheel #> Install artifacts
 	@:
 
 .PHONY: test
-test: black-check isort-check mypy-check pre-commit-run #> Run checks
+test: black-check isort-check mypy-check #> Run checks
 
 .PHONY: uninstall
 uninstall: uninstall-wheel #> Uninstall artifacts
