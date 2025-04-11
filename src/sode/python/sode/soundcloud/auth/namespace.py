@@ -45,14 +45,14 @@ class AuthNamespace(ProgramNamespace):
             command=command,
             description=textwrap.dedent(
                 """
-            (Re-)authorize with the SoundCloud API.  Save tokens for later use with other commands.
+            (Re-)authorize with the SoundCloud API, saving tokens for later use with other commands.
 
             environment variables:
-            Safely avoid passing secrets on the command line:
+              Safely avoid passing secrets on the command line:
                 SOUNDCLOUD_CLIENT_ID      override --client-id with a secret
                 SOUNDCLOUD_CLIENT_SECRET  override --client-secret with a secret
 
-            Override defaults or CLI arguments:
+              Override defaults or CLI arguments:
                 SOUNDCLOUD_TOKEN_URL      override --token-endpoint
                 SOUNDCLOUD_USER_ID        override --user-id
 
