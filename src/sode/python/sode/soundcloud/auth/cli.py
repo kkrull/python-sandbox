@@ -47,23 +47,22 @@ def _run_auth_cmd(args: AuthNamespace, _state: RunState) -> Either[str, int]:
         },
     )
 
-    match args.state_dir_v:
-        case Left(missing_arg):
-            return Left(missing_arg)
-        case Right(state_dir):
-            try:
-                state_dir.mkdir(0o700, parents=True, exist_ok=True)
-            except Exception as error:
-                return Left(str(error))
+    match args.state_dir_v.do_try(
+        lambda exception: str(exception),
+        lambda state_dir: state_dir.mkdir(0o700, parents=True, exist_ok=True),
+    ):
+        case Left(state_dir_error):
+            return Left(state_dir_error)
 
     auth_state_path = args.state_dir_v.map(lambda dir: dir.joinpath("soundcloud-auth.json"))
-    try:
-        auth_state_path.right_value.touch(0o600, exist_ok=True)
-    except Exception as error:
-        return Left(str(error))
+    match auth_state_path.do_try(
+        lambda exception: str(exception),
+        lambda file_path: file_path.touch(0o600, exist_ok=True),
+    ):
+        case Left(state_dir_error):
+            return Left(state_dir_error)
 
-    token_response = _fetch_tokens_ns(args)
-    match token_response:
+    match _fetch_tokens_ns(args):
         case Left(fetch_error):
             return Left(fetch_error)
         case Right(tokens):

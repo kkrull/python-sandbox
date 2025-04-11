@@ -48,6 +48,18 @@ class EitherBase[A, B]:
         pass
 
     @abstractmethod
+    def do_try(
+        self, exception_as_left: Callable[[Exception], A], risky_fn: Callable[[B], None]
+    ) -> Either[A, B]:
+        """
+        Try calling an exception-prone risky_fn with Right's value, returning Right upon success.
+
+        Return Left when Left invoked, or degrade to Left with the caught Exception (coerced back to
+        the Left type with exception_as_left) if risky_fn raises any Exception.
+        """
+        pass
+
+    @abstractmethod
     def flat_map(self, fn: Callable[[B], Either[A, C]]) -> Either[A, C]:
         """Replace Right with the result of calling the given function, or return Left unchanged."""
         pass
@@ -102,6 +114,12 @@ class Left[A, B](EitherBase[A, B]):
         return f"Left({self._value})"
 
     @override
+    def do_try(
+        self, _exception_as_left: Callable[[Exception], A], _fn: Callable[[B], None]
+    ) -> Either[A, B]:
+        return Left[A, B](self._value)
+
+    @override
     def flat_map(self, _fn: Callable[[B], Either[A, C]]) -> Either[A, C]:
         return Left[A, C](self._value)
 
@@ -147,6 +165,16 @@ class Right[A, B](EitherBase[A, B]):
     @override
     def __str__(self) -> str:
         return f"Right({self._value})"
+
+    @override
+    def do_try(
+        self, exception_as_left: Callable[[Exception], A], risky_fn: Callable[[B], None]
+    ) -> Either[A, B]:
+        try:
+            risky_fn(self._value)
+            return Right[A, B](self._value)
+        except Exception as error:
+            return Left[A, B](exception_as_left(error))
 
     @override
     def flat_map(self, fn: Callable[[B], Either[A, C]]) -> Either[A, C]:
