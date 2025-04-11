@@ -34,12 +34,21 @@ def _run_auth_shell(all_args: ProgramNamespace, state: RunState) -> int:
 
 def _run_auth_prepare(args: AuthNamespace) -> Either[str, tuple[Path, TokenResponse]]:
     return either.flatten_2_or_left(
-        _ensure_user_file(args.state_dir_v, "soundcloud-auth.json"),
+        _ensure_user_file_exists(args.state_dir_v, "soundcloud-auth.json"),
         _fetch_tokens(args),
     )
 
 
-def _ensure_user_file(directory: Either[str, Path], filename: str) -> Either[str, Path]:
+def _run_auth(state_file_path: Path, tokens: TokenResponse) -> Either[str, int]:
+    try:
+        with open(state_file_path, mode="wt") as state_file:
+            tokens.write_json(state_file, indent=2, sort_keys=True)
+            return Right(0)
+    except Exception as error:
+        return Left(str(error))
+
+
+def _ensure_user_file_exists(directory: Either[str, Path], filename: str) -> Either[str, Path]:
     return (
         directory.do_try(
             lambda exception: str(exception),
@@ -59,12 +68,3 @@ def _fetch_tokens(maybe_args: AuthNamespace) -> Either[str, TokenResponse]:
         maybe_args.client_id_v,
         maybe_args.client_secret_v,
     ).flat_map(lambda known_args: fetch_tokens(*known_args))
-
-
-def _run_auth(state_file_path: Path, tokens: TokenResponse) -> Either[str, int]:
-    try:
-        with open(state_file_path, mode="wt") as state_file:
-            tokens.write_json(state_file, indent=2, sort_keys=True)
-            return Right(0)
-    except Exception as error:
-        return Left(str(error))
