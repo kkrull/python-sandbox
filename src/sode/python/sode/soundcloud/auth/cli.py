@@ -50,10 +50,14 @@ def _run_auth_cmd(args: AuthNamespace, _state: RunState) -> Either[str, int]:
     match args.state_dir_v:
         case Left(missing_arg):
             return Left(missing_arg)
+        case Right(state_dir):
+            try:
+                state_dir.mkdir(0o700, parents=True, exist_ok=True)
+            except Exception as error:
+                return Left(str(error))
 
     auth_state_path = args.state_dir_v.map(lambda dir: dir.joinpath("soundcloud-auth.json"))
     try:
-        args.state_dir_v.right_value.mkdir(0o700, parents=True, exist_ok=True)
         auth_state_path.right_value.touch(0o600, exist_ok=True)
     except Exception as error:
         return Left(str(error))
