@@ -7,6 +7,7 @@ from typing import Any, NewType
 
 from sode.shared.cli import CliCommand, ProgramNamespace, argfactory, cmdfactory
 from sode.shared.fp import Either, new_option
+from sode.shared.state.path import default_state_dir
 from sode.soundcloud import SC_COMMAND
 
 ClientId = NewType("ClientId", str)
@@ -88,7 +89,7 @@ class AuthNamespace(ProgramNamespace):
                 "--state-dir",
                 **argfactory.environ_or_default(
                     "SODE_STATE",
-                    str(_sode_default_state_dir().absolute()),
+                    str(default_state_dir().absolute()),
                     environ,
                 ),
                 help="Directory where sode stores its state data (default: %(default)s)",
@@ -145,6 +146,16 @@ class AuthNamespace(ProgramNamespace):
         )
 
     @property
+    def state_dir_v(self) -> Either[str, Path]:
+        return (
+            new_option(self.token_endpoint)
+            .map(lambda x: x.strip())
+            .filter(lambda x: len(x) > 0)
+            .map(lambda x: Path(x))
+            .to_right("state_dir: missing or empty")
+        )
+
+    @property
     def token_endpoint_v(self) -> Either[str, TokenUrl]:
         """either the typed, non-empty token endpoint, or an error"""
 
@@ -160,10 +171,3 @@ class AuthNamespace(ProgramNamespace):
         """each argument's name and value, as a dictionary"""
 
         return asdict(self)
-
-
-## sode configuration/state module
-
-
-def _sode_default_state_dir() -> Path:
-    return Path.home().joinpath(".local", "state", "sode")
