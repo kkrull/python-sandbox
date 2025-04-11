@@ -157,4 +157,4 @@ def _authorize(args: ProgramNamespace) -> Either[str, AccessToken1]:
 
 def _existing_access_token(args: ProgramNamespace) -> Option[AccessToken1]:
     logger.debug({"existing_access_token": repr(args.access_token)})
-    return AccessToken1.maybe(args.access_token, "Bearer")
+    return AccessToken1.maybe(args.access_token, token_type="Bearer")
