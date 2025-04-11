@@ -36,13 +36,25 @@ def _run_auth(all_args: ProgramNamespace, state: RunState) -> int:
 
 
 def _run_auth_cmd(args: AuthNamespace, _state: RunState) -> Either[str, int]:
-    # TODO KDK: Work here first to check for persisted, unexpired tokens or fetch and save them
-    match _fetch_tokens_ns(args):
-        case Left(error):
-            return Left(error)
+    match args.state_dir_v:
+        case Left(missing_arg):
+            return Left(missing_arg)
+
+    try:
+        args.state_dir_v.right_value.mkdir(700, parents=True, exist_ok=True)
+    except Exception as error:
+        return Left(str(error))
+
+    token_response = _fetch_tokens_ns(args)
+    match token_response:
+        case Left(fetch_error):
+            return Left(fetch_error)
+
+    auth_state_path = args.state_dir_v.map(lambda dir: dir.joinpath("soundcloud-auth.json"))
+    match token_response:
         case Right(tokens):
-            with open("auth-token.json", mode="wt") as file:
-                tokens.write_json(file, indent=2, sort_keys=True)
+            with open(auth_state_path.right_value, mode="wt") as state_file:
+                tokens.write_json(state_file, indent=2, sort_keys=True)
                 return Right(0)
 
 
