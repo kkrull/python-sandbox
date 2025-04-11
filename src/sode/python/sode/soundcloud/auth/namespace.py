@@ -148,7 +148,7 @@ class AuthNamespace(ProgramNamespace):
     @property
     def state_dir_v(self) -> Either[str, Path]:
         return (
-            new_option(self.token_endpoint)
+            new_option(self.state_dir)
             .map(lambda x: x.strip())
             .filter(lambda x: len(x) > 0)
             .map(lambda x: Path(x))

@@ -36,6 +36,16 @@ def _run_auth(all_args: ProgramNamespace, state: RunState) -> int:
 
 
 def _run_auth_cmd(args: AuthNamespace, _state: RunState) -> Either[str, int]:
+    logger.debug(
+        {
+            "_run_auth_cmd": {
+                "client_id_v": args.client_id_v,
+                "client_secret_v": args.client_secret_v,
+                "state_dir_v": args.state_dir_v,
+                "token_endpoint_v": args.token_endpoint_v,
+            }
+        },
+    )
     match args.state_dir_v:
         case Left(missing_arg):
             return Left(missing_arg)
