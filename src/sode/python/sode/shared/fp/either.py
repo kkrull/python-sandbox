@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from typing import Callable, Tuple, TypeVar, Union, override
+from typing import Callable, TypeVar, Union, override
 
 A = TypeVar("A")
 B = TypeVar("B")
@@ -13,12 +13,27 @@ Y = TypeVar("Y")
 Z = TypeVar("Z")
 
 
+def flatten_2_or_left(
+    y: Either[A, Y],
+    z: Either[A, Z],
+) -> Either[A, tuple[Y, Z]]:
+    """Flatten all Rights to a tuple of right-hand values, or return the first Left"""
+
+    left_values = (e.left_value for e in (y, z) if e.is_left)
+    match next(left_values, None):
+        case None:
+            right_values = (y.right_value, z.right_value)
+            return Right(right_values)
+        case first_left_value:
+            return Left(first_left_value)
+
+
 def flatten_3_or_left(
     x: Either[A, X],
     y: Either[A, Y],
     z: Either[A, Z],
-) -> Either[A, Tuple[X, Y, Z]]:
-    """Flatten to oen Right of the given sequence of right-hand values, or the first Left"""
+) -> Either[A, tuple[X, Y, Z]]:
+    """Flatten all Rights to a tuple of right-hand values, or return the first Left"""
 
     left_values = (e.left_value for e in (x, y, z) if e.is_left)
     match next(left_values, None):
