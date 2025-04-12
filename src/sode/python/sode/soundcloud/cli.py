@@ -2,10 +2,9 @@ from argparse import _SubParsersAction
 
 from sode.shared.cli import add_subcommand_parsers
 
-from . import track
+from . import thing, track
 from .auth.cli import add_auth
 from .namespace import SC_COMMAND
-from .thing import add_the_thing
 
 
 def add_command(
@@ -22,5 +21,5 @@ def add_command(
 
     sc_subcommands = add_subcommand_parsers(sc_parser, SC_COMMAND)
     add_auth(sc_subcommands)
-    add_the_thing(sc_subcommands)
+    thing.add_subcommand(sc_subcommands)
     track.add_subcommand(sc_subcommands)
