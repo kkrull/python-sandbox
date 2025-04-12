@@ -12,5 +12,5 @@ isort-format: #> Format sources with isort
 
 .PHONY: isort-watch
 isort-watch: #> Format sources with isort (watch mode)
-	$(FSWATCH) $(FSWATCHFLAGS) $(sources) -0 \
-		| xargs -0 -I {} $(ISORT) {}
+	$(FSWATCH) $(FSWATCHFLAGS) --one-per-batch --recursive -d $(sources_dir) -0 \
+		| xargs -0 -I {} $(ISORT) $(sources_dir)

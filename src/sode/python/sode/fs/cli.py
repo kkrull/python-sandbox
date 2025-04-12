@@ -2,7 +2,7 @@ from argparse import _SubParsersAction
 
 from sode.shared.cli import add_subcommand_parsers
 
-from .find import add_find
+from . import find
 from .namespace import FS_COMMAND
 
 
@@ -18,4 +18,4 @@ def add_command(
     )
 
     fs_subcommands = add_subcommand_parsers(fs_parser, FS_COMMAND)
-    add_find(fs_subcommands)
+    find.add_subcommand(fs_subcommands)
