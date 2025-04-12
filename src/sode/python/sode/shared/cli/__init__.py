@@ -7,7 +7,6 @@ from .argfactory import (
     environ_or_required,
 )
 from .cmdfactory import add_command, add_unlisted_command
-from .format import DefaultsAndRawTextFormatter
 from .namespace import (
     CliCommand,
     LogLevel,
@@ -28,7 +27,6 @@ __all__ = [
     "environ_or_required",
     "add_command",
     "add_unlisted_command",
-    "DefaultsAndRawTextFormatter",
     "CliCommand",
     "LogLevel",
     "ProgramNamespace",
