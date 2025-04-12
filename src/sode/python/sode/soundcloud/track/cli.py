@@ -4,6 +4,7 @@ from argparse import _SubParsersAction
 from sode.shared.cli import ProgramNamespace, RunState, cmdfactory
 
 from ..namespace import SC_COMMAND
+from . import list
 
 logger = logging.getLogger(__name__)
 
@@ -41,11 +42,6 @@ def _run_track(args: ProgramNamespace, state: RunState) -> int:
     )
 
     if args.list:
-        return list_tracks(args, state)
+        return list.list_tracks(args, state)
     else:
         return 99
-
-
-def list_tracks(args: ProgramNamespace, state: RunState) -> int:
-    print(f"Listing tracks...", file=state.stdout)
-    return 0
