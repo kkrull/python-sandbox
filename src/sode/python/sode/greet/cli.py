@@ -6,7 +6,7 @@ from sode.shared.cli import ProgramNamespace, RunState, argfactory, cmdfactory
 logger = logging.getLogger(__name__)
 
 
-def add_greet(
+def add_command(
     commands: _SubParsersAction,  # type: ignore[type-arg]
 ) -> None:
     """Add a parser for the greet command"""

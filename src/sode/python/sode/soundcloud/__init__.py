@@ -1,3 +1,3 @@
-from typing import Final
+from .cli import add_command
 
-SC_COMMAND: Final[str] = "command.soundcloud"
+__all__ = ["add_command"]

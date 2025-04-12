@@ -4,7 +4,6 @@ from argparse import RawTextHelpFormatter, _SubParsersAction
 from pathlib import Path
 from typing import Iterable
 
-from sode.fs import FS_COMMAND
 from sode.shared.cli import (
     ProgramNamespace,
     RunState,
@@ -12,6 +11,8 @@ from sode.shared.cli import (
     cmdfactory,
 )
 from sode.shared.fp import Empty, Value
+
+from .namespace import FS_COMMAND
 
 logger = logging.getLogger(__name__)
 
