@@ -2,6 +2,7 @@ import logging
 import os
 import textwrap
 from argparse import RawTextHelpFormatter, _SubParsersAction
+from pathlib import Path
 
 from sode.shared.cli import ProgramNamespace, RunState, argfactory, cmdfactory
 from sode.shared.state.path import default_state_dir
@@ -65,7 +66,8 @@ def _run_track(args: ProgramNamespace, state: RunState) -> int:
         }
     )
 
-    if args.list:
-        return list.list_tracks(state)
-    else:
+    if not args.list:
         return 99
+
+    list_state = list.ListTracksState(state_dir=Path(args.state_dir))
+    return list.list_tracks(list_state)

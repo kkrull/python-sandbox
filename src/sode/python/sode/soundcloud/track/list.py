@@ -1,6 +1,13 @@
-from sode.shared.cli import ProgramNamespace, RunState
+from dataclasses import dataclass
+from pathlib import Path
 
 
-def list_tracks(state: RunState) -> int:
-    print(f"Listing tracks...", file=state.stdout)
+@dataclass(frozen=True)
+class ListTracksState:
+    state_dir: Path
+
+
+# TODO KDK: Work here, then pull data back through the call stack
+def list_tracks(state: ListTracksState) -> int:
+    # print(f"Listing tracks...", file=state.stdout)
     return 0
