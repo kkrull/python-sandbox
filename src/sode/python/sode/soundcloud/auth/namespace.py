@@ -8,7 +8,8 @@ from typing import Any, NewType
 from sode.shared.cli import CliCommand, ProgramNamespace, argfactory, cmdfactory
 from sode.shared.fp import Either, new_option
 from sode.shared.state.path import default_state_dir
-from sode.soundcloud import SC_COMMAND
+
+from ..namespace import SC_COMMAND
 
 ClientId = NewType("ClientId", str)
 ClientSecret = NewType("ClientSecret", str)

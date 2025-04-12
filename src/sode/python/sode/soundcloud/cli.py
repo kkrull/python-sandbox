@@ -1,14 +1,14 @@
 from argparse import _SubParsersAction
 
 from sode.shared.cli import add_subcommand_parsers
-from sode.soundcloud import SC_COMMAND
 
 from .auth.cli import add_auth
+from .namespace import SC_COMMAND
 from .thing import add_the_thing
 from .track import add_track
 
 
-def add_soundcloud(
+def add_command(
     commands: _SubParsersAction,  # type: ignore[type-arg]
 ) -> None:
     """Add a parser for soundcloud commands"""
