@@ -2,6 +2,7 @@ import logging
 import os
 from argparse import _SubParsersAction
 from pathlib import Path
+from typing import assert_never
 
 from sode.shared.cli import ProgramNamespace, RunState
 from sode.shared.fp import Either, Left, Right, either
@@ -21,8 +22,8 @@ def add_auth(
     AuthNamespace.add_command_subparser(subcommands, "auth", _run_auth_shell, environ)
 
 
-def _run_auth_shell(all_args: ProgramNamespace, state: RunState) -> int:
-    cmd_args = AuthNamespace.upgrayedd(all_args)
+def _run_auth_shell(args: ProgramNamespace, state: RunState) -> int:
+    cmd_args = AuthNamespace.upgrayedd(args)
     logger.debug({"soundcloud-auth": cmd_args.to_dict()})
     match _run_auth_prepare(cmd_args).flat_map(lambda tup: _run_auth(*tup)):
         case Left(error):
@@ -30,6 +31,8 @@ def _run_auth_shell(all_args: ProgramNamespace, state: RunState) -> int:
             return 1
         case Right(status):
             return status
+        case unreachable:
+            assert_never(unreachable)
 
 
 def _run_auth_prepare(args: AuthNamespace) -> Either[str, tuple[Path, TokenResponse]]:
