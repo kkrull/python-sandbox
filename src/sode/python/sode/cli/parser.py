@@ -1,7 +1,6 @@
 from argparse import ArgumentParser
 
-from sode import fs
-from sode.greet.cli import add_greet
+from sode import fs, greet
 from sode.shared.cli import add_command_parsers, add_global_arguments
 from sode.soundcloud.cli import add_soundcloud
 
@@ -14,7 +13,7 @@ def for_argv(state: MainState) -> ArgumentParser:
     main_parser = _new_main_parser(state)
     command_parsers = add_command_parsers(main_parser)
     fs.add_command(command_parsers)
-    add_greet(command_parsers)
+    greet.add_command(command_parsers)
     add_soundcloud(command_parsers)
 
     return main_parser
