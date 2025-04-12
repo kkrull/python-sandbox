@@ -54,13 +54,13 @@ def _run_auth(state_file: Path, tokens: TokenResponse) -> Either[str, int]:
 def _ensure_user_file_exists(directory: Either[str, Path], filename: str) -> Either[str, Path]:
     return (
         directory.do_try(
-            lambda exception: str(exception),
             lambda dir_path: dir_path.mkdir(0o700, exist_ok=True, parents=True),
+            lambda exception: str(exception),
         )
         .map(lambda dir_path: dir_path.joinpath(filename))
         .do_try(
-            lambda exception: str(exception),
             lambda file_path: file_path.touch(0o600, exist_ok=True),
+            lambda exception: str(exception),
         )
     )
 

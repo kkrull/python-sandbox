@@ -30,8 +30,8 @@ class EitherBase[A, B]:
     @abstractmethod
     def do_try(
         self,
-        exception_as_left: Callable[[Exception], A],
         risky_fn: Callable[[B], None],
+        exception_as_left: Callable[[Exception], A],
     ) -> Either[A, B]:
         """
         Try calling an exception-prone risky_fn with Right's value, returning Right upon success.
@@ -98,8 +98,8 @@ class Left[A, B](EitherBase[A, B]):
     @override
     def do_try(
         self,
-        _exception_as_left: Callable[[Exception], A],
         _fn: Callable[[B], None],
+        _exception_as_left: Callable[[Exception], A],
     ) -> Either[A, B]:
         return Left(self._value)
 
@@ -153,8 +153,8 @@ class Right[A, B](EitherBase[A, B]):
     @override
     def do_try(
         self,
-        exception_as_left: Callable[[Exception], A],
         risky_fn: Callable[[B], None],
+        exception_as_left: Callable[[Exception], A],
     ) -> Either[A, B]:
         try:
             risky_fn(self._value)
