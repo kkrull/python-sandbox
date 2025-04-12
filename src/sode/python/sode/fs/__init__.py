@@ -1,3 +1,3 @@
-from typing import Final
+from .cli import add_command
 
-FS_COMMAND: Final[str] = "command.fs"
+__all__ = ["add_command"]

@@ -2,11 +2,11 @@ from argparse import _SubParsersAction
 
 from sode.shared.cli import add_subcommand_parsers
 
-from . import FS_COMMAND
 from .find import add_find
+from .namespace import FS_COMMAND
 
 
-def add_fs(
+def add_command(
     commands: _SubParsersAction,  # type: ignore[type-arg]
 ) -> None:
     """Add a parser for fs commands"""
