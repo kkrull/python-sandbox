@@ -17,7 +17,7 @@ from .namespace import FS_COMMAND
 logger = logging.getLogger(__name__)
 
 
-def add_find(
+def add_subcommand(
     subcommands: _SubParsersAction,  # type: ignore[type-arg]
 ) -> None:
     """Add the find sub-command"""
