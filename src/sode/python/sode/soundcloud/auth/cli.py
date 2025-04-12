@@ -42,10 +42,10 @@ def _run_auth_prepare(args: AuthNamespace) -> Either[str, tuple[Path, TokenRespo
     )
 
 
-def _run_auth(state_file_path: Path, tokens: TokenResponse) -> Either[str, int]:
+def _run_auth(state_file: Path, tokens: TokenResponse) -> Either[str, int]:
     try:
-        with open(state_file_path, mode="wt") as state_file:
-            tokens.write_json(state_file, indent=2, sort_keys=True)
+        with open(state_file, mode="wt") as state_fd:
+            tokens.write_json(state_fd, indent=2, sort_keys=True)
             return Right(0)
     except Exception as error:
         return Left(str(error))
