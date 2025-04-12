@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from typing import Callable, TypeVar, Union, override
+from typing import Callable, Never, TypeVar, Union, override
 
 A = TypeVar("A")
 B = TypeVar("B")
@@ -97,13 +97,15 @@ class Left[A, B](EitherBase[A, B]):
 
     @override
     def do_try(
-        self, _exception_as_left: Callable[[Exception], A], _fn: Callable[[B], None]
+        self,
+        _exception_as_left: Callable[[Exception], A],
+        _fn: Callable[[B], None],
     ) -> Either[A, B]:
-        return Left[A, B](self._value)
+        return Left(self._value)
 
     @override
     def flat_map(self, _fn: Callable[[B], Either[A, C]]) -> Either[A, C]:
-        return Left[A, C](self._value)
+        return Left(self._value)
 
     @override
     def get_or_else(self, fallback_value: B) -> B:
@@ -126,11 +128,11 @@ class Left[A, B](EitherBase[A, B]):
 
     @override
     def map(self, _fn: Callable[[B], C]) -> Either[A, C]:
-        return Left[A, C](self._value)
+        return Left(self._value)
 
     @property
     @override
-    def right_value(self) -> B:
+    def right_value(self) -> Never:
         raise ValueError(f"{self!r} has no right hand value")
 
 
@@ -150,13 +152,15 @@ class Right[A, B](EitherBase[A, B]):
 
     @override
     def do_try(
-        self, exception_as_left: Callable[[Exception], A], risky_fn: Callable[[B], None]
+        self,
+        exception_as_left: Callable[[Exception], A],
+        risky_fn: Callable[[B], None],
     ) -> Either[A, B]:
         try:
             risky_fn(self._value)
-            return Right[A, B](self._value)
+            return Right(self._value)
         except Exception as error:
-            return Left[A, B](exception_as_left(error))
+            return Left(exception_as_left(error))
 
     @override
     def flat_map(self, fn: Callable[[B], Either[A, C]]) -> Either[A, C]:
@@ -178,12 +182,12 @@ class Right[A, B](EitherBase[A, B]):
 
     @property
     @override
-    def left_value(self) -> A:
+    def left_value(self) -> Never:
         raise ValueError("Right has no left_value")
 
     @override
     def map(self, fn: Callable[[B], C]) -> Either[A, C]:
-        return Right[A, C](fn(self._value))
+        return Right(fn(self._value))
 
     @property
     @override

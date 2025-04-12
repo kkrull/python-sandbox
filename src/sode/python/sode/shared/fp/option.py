@@ -97,7 +97,7 @@ class Empty[A](OptionBase[A]):
 
     @override
     def to_right[L](self, left_value: L) -> Either[L, A]:
-        return Left[L, A](left_value)
+        return Left(left_value)
 
 
 class Value[A](OptionBase[A]):
@@ -142,4 +142,4 @@ class Value[A](OptionBase[A]):
 
     @override
     def to_right[L](self, _left_value: L) -> Either[L, A]:
-        return Right[L, A](self._value)
+        return Right(self._value)
