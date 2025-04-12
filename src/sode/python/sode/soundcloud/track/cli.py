@@ -66,6 +66,6 @@ def _run_track(args: ProgramNamespace, state: RunState) -> int:
     )
 
     if args.list:
-        return list.list_tracks(args, state)
+        return list.list_tracks(state)
     else:
         return 99
