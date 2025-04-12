@@ -15,28 +15,26 @@ class AccessToken:
 
     @staticmethod
     def expected(value: str, token_type: str) -> Either[str, "AccessToken"]:
-        if len(token_type.strip()) == 0:
-            return Left(f"unknown token_type: {repr(token_type)}")
+        if (token_type is None) or (len(token_type.strip()) == 0):
+            return Left(f"unknown token_type: {token_type!r}")
 
         match value:
             case str(value) if len(value.strip()) > 0:
                 return Right(AccessToken(value.strip(), token_type.strip()))
             case str(value):
-                return Left(f"empty value: {repr(value)}")
+                return Left(f"empty value: {value!r}")
             case None:
-                return Left(f"missing value: {repr(value)}")
+                return Left(f"missing value: {value!r}")
             case _ as value:
-                return Left(f"unknown type of value: {repr(value)}")
+                return Left(f"unknown type of value: {value!r}")
 
     @staticmethod
-    def maybe(value: str, token_type: str = "Bearer") -> Option["AccessToken"]:
-        match value:
-            case None:
-                return Empty[AccessToken]()
-            case str(_) if len(value.strip()) == 0:
-                return Empty[AccessToken]()
-            case str(v):
-                return Value(AccessToken(v.strip(), token_type.strip()))
+    def maybe(value: str, token_type: str) -> Option["AccessToken"]:
+        match AccessToken.expected(value, token_type):
+            case Left(_):
+                return Empty()
+            case Right(t):
+                return Value(t)
 
     def oauth_session(self) -> OAuth2Session:
         return OAuth2Session(token={"access_token": self.value, "token_type": self.token_type})
