@@ -1,4 +1,5 @@
 import logging
+import os
 from argparse import _SubParsersAction
 
 from sode.shared.cli import ProgramNamespace, RunState, argfactory, cmdfactory
@@ -8,6 +9,7 @@ logger = logging.getLogger(__name__)
 
 def add_command(
     commands: _SubParsersAction,  # type: ignore[type-arg]
+    _environ: os._Environ[str],
 ) -> None:
     """Add a parser for the greet command"""
 

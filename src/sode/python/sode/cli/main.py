@@ -2,6 +2,7 @@
 # PYTHON_ARGCOMPLETE_OK
 
 import logging
+import os
 import sys
 from argparse import ArgumentError
 from typing import NoReturn
@@ -22,7 +23,7 @@ def main() -> NoReturn:
 
 
 def main_fn(state: MainState) -> int:
-    argv_parser = parser.for_argv(state)
+    argv_parser = parser.for_argv(state, os.environ)
     argcomplete.autocomplete(argv_parser, append_space=False)
     try:
         args = argv_parser.parse_args(state.arguments, namespace=ProgramNamespace.empty())

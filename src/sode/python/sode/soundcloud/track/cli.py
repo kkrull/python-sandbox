@@ -1,8 +1,10 @@
 import logging
+import os
 import textwrap
 from argparse import RawTextHelpFormatter, _SubParsersAction
 
-from sode.shared.cli import ProgramNamespace, RunState, cmdfactory
+from sode.shared.cli import ProgramNamespace, RunState, argfactory, cmdfactory
+from sode.shared.state.path import default_state_dir
 
 from ..namespace import SC_COMMAND
 from . import list
@@ -12,6 +14,7 @@ logger = logging.getLogger(__name__)
 
 def add_subcommand(
     subcommands: _SubParsersAction,  # type: ignore[type-arg]
+    environ: os._Environ[str],
 ) -> None:
     """Add the track sub-command"""
 
@@ -33,6 +36,21 @@ def add_subcommand(
         action="store_true",
         help="list tracks",
         required=True,
+    )
+
+    argfactory.completable_argument(
+        argfactory.completion_choices(),
+        track_parser.add_argument(
+            "--state-dir",
+            **argfactory.environ_or_default(
+                "SODE_STATE",
+                str(default_state_dir().absolute()),
+                environ,
+            ),
+            help="Directory where sode stores its state data (default: %(default)s)",
+            metavar="DIR",
+            nargs=1,
+        ),
     )
 
 
