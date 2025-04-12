@@ -1,12 +1,11 @@
 import logging
 import textwrap
-from argparse import _SubParsersAction
+from argparse import RawTextHelpFormatter, _SubParsersAction
 from pathlib import Path
 from typing import Iterable
 
 from sode.fs import FS_COMMAND
 from sode.shared.cli import (
-    DefaultsAndRawTextFormatter,
     ProgramNamespace,
     RunState,
     argfactory,
@@ -28,7 +27,7 @@ def add_find(
         command=_run_find,
         description="Find files matching any of the specified criteria",
         epilog="""Example: %(prog)s --glob '**/index.[j,t]s' ~/git/node-sandbox ~/git/react""",
-        formatter_class=DefaultsAndRawTextFormatter,
+        formatter_class=RawTextHelpFormatter,
         help="find files lurking in the dark",
     )
 
@@ -36,14 +35,14 @@ def add_find(
         "--exclude",
         action="extend",
         default=["**/.git/**", "**/node_modules/**"],
-        help="path pattern(s) to exclude (repeatable)",
+        help="path pattern(s) to exclude (repeatable; default: %(default)s)",
         metavar="GLOB",
         nargs=1,
     )
     find_parser.add_argument(
         "--glob",
         action="extend",
-        help="path pattern(s) to match (repeatable)",
+        help="path pattern(s) to match (repeatable; default: %(default)s)",
         metavar="GLOB",
         nargs=1,
     )

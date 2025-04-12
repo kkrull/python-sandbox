@@ -11,10 +11,11 @@ type Option[A] = Union[Empty[A], Value[A]]
 
 def new_option(maybe_value: A) -> Option[A]:
     """Return Empty if the given value is None, or Value with the given value otherwise."""
+
     if maybe_value is None:
-        return Empty()
+        return Empty[A]()
     else:
-        return Value(maybe_value)
+        return Value[A](maybe_value)
 
 
 class OptionBase[A]:
@@ -57,8 +58,8 @@ class OptionBase[A]:
         pass
 
     @abstractmethod
-    def to_right(self, left_value: B) -> Either[B, A]:
-        """Get Value's inner value, or-in the case of Empty-the given fallback value."""
+    def to_right[L](self, left_value: L) -> Either[L, A]:
+        """Convert a Value to Right or Empty to Left with the given left-hand (e.g. error) value."""
         pass
 
 
@@ -79,7 +80,7 @@ class Empty[A](OptionBase[A]):
 
     @override
     def flat_map(self, _fn: Callable[[A], Option[B]]) -> Option[B]:
-        return Empty()
+        return Empty[B]()
 
     @override
     def get_or_else(self, fallback_value: A) -> A:
@@ -92,43 +93,43 @@ class Empty[A](OptionBase[A]):
 
     @override
     def map(self, _fn: Callable[[A], B]) -> Option[B]:
-        return Empty()
+        return Empty[B]()
 
     @override
-    def to_right(self, left_value: B) -> Either[B, A]:
+    def to_right[L](self, left_value: L) -> Either[L, A]:
         return Left(left_value)
 
 
 class Value[A](OptionBase[A]):
     """A container with a value inside"""
 
-    __match_args__ = ("value",)
+    __match_args__ = ("_value",)
 
     def __init__(self, value: A):
-        self.value = value
+        self._value = value
 
     @override
     def __repr__(self) -> str:
-        return f"Value({self.value!r})"
+        return f"Value({self._value!r})"
 
     @override
     def __str__(self) -> str:
-        return f"Value({self.value})"
+        return f"Value({self._value})"
 
     @override
     def filter(self, predicate: Callable[[A], bool]) -> Option[A]:
-        if predicate(self.value):
+        if predicate(self._value):
             return self
         else:
             return Empty[A]()
 
     @override
     def flat_map(self, fn: Callable[[A], Option[B]]) -> Option[B]:
-        return fn(self.value)
+        return fn(self._value)
 
     @override
     def get_or_else(self, _fallback_value: A) -> A:
-        return self.value
+        return self._value
 
     @property
     @override
@@ -137,8 +138,8 @@ class Value[A](OptionBase[A]):
 
     @override
     def map(self, fn: Callable[[A], B]) -> Option[B]:
-        return Value(fn(self.value))
+        return Value[B](fn(self._value))
 
     @override
-    def to_right(self, _left_value: B) -> Either[B, A]:
-        return Right(self.value)
+    def to_right[L](self, _left_value: L) -> Either[L, A]:
+        return Right(self._value)

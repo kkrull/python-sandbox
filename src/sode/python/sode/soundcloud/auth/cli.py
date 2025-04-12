@@ -2,6 +2,7 @@ import logging
 import os
 from argparse import _SubParsersAction
 from pathlib import Path
+from typing import assert_never
 
 from sode.shared.cli import ProgramNamespace, RunState
 from sode.shared.fp import Either, Left, Right, either
@@ -21,8 +22,8 @@ def add_auth(
     AuthNamespace.add_command_subparser(subcommands, "auth", _run_auth_shell, environ)
 
 
-def _run_auth_shell(all_args: ProgramNamespace, state: RunState) -> int:
-    cmd_args = AuthNamespace.upgrayedd(all_args)
+def _run_auth_shell(args: ProgramNamespace, state: RunState) -> int:
+    cmd_args = AuthNamespace.upgrayedd(args)
     logger.debug({"soundcloud-auth": cmd_args.to_dict()})
     match _run_auth_prepare(cmd_args).flat_map(lambda tup: _run_auth(*tup)):
         case Left(error):
@@ -30,6 +31,8 @@ def _run_auth_shell(all_args: ProgramNamespace, state: RunState) -> int:
             return 1
         case Right(status):
             return status
+        case unreachable:
+            assert_never(unreachable)
 
 
 def _run_auth_prepare(args: AuthNamespace) -> Either[str, tuple[Path, TokenResponse]]:
@@ -39,10 +42,10 @@ def _run_auth_prepare(args: AuthNamespace) -> Either[str, tuple[Path, TokenRespo
     )
 
 
-def _run_auth(state_file_path: Path, tokens: TokenResponse) -> Either[str, int]:
+def _run_auth(state_file: Path, tokens: TokenResponse) -> Either[str, int]:
     try:
-        with open(state_file_path, mode="wt") as state_file:
-            tokens.write_json(state_file, indent=2, sort_keys=True)
+        with open(state_file, mode="wt") as state_fd:
+            tokens.write_json(state_fd, indent=2, sort_keys=True)
             return Right(0)
     except Exception as error:
         return Left(str(error))
@@ -51,13 +54,13 @@ def _run_auth(state_file_path: Path, tokens: TokenResponse) -> Either[str, int]:
 def _ensure_user_file_exists(directory: Either[str, Path], filename: str) -> Either[str, Path]:
     return (
         directory.do_try(
-            lambda exception: str(exception),
             lambda dir_path: dir_path.mkdir(0o700, exist_ok=True, parents=True),
+            lambda exception: str(exception),
         )
         .map(lambda dir_path: dir_path.joinpath(filename))
         .do_try(
-            lambda exception: str(exception),
             lambda file_path: file_path.touch(0o600, exist_ok=True),
+            lambda exception: str(exception),
         )
     )
 

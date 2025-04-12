@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from typing import Callable, TypeVar, Union, override
+from typing import Callable, Never, TypeVar, Union, override
 
 A = TypeVar("A")
 B = TypeVar("B")
@@ -8,41 +8,6 @@ C = TypeVar("C")
 
 type Either[A, B] = Union[Left[A, B], Right[A, B]]
 
-X = TypeVar("X")
-Y = TypeVar("Y")
-Z = TypeVar("Z")
-
-
-def flatten_2_or_left(
-    y: Either[A, Y],
-    z: Either[A, Z],
-) -> Either[A, tuple[Y, Z]]:
-    """Flatten all Rights to a tuple of right-hand values, or return the first Left"""
-
-    left_values = (e.left_value for e in (y, z) if e.is_left)
-    match next(left_values, None):
-        case None:
-            right_values = (y.right_value, z.right_value)
-            return Right(right_values)
-        case first_left_value:
-            return Left(first_left_value)
-
-
-def flatten_3_or_left(
-    x: Either[A, X],
-    y: Either[A, Y],
-    z: Either[A, Z],
-) -> Either[A, tuple[X, Y, Z]]:
-    """Flatten all Rights to a tuple of right-hand values, or return the first Left"""
-
-    left_values = (e.left_value for e in (x, y, z) if e.is_left)
-    match next(left_values, None):
-        case None:
-            right_values = (x.right_value, y.right_value, z.right_value)
-            return Right(right_values)
-        case first_left_value:
-            return Left(first_left_value)
-
 
 class EitherBase[A, B]:
     """
@@ -50,7 +15,7 @@ class EitherBase[A, B]:
     Right[B].
 
     Left-hand values are typically used for errors or lack of ability to proceed further with an
-    algorithm. Mapping functions are right-associative.  In other words, mapping functions are
+    algorithm.  Mapping functions are right-associative.  In other words, mapping functions are
     applied to right-hand values, but left-hand values are returned as-is.
     """
 
@@ -64,7 +29,9 @@ class EitherBase[A, B]:
 
     @abstractmethod
     def do_try(
-        self, exception_as_left: Callable[[Exception], A], risky_fn: Callable[[B], None]
+        self,
+        risky_fn: Callable[[B], None],
+        exception_as_left: Callable[[Exception], A],
     ) -> Either[A, B]:
         """
         Try calling an exception-prone risky_fn with Right's value, returning Right upon success.
@@ -130,13 +97,15 @@ class Left[A, B](EitherBase[A, B]):
 
     @override
     def do_try(
-        self, _exception_as_left: Callable[[Exception], A], _fn: Callable[[B], None]
+        self,
+        _fn: Callable[[B], None],
+        _exception_as_left: Callable[[Exception], A],
     ) -> Either[A, B]:
-        return Left[A, B](self._value)
+        return Left(self._value)
 
     @override
     def flat_map(self, _fn: Callable[[B], Either[A, C]]) -> Either[A, C]:
-        return Left[A, C](self._value)
+        return Left(self._value)
 
     @override
     def get_or_else(self, fallback_value: B) -> B:
@@ -159,11 +128,11 @@ class Left[A, B](EitherBase[A, B]):
 
     @override
     def map(self, _fn: Callable[[B], C]) -> Either[A, C]:
-        return Left[A, C](self._value)
+        return Left(self._value)
 
     @property
     @override
-    def right_value(self) -> B:
+    def right_value(self) -> Never:
         raise ValueError(f"{self!r} has no right hand value")
 
 
@@ -183,13 +152,15 @@ class Right[A, B](EitherBase[A, B]):
 
     @override
     def do_try(
-        self, exception_as_left: Callable[[Exception], A], risky_fn: Callable[[B], None]
+        self,
+        risky_fn: Callable[[B], None],
+        exception_as_left: Callable[[Exception], A],
     ) -> Either[A, B]:
         try:
             risky_fn(self._value)
-            return Right[A, B](self._value)
+            return Right(self._value)
         except Exception as error:
-            return Left[A, B](exception_as_left(error))
+            return Left(exception_as_left(error))
 
     @override
     def flat_map(self, fn: Callable[[B], Either[A, C]]) -> Either[A, C]:
@@ -211,7 +182,7 @@ class Right[A, B](EitherBase[A, B]):
 
     @property
     @override
-    def left_value(self) -> A:
+    def left_value(self) -> Never:
         raise ValueError("Right has no left_value")
 
     @override
@@ -222,3 +193,39 @@ class Right[A, B](EitherBase[A, B]):
     @override
     def right_value(self) -> B:
         return self._value
+
+
+X = TypeVar("X")
+Y = TypeVar("Y")
+Z = TypeVar("Z")
+
+
+def flatten_2_or_left(
+    y: Either[A, Y],
+    z: Either[A, Z],
+) -> Either[A, tuple[Y, Z]]:
+    """Flatten all Rights to a tuple of right-hand values (same order), or return the first Left"""
+
+    left_values = (e.left_value for e in (y, z) if e.is_left)
+    match next(left_values, None):
+        case None:
+            right_values = (y.right_value, z.right_value)
+            return Right(right_values)
+        case first_left_value:
+            return Left(first_left_value)
+
+
+def flatten_3_or_left(
+    x: Either[A, X],
+    y: Either[A, Y],
+    z: Either[A, Z],
+) -> Either[A, tuple[X, Y, Z]]:
+    """Flatten all Rights to a tuple of right-hand values (same order), or return the first Left"""
+
+    left_values = (e.left_value for e in (x, y, z) if e.is_left)
+    match next(left_values, None):
+        case None:
+            right_values = (x.right_value, y.right_value, z.right_value)
+            return Right(right_values)
+        case first_left_value:
+            return Left(first_left_value)

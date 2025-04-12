@@ -55,10 +55,9 @@ class AuthNamespace(ProgramNamespace):
               Override defaults or CLI arguments:
                 SOUNDCLOUD_TOKEN_URL      override --token-endpoint
                 SOUNDCLOUD_USER_ID        override --user-id
-
-            Find your API credentials at: https://soundcloud.com/you/apps
             """,
             ),
+            epilog="Find your API credentials at: https://soundcloud.com/you/apps",
             formatter_class=RawTextHelpFormatter,
             help="(re-)authorize with SoundCloud API [start here]",
         )

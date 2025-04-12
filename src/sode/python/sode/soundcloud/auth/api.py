@@ -86,7 +86,6 @@ def fetch_tokens(
         {
             "fetch_tokens": {
                 "client_id": client_id,
-                "client_secret": client_secret,
                 "token_endpoint": token_endpoint,
             }
         }
@@ -98,8 +97,7 @@ def fetch_tokens(
     oauth = OAuth2Session(client=client)
 
     try:
-        return Right(oauth.fetch_token(auth=auth, token_url=token_endpoint)).map(
-            lambda json_response: TokenResponse(**json_response)
-        )
+        response: Mapping[str, Any] = oauth.fetch_token(auth=auth, token_url=token_endpoint)
+        return Right(response).map(lambda json: TokenResponse(**json))
     except Exception as err:
         return Left(f"{token_endpoint}: {err}")
