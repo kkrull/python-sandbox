@@ -1,5 +1,6 @@
 import logging
-from argparse import _SubParsersAction
+import textwrap
+from argparse import RawTextHelpFormatter, _SubParsersAction
 
 from sode.shared.cli import ProgramNamespace, RunState, cmdfactory
 
@@ -18,7 +19,12 @@ def add_subcommand(
         subcommands,
         "track",
         command=_run_track,
-        description="Work with tracks",
+        description=textwrap.dedent(
+            """
+        Work with tracks on SoundCloud.  Requires authorization with `auth`.
+        """,
+        ),
+        formatter_class=RawTextHelpFormatter,
         help="hack tracks",
     )
 
