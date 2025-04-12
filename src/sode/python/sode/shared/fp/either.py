@@ -8,41 +8,6 @@ C = TypeVar("C")
 
 type Either[A, B] = Union[Left[A, B], Right[A, B]]
 
-X = TypeVar("X")
-Y = TypeVar("Y")
-Z = TypeVar("Z")
-
-
-def flatten_2_or_left(
-    y: Either[A, Y],
-    z: Either[A, Z],
-) -> Either[A, tuple[Y, Z]]:
-    """Flatten all Rights to a tuple of right-hand values, or return the first Left"""
-
-    left_values = (e.left_value for e in (y, z) if e.is_left)
-    match next(left_values, None):
-        case None:
-            right_values = (y.right_value, z.right_value)
-            return Right(right_values)
-        case first_left_value:
-            return Left(first_left_value)
-
-
-def flatten_3_or_left(
-    x: Either[A, X],
-    y: Either[A, Y],
-    z: Either[A, Z],
-) -> Either[A, tuple[X, Y, Z]]:
-    """Flatten all Rights to a tuple of right-hand values, or return the first Left"""
-
-    left_values = (e.left_value for e in (x, y, z) if e.is_left)
-    match next(left_values, None):
-        case None:
-            right_values = (x.right_value, y.right_value, z.right_value)
-            return Right(right_values)
-        case first_left_value:
-            return Left(first_left_value)
-
 
 class EitherBase[A, B]:
     """
@@ -50,7 +15,7 @@ class EitherBase[A, B]:
     Right[B].
 
     Left-hand values are typically used for errors or lack of ability to proceed further with an
-    algorithm. Mapping functions are right-associative.  In other words, mapping functions are
+    algorithm.  Mapping functions are right-associative.  In other words, mapping functions are
     applied to right-hand values, but left-hand values are returned as-is.
     """
 
@@ -64,7 +29,9 @@ class EitherBase[A, B]:
 
     @abstractmethod
     def do_try(
-        self, exception_as_left: Callable[[Exception], A], risky_fn: Callable[[B], None]
+        self,
+        exception_as_left: Callable[[Exception], A],
+        risky_fn: Callable[[B], None],
     ) -> Either[A, B]:
         """
         Try calling an exception-prone risky_fn with Right's value, returning Right upon success.
@@ -216,9 +183,45 @@ class Right[A, B](EitherBase[A, B]):
 
     @override
     def map(self, fn: Callable[[B], C]) -> Either[A, C]:
-        return Right(fn(self._value))
+        return Right[A, C](fn(self._value))
 
     @property
     @override
     def right_value(self) -> B:
         return self._value
+
+
+X = TypeVar("X")
+Y = TypeVar("Y")
+Z = TypeVar("Z")
+
+
+def flatten_2_or_left(
+    y: Either[A, Y],
+    z: Either[A, Z],
+) -> Either[A, tuple[Y, Z]]:
+    """Flatten all Rights to a tuple of right-hand values (same order), or return the first Left"""
+
+    left_values = (e.left_value for e in (y, z) if e.is_left)
+    match next(left_values, None):
+        case None:
+            right_values = (y.right_value, z.right_value)
+            return Right(right_values)
+        case first_left_value:
+            return Left(first_left_value)
+
+
+def flatten_3_or_left(
+    x: Either[A, X],
+    y: Either[A, Y],
+    z: Either[A, Z],
+) -> Either[A, tuple[X, Y, Z]]:
+    """Flatten all Rights to a tuple of right-hand values (same order), or return the first Left"""
+
+    left_values = (e.left_value for e in (x, y, z) if e.is_left)
+    match next(left_values, None):
+        case None:
+            right_values = (x.right_value, y.right_value, z.right_value)
+            return Right(right_values)
+        case first_left_value:
+            return Left(first_left_value)
