@@ -3,12 +3,12 @@ from argparse import _SubParsersAction
 
 from sode.shared.cli import ProgramNamespace, RunState, cmdfactory
 
-from .namespace import SC_COMMAND
+from ..namespace import SC_COMMAND
 
 logger = logging.getLogger(__name__)
 
 
-def add_track(
+def add_subcommand(
     subcommands: _SubParsersAction,  # type: ignore[type-arg]
 ) -> None:
     """Add the track sub-command"""
