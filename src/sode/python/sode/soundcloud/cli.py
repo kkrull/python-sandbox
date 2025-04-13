@@ -1,3 +1,4 @@
+import os
 from argparse import _SubParsersAction
 
 from sode.shared.cli import add_subcommand_parsers
@@ -8,6 +9,7 @@ from .namespace import SC_COMMAND
 
 def add_command(
     commands: _SubParsersAction,  # type: ignore[type-arg]
+    environ: os._Environ[str],
 ) -> None:
     """Add a parser for soundcloud commands"""
 
@@ -19,6 +21,6 @@ def add_command(
     )
 
     sc_subcommands = add_subcommand_parsers(sc_parser, SC_COMMAND)
-    auth.add_subcommand(sc_subcommands)
-    thing.add_subcommand(sc_subcommands)
-    track.add_subcommand(sc_subcommands)
+    auth.add_subcommand(sc_subcommands, environ)
+    thing.add_subcommand(sc_subcommands, environ)
+    track.add_subcommand(sc_subcommands, environ)

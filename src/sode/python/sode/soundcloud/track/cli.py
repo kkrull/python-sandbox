@@ -1,15 +1,21 @@
 import logging
-from argparse import _SubParsersAction
+import os
+import textwrap
+from argparse import RawTextHelpFormatter, _SubParsersAction
+from pathlib import Path
 
-from sode.shared.cli import ProgramNamespace, RunState, cmdfactory
+from sode.shared.cli import ProgramNamespace, RunState, argfactory, cmdfactory
+from sode.shared.state.path import default_state_dir
 
 from ..namespace import SC_COMMAND
+from . import list
 
 logger = logging.getLogger(__name__)
 
 
 def add_subcommand(
     subcommands: _SubParsersAction,  # type: ignore[type-arg]
+    environ: os._Environ[str],
 ) -> None:
     """Add the track sub-command"""
 
@@ -17,7 +23,12 @@ def add_subcommand(
         subcommands,
         "track",
         command=_run_track,
-        description="Work with tracks",
+        description=textwrap.dedent(
+            """
+        Work with tracks on SoundCloud.  Requires authorization with `auth`.
+        """,
+        ),
+        formatter_class=RawTextHelpFormatter,
         help="hack tracks",
     )
 
@@ -26,6 +37,21 @@ def add_subcommand(
         action="store_true",
         help="list tracks",
         required=True,
+    )
+
+    argfactory.completable_argument(
+        argfactory.completion_choices(),
+        track_parser.add_argument(
+            "--state-dir",
+            **argfactory.environ_or_default(
+                "SODE_STATE",
+                str(default_state_dir().absolute()),
+                environ,
+            ),
+            help="Directory where sode stores its state data (default: %(default)s)",
+            metavar="DIR",
+            nargs=1,
+        ),
     )
 
 
@@ -40,12 +66,8 @@ def _run_track(args: ProgramNamespace, state: RunState) -> int:
         }
     )
 
-    if args.list:
-        return list_tracks(args, state)
-    else:
+    if not args.list:
         return 99
 
-
-def list_tracks(args: ProgramNamespace, state: RunState) -> int:
-    print(f"Listing tracks...", file=state.stdout)
-    return 0
+    list_state = list.ListTracksState(state_dir=Path(args.state_dir))
+    return list.list_tracks(list_state)

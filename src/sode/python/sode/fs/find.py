@@ -1,4 +1,5 @@
 import logging
+import os
 import textwrap
 from argparse import RawTextHelpFormatter, _SubParsersAction
 from pathlib import Path
@@ -19,6 +20,7 @@ logger = logging.getLogger(__name__)
 
 def add_subcommand(
     subcommands: _SubParsersAction,  # type: ignore[type-arg]
+    _environ: os._Environ[str],
 ) -> None:
     """Add the find sub-command"""
 

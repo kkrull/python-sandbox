@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 def add_subcommand(
     subcommands: _SubParsersAction,  # type: ignore[type-arg]
-    environ: os._Environ[str] = os.environ,
+    environ: os._Environ[str],
 ) -> None:
     """Add the auth sub-command"""
 
