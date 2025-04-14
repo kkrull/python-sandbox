@@ -31,6 +31,14 @@ def completion_choices(choices: list[str] = []) -> argcomplete.completers.Choice
 DefaultArg = TypedDict("DefaultArg", {"default": str})
 HelplessArg = TypedDict("HelplessArg", {"help": str})
 OptionalArg = TypedDict("OptionalArg", {"required": Literal[False]})
+OptionalArgWithDefault = TypedDict(
+    "OptionalArgWithDefault",
+    {
+        "default": str,
+        "required": Literal[False],
+    },
+)
+
 RequiredArg = TypedDict("RequiredArg", {"required": Literal[True]})
 
 
@@ -84,3 +92,12 @@ def environ_or_required(
             return {"default": secret_value}
         case None:
             return {"required": True}
+
+
+def optional_with_default(default: str) -> OptionalArgWithDefault:
+    """An optional argument with a default value."""
+
+    return {
+        "default": default,
+        "required": False,
+    }

@@ -5,6 +5,8 @@ from argparse import RawTextHelpFormatter, _SubParsersAction
 from pathlib import Path
 
 from sode.shared.cli import ProgramNamespace, RunState, argfactory, cmdfactory
+from sode.shared.fp.either import Either, Left
+from sode.shared.oauth.token import AccessToken
 from sode.shared.state.path import default_state_dir
 
 from ..namespace import SC_COMMAND
@@ -26,6 +28,10 @@ def add_subcommand(
         description=textwrap.dedent(
             """
         Work with tracks on SoundCloud.  Requires authorization with `auth`.
+
+        environment variables:
+          Override defaults or CLI arguments:
+            SOUNDCLOUD_USER_ID        override --user-id
         """,
         ),
         formatter_class=RawTextHelpFormatter,
@@ -43,13 +49,20 @@ def add_subcommand(
         argfactory.completion_choices(),
         track_parser.add_argument(
             "--state-dir",
-            **argfactory.environ_or_default(
-                "SODE_STATE",
-                str(default_state_dir().absolute()),
-                environ,
-            ),
+            **argfactory.optional_with_default(str(default_state_dir().absolute())),
             help="Directory where sode stores its state data (default: %(default)s)",
             metavar="DIR",
+            nargs=1,
+        ),
+    )
+
+    argfactory.completable_argument(
+        argfactory.completion_choices(),
+        track_parser.add_argument(
+            "-u",
+            "--user-id",
+            **argfactory.environ_or_required("SOUNDCLOUD_USER_ID", environ),
+            help="SoundCloud user ID",
             nargs=1,
         ),
     )
@@ -69,5 +82,12 @@ def _run_track(args: ProgramNamespace, state: RunState) -> int:
     if not args.list:
         return 99
 
-    list_state = list.ListTracksState(state_dir=Path(args.state_dir))
+    list_state = list.ListTracksState(
+        access_token=lambda: load_access_token(args.state_dir),
+        user_id=args.user_id,
+    )
     return list.list_tracks(list_state)
+
+
+def load_access_token(state_dir: Path) -> Either[str, AccessToken]:
+    return Left("load_access_token: not implemented")
