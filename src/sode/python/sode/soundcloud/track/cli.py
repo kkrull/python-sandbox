@@ -82,13 +82,19 @@ def _run_track(args: ProgramNamespace, state: RunState) -> int:
     if not args.list:
         return 99
 
+    list_state = listing_state(args, state)
+    return list.list_tracks(list_state)
+
+
+def listing_state(args: ProgramNamespace, state: RunState) -> list.ListTracksState:
     list_state = list.ListTracksState(
         access_token=lambda: load_access_token(args.state_dir),
         stderr=state.stderr,
         stdout=state.stdout,
         user_id=args.user_id,
     )
-    return list.list_tracks(list_state)
+
+    return list_state
 
 
 def load_access_token(state_dir: Path) -> Either[str, AccessToken]:
