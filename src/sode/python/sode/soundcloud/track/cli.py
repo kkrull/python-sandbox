@@ -6,6 +6,7 @@ from pathlib import Path
 
 from sode.shared.cli import ProgramNamespace, RunState, argfactory, cmdfactory
 from sode.shared.fp.either import Either, Left
+from sode.shared.fp.option import Value
 from sode.shared.oauth.token import AccessToken
 from sode.shared.state.path import default_state_dir
 
@@ -87,14 +88,12 @@ def _run_track(args: ProgramNamespace, state: RunState) -> int:
 
 
 def listing_state(args: ProgramNamespace, state: RunState) -> list.ListTracksState:
-    list_state = list.ListTracksState(
+    return list.ListTracksState(
         access_token=lambda: load_access_token(args.state_dir),
         stderr=state.stderr,
         stdout=state.stdout,
         user_id=args.user_id,
     )
-
-    return list_state
 
 
 def load_access_token(state_dir: Path) -> Either[str, AccessToken]:
