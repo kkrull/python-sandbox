@@ -5,7 +5,7 @@ from sode.shared.oauth import AccessToken
 
 # TODO KDK: Return Either[str, Playlist] instead of the implementation type Response
 def any(access_token: AccessToken, user_id: str) -> Response:
-    """Fetch any playlist for that user"""
+    """Fetch any playlist for a user"""
 
     # https://developers.soundcloud.com/docs/api/explorer/open-api
     session = access_token.oauth_session()
