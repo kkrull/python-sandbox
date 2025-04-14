@@ -1,3 +1,4 @@
+import typing
 from dataclasses import dataclass
 from typing import Callable
 
@@ -12,6 +13,7 @@ type AccessTokenFactory = Callable[[], Either[str, AccessToken]]
 @dataclass(frozen=True)
 class ListTracksState:
     access_token: AccessTokenFactory
+    stdout: typing.IO[str]
     user_id: str
 
 

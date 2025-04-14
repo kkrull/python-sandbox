@@ -84,6 +84,7 @@ def _run_track(args: ProgramNamespace, state: RunState) -> int:
 
     list_state = list.ListTracksState(
         access_token=lambda: load_access_token(args.state_dir),
+        stdout=state.stdout,
         user_id=args.user_id,
     )
     return list.list_tracks(list_state)
