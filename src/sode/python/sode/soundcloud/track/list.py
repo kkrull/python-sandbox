@@ -1,10 +1,10 @@
 import typing
 from dataclasses import dataclass
-from typing import Callable
+from typing import Callable, Iterable, assert_never
 
 from requests import Response
 
-from sode.shared.fp.either import Either, Left
+from sode.shared.fp.either import Either, Left, Right
 from sode.shared.oauth.token import AccessToken
 
 type AccessTokenFactory = Callable[[], Either[str, AccessToken]]
@@ -13,14 +13,24 @@ type AccessTokenFactory = Callable[[], Either[str, AccessToken]]
 @dataclass(frozen=True)
 class ListTracksState:
     access_token: AccessTokenFactory
+    stderr: typing.IO[str]
     stdout: typing.IO[str]
     user_id: str
 
 
-# TODO KDK: Work here, then pull data back through the call stack
 def list_tracks(state: ListTracksState) -> int:
-    # print(f"Listing tracks...", file=state.stdout)
-    return 0
+    match state.access_token().flat_map(
+        lambda access_token: _tracks_list(access_token, state.user_id)
+    ):
+        case Left(err):
+            print(err, file=state.stderr)
+            return 1
+        case Right(listing):
+            for name in listing.track_names():
+                print(name, file=state.stdout)
+            return 0
+        case unreachable:
+            assert_never(unreachable)
 
 
 ## SoundCloud tracks
@@ -28,7 +38,9 @@ def list_tracks(state: ListTracksState) -> int:
 
 @dataclass(frozen=True)
 class TrackListing:
-    pass
+    def track_names(self) -> Iterable[str]:
+        # TODO KDK: Work here
+        return []
 
 
 def _tracks_list(access_token: AccessToken, user_id: str) -> Either[str, TrackListing]:
