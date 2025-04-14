@@ -89,12 +89,12 @@ def _run_track(args: ProgramNamespace, state: RunState) -> int:
 
 def listing_state(args: ProgramNamespace, state: RunState) -> list.ListTracksState:
     return list.ListTracksState(
-        access_token=lambda: load_access_token(args.state_dir),
+        access_token=lambda: _sode_load_access_token(args.state_dir),
         stderr=state.stderr,
         stdout=state.stdout,
         user_id=args.user_id,
     )
 
 
-def load_access_token(state_dir: Path) -> Either[str, AccessToken]:
+def _sode_load_access_token(state_dir: Path) -> Either[str, AccessToken]:
     return Left("load_access_token: not implemented")
