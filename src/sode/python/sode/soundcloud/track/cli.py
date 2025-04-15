@@ -9,6 +9,7 @@ from sode.shared.fp import Either, Left, Value
 from sode.shared.oauth.token import AccessToken
 from sode.shared.state.path import default_state_dir
 from sode.shared.state.state import SodeState
+from sode.soundcloud.auth import TokenResponse
 
 from ..namespace import SC_COMMAND
 from . import list
@@ -97,5 +98,7 @@ def listing_state(args: ProgramNamespace, state: RunState) -> list.ListTracksSta
 
 
 def _sode_load_access_token(state_dir: Path) -> Either[str, AccessToken]:
-    state = SodeState.load(state_dir)
-    return Left("load_access_token: not implemented")
+    state: Either[str, SodeState] = SodeState.load(state_dir)
+    response: Either[str, TokenResponse] = state.map(lambda x: x.soundcloud_auth)
+    access_token: Either[str, AccessToken] = response.flat_map(lambda x: x.access_token_v)
+    return access_token
