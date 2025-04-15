@@ -1,7 +1,9 @@
 import json
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any, Mapping, TextIO
 
+from sode.shared.fp import Either, Left
 from sode.soundcloud.auth.api import TokenResponse
 
 
@@ -10,6 +12,10 @@ class SodeState:
     """Top-level saved state for sode"""
 
     soundcloud_auth: TokenResponse
+
+    @staticmethod
+    def load(state_file: Path) -> Either[str, "SodeState"]:
+        return Left("SodeState::load: not implemented")
 
     @staticmethod
     def parse(data: Mapping[str, Any]) -> "SodeState":
