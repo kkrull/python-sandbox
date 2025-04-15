@@ -15,7 +15,12 @@ class SodeState:
 
     @staticmethod
     def load(state_file: Path) -> Either[str, "SodeState"]:
-        return Left("SodeState::load: not implemented")
+        try:
+            with open(state_file, mode="rt") as file:
+                json_file = json.load(file)
+            return Left("SodeState::load: not implemented")
+        except Exception as error:
+            return Left(str(error))
 
     @staticmethod
     def parse(data: Mapping[str, Any]) -> "SodeState":
