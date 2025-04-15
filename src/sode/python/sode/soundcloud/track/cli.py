@@ -98,7 +98,8 @@ def listing_state(args: ProgramNamespace, state: RunState) -> list.ListTracksSta
 
 
 def _sode_load_access_token(state_dir: Path) -> Either[str, AccessToken]:
-    state: Either[str, SodeState] = SodeState.load(state_dir)
-    response: Either[str, TokenResponse] = state.map(lambda x: x.soundcloud_auth)
-    access_token: Either[str, AccessToken] = response.flat_map(lambda x: x.access_token_v)
-    return access_token
+    return (
+        SodeState.load(state_dir)
+        .map(lambda x: x.soundcloud_auth)
+        .flat_map(lambda x: x.access_token_v)
+    )
