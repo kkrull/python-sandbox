@@ -1,3 +1,4 @@
+import logging
 import typing
 from dataclasses import dataclass
 from typing import Any, Callable, Iterable, Mapping, assert_never
@@ -8,6 +9,8 @@ from requests_oauthlib import OAuth2Session
 
 from sode.shared.fp import Either, Left, Right
 from sode.shared.oauth.token import AccessToken
+
+logger = logging.getLogger(__name__)
 
 type AccessTokenFactory = Callable[[], Either[str, AccessToken]]
 
@@ -21,6 +24,7 @@ class ListTracksState:
 
 
 def list_tracks(state: ListTracksState) -> int:
+    logger.debug({"list_tracks": {"state": state}})
     match state.access_token().flat_map(
         lambda access_token: _tracks_list(access_token, state.user_urn)
     ):

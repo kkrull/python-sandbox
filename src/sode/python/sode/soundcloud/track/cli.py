@@ -97,6 +97,7 @@ def listing_state(args: ProgramNamespace, state: RunState) -> list.ListTracksSta
 
 
 def _sode_load_access_token(state_dir: Path) -> Either[str, AccessToken]:
+    logger.debug({"_sode_load_access_token": {"state_dir": state_dir.absolute()}})
     return (
         SodeState.load(state_dir)
         .map(lambda x: x.soundcloud_auth)
