@@ -66,7 +66,7 @@ def _tracks_list_raw(session: requests.Session, user_id: str) -> Response:
 
     # TODO KDK: Look up the actual API endpoint for listing tracks
     return session.get(
-        f"https://api.soundcloud.com/users/{user_id}/bogus",
+        f"https://api.soundcloud.com/me/tracks",
         params={"limit": 1},
     )
 

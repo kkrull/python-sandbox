@@ -22,6 +22,6 @@ export SOUNDCLOUD_CLIENT_ID='client-id-from-envrc-local'
 export SOUNDCLOUD_CLIENT_SECRET='client-secret-from-envrc-local'
 export SOUNDCLOUD_TOKEN_URL='https://secure.soundcloud.com/oauth/token'
 
-# https://<soundcloud api>/users/6646206/tracks?client_id=...
-export SOUNDCLOUD_USER_ID='soundcloud-user-id-from-envrc-local'
-export SOUNDCLOUD_USER_URN='soundcloud-user-urn-from-envrc-local'
+# https://<soundcloud api>/users/:user_urn/tracks?client_id=...
+# export SOUNDCLOUD_USER_ID='soundcloud-user-id-from-envrc-local'
+export SOUNDCLOUD_USER_URN='soundcloud:users:bogus-user-id-from-envrc-local'
