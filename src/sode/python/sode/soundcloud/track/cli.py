@@ -33,7 +33,7 @@ def add_subcommand(
 
         environment variables:
           Override defaults or CLI arguments:
-            SOUNDCLOUD_USER_ID        override --user-id
+            SOUNDCLOUD_USER_URN     override --user-urn
         """,
         ),
         formatter_class=RawTextHelpFormatter,
@@ -62,9 +62,9 @@ def add_subcommand(
         argfactory.completion_choices(),
         track_parser.add_argument(
             "-u",
-            "--user-id",
-            **argfactory.environ_or_required("SOUNDCLOUD_USER_ID", environ),
-            help="SoundCloud user ID",
+            "--user-urn",
+            **argfactory.environ_or_required("SOUNDCLOUD_USER_URN", environ),
+            help="SoundCloud user URN (e.g. `soundcloud:users:$user_id`)",
             nargs=1,
         ),
     )
@@ -93,7 +93,7 @@ def listing_state(args: ProgramNamespace, state: RunState) -> list.ListTracksSta
         access_token=lambda: _sode_load_access_token(args.state_dir),
         stderr=state.stderr,
         stdout=state.stdout,
-        user_id=args.user_id,
+        user_urn=args.user_urn,
     )
 
 

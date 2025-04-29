@@ -17,12 +17,12 @@ class ListTracksState:
     access_token: AccessTokenFactory
     stderr: typing.IO[str]
     stdout: typing.IO[str]
-    user_id: str
+    user_urn: str
 
 
 def list_tracks(state: ListTracksState) -> int:
     match state.access_token().flat_map(
-        lambda access_token: _tracks_list(access_token, state.user_id)
+        lambda access_token: _tracks_list(access_token, state.user_urn)
     ):
         case Left(err):
             print(err, file=state.stderr)
@@ -49,25 +49,25 @@ class TrackListing:
         return []
 
 
-def _tracks_list(access_token: AccessToken, user_id: str) -> Either[str, TrackListing]:
+def _tracks_list(access_token: AccessToken, user_urn: str) -> Either[str, TrackListing]:
     """List all tracks published by a user"""
 
     return (
         Right[str, OAuth2Session](access_token.oauth_session())
-        .map(lambda session: _tracks_list_raw(session, user_id))
+        .map(lambda session: _tracks_list_raw(session, user_urn))
         .flat_map(lambda response: _response_to_either(response))
         .map(lambda http_response: http_response.json())
         .flat_map(lambda json_response: TrackListing.parse(json_response))
     )
 
 
-def _tracks_list_raw(session: requests.Session, user_id: str) -> Response:
+def _tracks_list_raw(session: requests.Session, user_urn: str) -> Response:
     """List all tracks published by a user, returning the raw HTTP response"""
 
-    # TODO KDK: Look up the actual API endpoint for listing tracks
+    # TODO KDK: Handle multiple pages where response contains .next_href
     return session.get(
-        f"https://api.soundcloud.com/me/tracks",
-        params={"limit": 1},
+        f"https://api.soundcloud.com/users/{user_urn}/tracks",
+        params={"limit": 50, "linked_partitioning": True},
     )
 
 
