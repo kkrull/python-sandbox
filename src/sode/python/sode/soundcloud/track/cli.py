@@ -5,11 +5,10 @@ from argparse import RawTextHelpFormatter, _SubParsersAction
 from pathlib import Path
 
 from sode.shared.cli import ProgramNamespace, RunState, argfactory, cmdfactory
-from sode.shared.fp import Either, Left, Value
+from sode.shared.fp import Either
 from sode.shared.oauth.token import AccessToken
 from sode.shared.state.path import default_state_dir
 from sode.shared.state.state import SodeState
-from sode.soundcloud.auth import TokenResponse
 
 from ..namespace import SC_COMMAND
 from . import list
@@ -82,7 +81,7 @@ def _run_track(args: ProgramNamespace, state: RunState) -> int:
     )
 
     if not args.list:
-        return 99
+        return 2
 
     list_state = listing_state(args, state)
     return list.list_tracks(list_state)
