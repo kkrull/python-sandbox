@@ -24,13 +24,13 @@ def list_tracks(state: ListTracksState) -> int:
     match state.access_token().flat_map(
         lambda access_token: _tracks_list(access_token, state.user_urn)
     ):
+        case Right(listing):
+            for name in listing.titles():
+                print(name, file=state.stdout)
+            return 0
         case Left(err):
             print(err, file=state.stderr)
             return 1
-        case Right(listing):
-            for name in listing.track_names():
-                print(name, file=state.stdout)
-            return 0
         case unreachable:
             assert_never(unreachable)
 
@@ -39,17 +39,26 @@ def list_tracks(state: ListTracksState) -> int:
 
 
 @dataclass(frozen=True)
-class TrackListing:
+class TrackListItem:
+    title: str
+    urn: str
+
+
+@dataclass(frozen=True)
+class TrackList:
+    collection: list[TrackListItem]
+
     @staticmethod
-    def parse(response_data: Mapping[str, Any]) -> Either[str, "TrackListing"]:
-        return Left("TrackListing::parse: not implemented")
+    def parse(response_data: Mapping[str, Any]) -> Either[str, "TrackList"]:
+        return Left("TrackList::parse: not implemented")
 
-    def track_names(self) -> Iterable[str]:
-        # TODO KDK: Work here
-        return []
+    def titles(self) -> Iterable[str]:
+        """The title of each track"""
+
+        return [x.title for x in self.collection]
 
 
-def _tracks_list(access_token: AccessToken, user_urn: str) -> Either[str, TrackListing]:
+def _tracks_list(access_token: AccessToken, user_urn: str) -> Either[str, TrackList]:
     """List all tracks published by a user"""
 
     return (
@@ -57,7 +66,7 @@ def _tracks_list(access_token: AccessToken, user_urn: str) -> Either[str, TrackL
         .map(lambda session: _tracks_list_raw(session, user_urn))
         .flat_map(lambda response: _response_to_either(response))
         .map(lambda http_response: http_response.json())
-        .flat_map(lambda json_response: TrackListing.parse(json_response))
+        .flat_map(lambda json_response: TrackList.parse(json_response))
     )
 
 
