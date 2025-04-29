@@ -43,6 +43,18 @@ class TrackListItem:
     title: str
     urn: str
 
+    @staticmethod
+    def parse(response_data: Mapping[str, Any]) -> Either[str, "TrackListItem"]:
+        if "urn" not in response_data.keys():
+            return Left(f"missing urn: response_data={response_data}")
+
+        list_item = TrackListItem(
+            title=response_data["title"],
+            urn=response_data["urn"],
+        )
+
+        return Right(list_item)
+
 
 @dataclass(frozen=True)
 class TrackList:
@@ -50,7 +62,16 @@ class TrackList:
 
     @staticmethod
     def parse(response_data: Mapping[str, Any]) -> Either[str, "TrackList"]:
-        return Left("TrackList::parse: not implemented")
+        collection = [TrackListItem.parse(x) for x in response_data["collection"]]
+        parse_failures = (item.left_value for item in collection if item.is_left)
+        match next(parse_failures, None):
+            case None:
+                track_list = TrackList(
+                    collection=[item.right_value for item in collection],
+                )
+                return Right(track_list)
+            case error:
+                return Left(error)
 
     def titles(self) -> Iterable[str]:
         """The title of each track"""
