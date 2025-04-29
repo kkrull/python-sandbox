@@ -5,7 +5,7 @@ from argparse import RawTextHelpFormatter, _SubParsersAction
 from pathlib import Path
 
 from sode.shared.cli import ProgramNamespace, RunState, argfactory, cmdfactory
-from sode.shared.fp import Either
+from sode.shared.fp import Either, Value
 from sode.shared.oauth.token import AccessToken
 from sode.shared.state.path import default_state_dir
 from sode.shared.state.state import SodeState
@@ -99,6 +99,8 @@ def listing_state(args: ProgramNamespace, state: RunState) -> list.ListTracksSta
 
 def _sode_load_access_token(state_dir: Path) -> Either[str, AccessToken]:
     logger.debug({"_sode_load_access_token": {"state_dir": state_dir.absolute()}})
+    # TODO KDK: Figure out the right path and make sure it's being saved
+    Value(state_dir).map(lambda x: x.joinpath("soundcloud-token-response.json"))
     return (
         SodeState.load(state_dir)
         .map(lambda x: x.soundcloud_auth)
