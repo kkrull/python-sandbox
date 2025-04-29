@@ -88,6 +88,7 @@ def _run_track(args: ProgramNamespace, state: RunState) -> int:
 
 
 def listing_state(args: ProgramNamespace, state: RunState) -> list.ListTracksState:
+    # TODO KDK: state_dir has not been converted to Path yet
     return list.ListTracksState(
         access_token=lambda: _sode_load_access_token(args.state_dir),
         stderr=state.stderr,
