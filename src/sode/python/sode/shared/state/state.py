@@ -1,9 +1,9 @@
 import json
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Mapping, TextIO
+from typing import Any, Mapping
 
-from sode.shared.fp import Either, Left
+from sode.shared.fp import Either, Left, Right
 from sode.soundcloud.auth.api import TokenResponse
 
 
@@ -18,8 +18,9 @@ class SodeState:
     def load(state_file: Path) -> Either[str, "SodeState"]:
         try:
             with open(state_file, mode="rt") as file:
-                json_file = json.load(file)
-            return Left("SodeState::load: not implemented")
+                json_data = json.load(file)
+                state = SodeState.parse(json_data)
+                return Right(state)
         except Exception as error:
             return Left(str(error))
 
