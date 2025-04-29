@@ -12,6 +12,7 @@ class SodeState:
     """Top-level saved state for sode"""
 
     soundcloud_auth: TokenResponse
+    version: str
 
     @staticmethod
     def load(state_file: Path) -> Either[str, "SodeState"]:
@@ -28,10 +29,5 @@ class SodeState:
 
         return SodeState(
             soundcloud_auth=TokenResponse.parse(data["soundcloud_auth"]),
+            version=data["version"],
         )
-
-    @staticmethod
-    def read_json(readable: TextIO) -> "SodeState":
-        """Read from a given TextIO and parse as JSON"""
-
-        return SodeState.parse(json.load(readable))
